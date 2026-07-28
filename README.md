@@ -34,6 +34,14 @@ acon/
         │   ├── knowledge-base.md
         │   ├── laravel/v13.x/ (SKILL.md + 104 docs)
         │   └── filament/v5.x/ (SKILL.md + 14 docs)
+        ├── security-audit/            # Security Audit Skill Suite
+        │   ├── SKILL.md
+        │   └── checklists/
+        │       ├── coverage-matrix.md
+        │       ├── php.md
+        │       ├── javascript.md
+        │       ├── python.md
+        │       └── dotnet.md
         └── technical-writing-for-engineers/
             └── SKILL.md
 ```
@@ -57,6 +65,7 @@ ln -s /path/to/acon/.agents .agents
 This repository is structured and inspired by the following open-source projects:
 
 - **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Architectural pattern for `.claude`, `.cursor`, `.agents` symlinks, rules, skills, commands, and knowledge-base structure.
+- **[3stoneBrother Code Audit](https://github.com/3stoneBrother/code-audit)**: Source inspiration for multi-language security audit checklists (PHP, JS, Python, C#).
 - **[Laravel Documentation (v13.x)](https://github.com/laravel/docs/tree/13.x)**: Official documentation source for the `laravel-projects/laravel/v13.x` skill set.
 - **[Filament Documentation (v5.x)](https://github.com/filamentphp/filament/tree/5.x/docs)**: Official documentation source for the `laravel-projects/filament/v5.x` skill set.
 - **[Technical Writing for Engineers](https://github.com/marcelorodrigo/agent-skills/tree/master/skills/technical-writing-for-engineers)**: Skill specification for writing technical articles and engineering post-mortems.

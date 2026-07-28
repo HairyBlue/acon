@@ -11,6 +11,7 @@ Welcome to the **ACON (Agent Collections)** repository. This repository houses r
   - **Laravel 13.x**: [`agents/skills/laravel-projects/laravel/v13.x/SKILL.md`](agents/skills/laravel-projects/laravel/v13.x/SKILL.md) (104 official doc files in `docs/`).
   - **Filament 5.x**: [`agents/skills/laravel-projects/filament/v5.x/SKILL.md`](agents/skills/laravel-projects/filament/v5.x/SKILL.md) (Official doc files in `docs/`).
 - **[`agents/skills/technical-writing-for-engineers/SKILL.md`](agents/skills/technical-writing-for-engineers/SKILL.md)**: Guidelines for technical articles & engineering post-mortems.
+- **[`agents/skills/security-audit/SKILL.md`](agents/skills/security-audit/SKILL.md)**: Static code security auditing skill covering 50+ vulnerability types (PHP, JavaScript/Node, Python, C#/.NET).
 
 ---
 
@@ -40,21 +41,10 @@ Agent tools reference configuration files through standard dot-folders symlinked
 
 ---
 
-## Core Dependency Versions (Laravel Projects)
-
-```json
-{
-  "php": "^8.2",
-  "filament/filament": "^5.3",
-  "laravel/framework": "^13.0"
-}
-```
-
----
-
 ## References & Inspiration
 
 - **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Structure pattern for `.claude`, `.cursor`, `.agents` symlinks, rules, skills, commands, and knowledge-base structure.
+- **[3stoneBrother Code Audit](https://github.com/3stoneBrother/code-audit)**: Source inspiration for multi-language security audit checklists (PHP, JS, Python, C#).
 - **[Laravel Documentation (v13.x)](https://github.com/laravel/docs/tree/13.x)**: Source documentation for `laravel-projects/laravel/v13.x`.
 - **[Filament Documentation (v5.x)](https://github.com/filamentphp/filament/tree/5.x/docs)**: Source documentation for `laravel-projects/filament/v5.x`.
 - **[Technical Writing for Engineers](https://github.com/marcelorodrigo/agent-skills/tree/master/skills/technical-writing-for-engineers)**: Source skill for technical writing guidelines.
