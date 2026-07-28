@@ -1,6 +1,6 @@
 # ACON - Agent Collections
 
-A modular, cross-project repository for AI agent skills, rules, commands, and domain knowledge bases, following the **Cal.diy** agent directory pattern.
+A modular, cross-project repository for AI agent skills, rules, commands, and domain knowledge bases, following the **Cal.diy** agent directory pattern, using `.acon/` as its core asset directory.
 
 ---
 
@@ -10,10 +10,11 @@ A modular, cross-project repository for AI agent skills, rules, commands, and do
 acon/
 ├── README.md                          # Overview & repository sitemap
 ├── AGENTS.md                          # Main entry point for AI agents
-├── .claude/                           # Claude Code agent symlinks -> ../agents/skills, ../agents/rules
-├── .cursor/                           # Cursor IDE agent symlinks -> ../agents/skills, ../agents/rules
-├── .agents/                           # Universal / Antigravity agent symlinks -> ../agents/skills, ../agents/rules
-└── agents/                            # Centralized Agent Assets
+├── setup-acon.sh                      # Executable integration script
+├── .claude/                           # Claude Code agent symlinks -> ../.acon/skills, ../.acon/rules
+├── .cursor/                           # Cursor IDE agent symlinks -> ../.acon/skills, ../.acon/rules
+├── .agents/                           # Universal / Antigravity agent symlinks -> ../.acon/skills, ../.acon/rules
+└── .acon/                             # Centralized Agent Assets
     ├── README.md
     ├── commands.md
     ├── knowledge-base.md
@@ -26,6 +27,7 @@ acon/
     │       ├── data-eloquent-relationships.md
     │       └── filament-resource-standards.md
     └── skills/                        # Modular Agent Skills
+        ├── acon-reference.md          # Built-in reference file for AI agents
         ├── conventional-commits/
         │   └── SKILL.md
         ├── laravel-projects/
@@ -50,72 +52,80 @@ acon/
 
 ---
 
-## How to Symlink into Other Projects
+## How to Integrate ACON into Any Target Project
 
-To use **all** skills and rules in your project, symlink `.claude`, `.cursor`, or `.agents` into your project root:
+Integrating `acon` into any project takes seconds and ensures **100% zero naming conflicts** (even if the target repository already has `agents/`, `.claude/`, or `.cursor/`).
 
+---
+
+### Method 1: Using `setup-acon.sh` (Recommended)
+
+#### Option A: Run inside target project folder
 ```bash
-ln -s /path/to/acon/.claude .claude
-ln -s /path/to/acon/.cursor .cursor
-ln -s /path/to/acon/.agents .agents
+cd /path/to/target-project
+/home/mewho/ai-stuff/acon/setup-acon.sh
+```
+
+#### Option B: Run from anywhere by passing target path
+```bash
+/home/mewho/ai-stuff/acon/setup-acon.sh /path/to/target-project
+```
+
+#### Option C: Install `setup-acon` system command (Optional)
+```bash
+sudo ln -s /home/mewho/ai-stuff/acon/setup-acon.sh /usr/local/bin/setup-acon
+
+# Now run anywhere:
+cd /path/to/target-project
+setup-acon
 ```
 
 ---
 
-## Targeted Selective Integration Guide
+### Method 2: Manual Terminal Commands
 
-If you only want specific skills or rules for a project stack (e.g., Laravel), copy or symlink only the relevant directories manually.
+If you prefer to perform integration manually without the script:
 
-### Example 1: Selective Copy for Laravel Projects
-
-To install **only** Laravel skills, Laravel rules, global rules, and conventional commit guidelines into a target Laravel project:
-
+#### Step 1: Open Target Project & Symlink `.acon`
 ```bash
-# Set your ACON repository path and target project path
-ACON_DIR="/path/to/acon"
-TARGET_DIR="/path/to/your-laravel-project"
+cd /path/to/target-project
+ln -s /home/mewho/ai-stuff/acon/.acon .acon
+echo ".acon" >> .git/info/exclude
+```
 
-cd "$TARGET_DIR"
+#### Step 2: Configure AI Platforms (.claude, .cursor, .agents)
 
-# 1. Create target agent directories
-mkdir -p agents/skills agents/rules/laravel-projects
+**Case A: If `.claude/`, `.cursor/`, or `.agents/` ALREADY exist in the project**:
+Symlink the built-in `acon-reference.md` file:
+```bash
+mkdir -p .claude/skills .cursor/skills .agents/skills
 
-# 2. Copy Laravel and Conventional Commit skills
-cp -r "$ACON_DIR/agents/skills/laravel-projects" agents/skills/
-cp -r "$ACON_DIR/agents/skills/conventional-commits" agents/skills/
+ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .claude/skills/acon-reference.md
+ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .cursor/skills/acon-reference.md
+ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .agents/skills/acon-reference.md
 
-# 3. Copy global rules and Laravel-specific rules
-cp "$ACON_DIR/agents/rules/quality-simplicity.md" agents/rules/
-cp "$ACON_DIR/agents/rules/git-conventional-commits.md" agents/rules/
-cp -r "$ACON_DIR/agents/rules/laravel-projects/"* agents/rules/laravel-projects/
+echo ".claude/skills/acon-reference.md" >> .git/info/exclude
+echo ".cursor/skills/acon-reference.md" >> .git/info/exclude
+echo ".agents/skills/acon-reference.md" >> .git/info/exclude
+```
 
-# 4. Copy AGENTS.md guide (excluding ACON README)
-cp "$ACON_DIR/AGENTS.md" ./
-
-# 5. Create standard platform dot-folders with relative symlinks
+**Case B: If `.claude/`, `.cursor/`, or `.agents/` DO NOT exist in the project**:
+Create standard relative symlinks:
+```bash
 mkdir -p .claude .cursor .agents
-ln -sf ../agents/skills .claude/skills && ln -sf ../agents/rules .claude/rules
-ln -sf ../agents/skills .cursor/skills && ln -sf ../agents/rules .cursor/rules
-ln -sf ../agents/skills .agents/skills && ln -sf ../agents/rules .agents/rules
+
+ln -sf ../.acon/skills .claude/skills && ln -sf ../.acon/rules .claude/rules
+ln -sf ../.acon/skills .cursor/skills && ln -sf ../.acon/rules .cursor/rules
+ln -sf ../.acon/skills .agents/skills && ln -sf ../.acon/rules .agents/rules
+
+echo ".claude" >> .git/info/exclude
+echo ".cursor" >> .git/info/exclude
+echo ".agents" >> .git/info/exclude
 ```
-
----
-
-### Example 2: Including Optional Security Audit Skill Suite
-
-The **`security-audit`** skill suite is **optional**. 
-
-- **To include security auditing**: Copy the `security-audit` skill folder into your project's `agents/skills/`:
-  ```bash
-  cp -r "$ACON_DIR/agents/skills/security-audit" agents/skills/
-  ```
-- **To exclude security auditing**: Simply skip copying `security-audit/`. Your project will continue to use only the stack skills you selected.
 
 ---
 
 ## References & Inspiration
-
-This repository is structured and inspired by the following open-source projects:
 
 - **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Architectural pattern for `.claude`, `.cursor`, `.agents` symlinks, rules, skills, commands, and knowledge-base structure.
 - **[3stoneBrother Code Audit](https://github.com/3stoneBrother/code-audit)**: Source inspiration for multi-language security audit checklists (PHP, JS, Python, C#).
