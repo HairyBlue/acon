@@ -34,14 +34,16 @@ acon/
         │   ├── knowledge-base.md
         │   ├── laravel/v13.x/ (SKILL.md + 104 docs)
         │   └── filament/v5.x/ (SKILL.md + 14 docs)
-        ├── security-audit/            # Security Audit Skill Suite
-        │   ├── SKILL.md
-        │   └── checklists/
-        │       ├── coverage-matrix.md
-        │       ├── php.md
-        │       ├── javascript.md
-        │       ├── python.md
-        │       └── dotnet.md
+        ├── security-audit/            # Security Audit Skill Suite (Optional)
+        │   ├── SKILL.md               # Master audit orchestration guide
+        │   ├── core/                  # Taint analysis, verification, anti-hallucination
+        │   ├── frameworks/            # Laravel, Express/Next.js, Django/FastAPI, ASP.NET
+        │   ├── checklists/            # Coverage matrix & language checklists
+        │   ├── languages/             # Deep language security guides (PHP, JS, Python, C#)
+        │   ├── security/              # Business logic, Auth/OAuth/JWT, GraphQL, Supply chain
+        │   ├── cases/                 # Real-world vulnerability case studies
+        │   ├── wooyun/                # Parameter priority (TOP_VULNERABLE_PARAMS) & bypasses
+        │   └── reporting/             # Report templates
         └── technical-writing-for-engineers/
             └── SKILL.md
 ```
@@ -50,13 +52,64 @@ acon/
 
 ## How to Symlink into Other Projects
 
-To use these skills and rules in your project, symlink `.claude`, `.cursor`, or `.agents` into your project root:
+To use **all** skills and rules in your project, symlink `.claude`, `.cursor`, or `.agents` into your project root:
 
 ```bash
 ln -s /path/to/acon/.claude .claude
 ln -s /path/to/acon/.cursor .cursor
 ln -s /path/to/acon/.agents .agents
 ```
+
+---
+
+## Targeted Selective Integration Guide
+
+If you only want specific skills or rules for a project stack (e.g., Laravel), copy or symlink only the relevant directories manually.
+
+### Example 1: Selective Copy for Laravel Projects
+
+To install **only** Laravel skills, Laravel rules, global rules, and conventional commit guidelines into a target Laravel project:
+
+```bash
+# Set your ACON repository path and target project path
+ACON_DIR="/path/to/acon"
+TARGET_DIR="/path/to/your-laravel-project"
+
+cd "$TARGET_DIR"
+
+# 1. Create target agent directories
+mkdir -p agents/skills agents/rules/laravel-projects
+
+# 2. Copy Laravel and Conventional Commit skills
+cp -r "$ACON_DIR/agents/skills/laravel-projects" agents/skills/
+cp -r "$ACON_DIR/agents/skills/conventional-commits" agents/skills/
+
+# 3. Copy global rules and Laravel-specific rules
+cp "$ACON_DIR/agents/rules/quality-simplicity.md" agents/rules/
+cp "$ACON_DIR/agents/rules/git-conventional-commits.md" agents/rules/
+cp -r "$ACON_DIR/agents/rules/laravel-projects/"* agents/rules/laravel-projects/
+
+# 4. Copy AGENTS.md guide (excluding ACON README)
+cp "$ACON_DIR/AGENTS.md" ./
+
+# 5. Create standard platform dot-folders with relative symlinks
+mkdir -p .claude .cursor .agents
+ln -sf ../agents/skills .claude/skills && ln -sf ../agents/rules .claude/rules
+ln -sf ../agents/skills .cursor/skills && ln -sf ../agents/rules .cursor/rules
+ln -sf ../agents/skills .agents/skills && ln -sf ../agents/rules .agents/rules
+```
+
+---
+
+### Example 2: Including Optional Security Audit Skill Suite
+
+The **`security-audit`** skill suite is **optional**. 
+
+- **To include security auditing**: Copy the `security-audit` skill folder into your project's `agents/skills/`:
+  ```bash
+  cp -r "$ACON_DIR/agents/skills/security-audit" agents/skills/
+  ```
+- **To exclude security auditing**: Simply skip copying `security-audit/`. Your project will continue to use only the stack skills you selected.
 
 ---
 

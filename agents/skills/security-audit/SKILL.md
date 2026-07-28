@@ -1,9 +1,9 @@
 ---
 name: security-audit
-description: Static code security auditing skill covering 50+ vulnerability types across PHP, JavaScript/Node.js, Python, and C#/.NET. Use when performing security audits, code reviews for vulnerabilities, or pre-deployment security checks.
+description: Static code security auditing skill covering 50+ vulnerability types across PHP, JavaScript/Node.js, Python, and C#/.NET. Orchestrates sub-directories for core logic, frameworks, checklists, languages, security principles, case studies, wooyun archives, and reporting templates. Use when performing security audits, code reviews for vulnerabilities, or pre-deployment security checks.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.2.0"
   supported_languages: ["php", "javascript", "typescript", "python", "csharp"]
 ---
 
@@ -11,49 +11,41 @@ metadata:
 
 Professional static code analysis and security auditing skill tailored for **PHP**, **JavaScript / TypeScript (Node.js)**, **Python**, and **C# (.NET)**.
 
+## Directory Orchestration
+
+This skill utilizes a modular directory structure to organize auditing resources:
+
+- **`core/`**: Core auditing methodologies, data flow analysis techniques (`taint-analysis.md`), and anti-hallucination rules.
+- **`frameworks/`**: Framework-specific security configurations and common pitfalls (`laravel.md`, `express-nextjs.md`, `django-fastapi.md`, `dotnet-asp.md`).
+- **`checklists/`**: Language checklists and the D1-D10 security coverage matrix (`coverage-matrix.md`).
+- **`languages/`**: Deep language security guides (`php.md`, `javascript.md`, `python.md`, `dotnet.md`).
+- **`security/`**: In-depth explanations of security concepts (`business-logic.md`, `auth-oauth-jwt.md`, `graphql-realtime.md`, `supply-chain-infra.md`).
+- **`cases/`**: Real-world vulnerability case studies and exploit analysis (`cases/real-world-vulns.md`).
+- **`wooyun/`**: Historical vulnerability archives, bug bounty reports, and parameter priority statistics (`INDEX.md`, `bypass-techniques.md`).
+- **`reporting/`**: Standardized vulnerability reporting templates (`reporting/report-template.md`).
+
 ## Audit Workflow
 
-```
+```text
 1. Reconnaissance   → Map project tech stack, frameworks, routers, and entry points.
-2. Vulnerability Hunt → Trace data flow from user inputs to dangerous sinks across D1-D10 dimensions.
+2. Vulnerability Hunt → Trace data flow from user inputs to dangerous sinks across D1-D10 dimensions. Consult `languages/` and `frameworks/`.
 3. Verification    → Confirm exploitability, eliminate false positives, and assess severity.
-4. Remediation     → Document findings with clear root cause, PoC impact, and secure code fixes.
+4. Remediation     → Document findings using `reporting/report-template.md` with clear root cause, PoC impact, and secure code fixes.
 ```
 
 ---
 
-## Audit Modes
+## Language Specific Guides (`languages/`)
 
-| Mode | Use Case | Target Scope |
-| :--- | :--- | :--- |
-| **Quick** | CI/CD pipelines, quick PR checks | High-risk injections (SQLi, RCE), hardcoded secrets, known CVEs |
-| **Standard** | Regular security code reviews | OWASP Top 10, Auth/IDOR, Cryptography, File Operations |
-| **Deep** | Pre-deployment audits, critical modules | Full D1–D10 matrix coverage, business logic flaws, attack chain tracing |
+Query the target language guide when auditing matching files:
 
----
-
-## Security Dimensions Coverage Matrix (D1–D10)
-
-Refer to [`checklists/coverage-matrix.md`](checklists/coverage-matrix.md) for full coverage criteria.
-
-- **D1: Injection**: SQLi, Command Injection, SSTI, NoSQLi, Code Execution (`eval`).
-- **D2: Authentication**: Weak hash comparison, missing session regeneration, broken JWT verification.
-- **D3: Authorization & Access Control**: IDOR, broken object-level authorization, missing role middleware.
-- **D4: Deserialization & Prototype Pollution**: Unsafe `unserialize()`, `pickle`, `BinaryFormatter`, Prototype Pollution.
-- **D5: File Operations**: Path traversal, unrestricted file upload, Zip Slip, arbitrary file deletion.
-- **D6: SSRF**: User-controlled URL fetching, Cloud metadata endpoint access (`169.254.169.254`).
-- **D7: Cryptography**: Hardcoded secrets, ECB mode, weak PRNG (`rand()`, `mt_rand()`), broken hash algorithms (`MD5`, `SHA1`).
-- **D8: Security Configuration**: Exposed debug endpoints, overly permissive CORS (`*`), detailed stack traces in production.
-- **D9: Business Logic**: Mass assignment, parameter tampering, race conditions, type confusion (`==`).
-- **D10: Supply Chain**: Outdated dependencies with known CVEs (`composer.lock`, `package-lock.json`, `requirements.txt`, `.csproj`).
+- **PHP & Laravel / WordPress**: [`languages/php.md`](languages/php.md)
+- **JavaScript / Node.js / Express / Next.js**: [`languages/javascript.md`](languages/javascript.md)
+- **Python / Django / FastAPI / Flask**: [`languages/python.md`](languages/python.md)
+- **C# / .NET Core / ASP.NET**: [`languages/dotnet.md`](languages/dotnet.md)
 
 ---
 
-## Language Specific Checklists
+## References & Inspiration
 
-Query the target language checklist when auditing matching files:
-
-- **PHP & Laravel / WordPress**: [`checklists/php.md`](checklists/php.md)
-- **JavaScript / Node.js / Express / Next.js**: [`checklists/javascript.md`](checklists/javascript.md)
-- **Python / Django / FastAPI / Flask**: [`checklists/python.md`](checklists/python.md)
-- **C# / .NET Core / ASP.NET**: [`checklists/dotnet.md`](checklists/dotnet.md)
+- **[3stoneBrother Code Audit Repository](https://github.com/3stoneBrother/code-audit)**: Source inspiration for multi-language security audit checklists, D1-D10 coverage matrix, taint analysis methodology, and WooYun real-world vulnerability insights.

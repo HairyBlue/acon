@@ -10,5 +10,5 @@ This folder contains repository-wide rules, skills, commands, and knowledge base
 - **[skills/](skills/)**:
   - **[`conventional-commits/`](skills/conventional-commits/SKILL.md)**: Conventional Commits (v1.0.0) Skill.
   - **[`laravel-projects/`](skills/laravel-projects/SKILL.md)**: Laravel Projects master skill (Laravel 13.x & Filament 5.x).
-  - **[`security-audit/`](skills/security-audit/SKILL.md)**: Security Audit Skill Suite (PHP, JavaScript/Node, Python, C#/.NET).
+  - **[`security-audit/`](skills/security-audit/SKILL.md)**: Security Audit Skill Suite (covering `core/`, `frameworks/`, `checklists/`, `languages/`, `security/`, `cases/`, `wooyun/`, `reporting/`).
   - **[`technical-writing-for-engineers/`](skills/technical-writing-for-engineers/SKILL.md)**: Technical Writing for Engineers Skill.

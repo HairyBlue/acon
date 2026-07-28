@@ -11,7 +11,15 @@ Welcome to the **ACON (Agent Collections)** repository. This repository houses r
   - **Laravel 13.x**: [`agents/skills/laravel-projects/laravel/v13.x/SKILL.md`](agents/skills/laravel-projects/laravel/v13.x/SKILL.md) (104 official doc files in `docs/`).
   - **Filament 5.x**: [`agents/skills/laravel-projects/filament/v5.x/SKILL.md`](agents/skills/laravel-projects/filament/v5.x/SKILL.md) (Official doc files in `docs/`).
 - **[`agents/skills/technical-writing-for-engineers/SKILL.md`](agents/skills/technical-writing-for-engineers/SKILL.md)**: Guidelines for technical articles & engineering post-mortems.
-- **[`agents/skills/security-audit/SKILL.md`](agents/skills/security-audit/SKILL.md)**: Static code security auditing skill covering 50+ vulnerability types (PHP, JavaScript/Node, Python, C#/.NET).
+- **[`agents/skills/security-audit/SKILL.md`](agents/skills/security-audit/SKILL.md)**: Static code security auditing suite covering 50+ vulnerability types across PHP, JavaScript/Node, Python, C#/.NET.
+  - **Core Logic**: [`core/`](agents/skills/security-audit/core/) (Taint analysis, verification methodology, anti-hallucination).
+  - **Frameworks**: [`frameworks/`](agents/skills/security-audit/frameworks/) (Laravel, Express/Next.js, Django/FastAPI, ASP.NET Core).
+  - **Checklists & Matrix**: [`checklists/`](agents/skills/security-audit/checklists/) (D1-D10 Matrix & quick checklists).
+  - **Deep Language Guides**: [`languages/`](agents/skills/security-audit/languages/) (PHP, JS/Node, Python, C#/.NET).
+  - **Security Concepts**: [`security/`](agents/skills/security-audit/security/) (Business logic, Auth/OAuth/JWT, GraphQL/Realtime, Supply chain).
+  - **Case Studies**: [`cases/real-world-vulns.md`](agents/skills/security-audit/cases/real-world-vulns.md).
+  - **WooYun Intelligence**: [`wooyun/`](agents/skills/security-audit/wooyun/) (Parameter priorities & bypass techniques).
+  - **Reporting**: [`reporting/report-template.md`](agents/skills/security-audit/reporting/report-template.md).
 
 ---
 
