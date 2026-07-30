@@ -10,11 +10,11 @@ A modular, cross-project repository for AI agent skills, rules, commands, and do
 acon/
 ├── README.md                          # Overview & repository sitemap
 ├── AGENTS.md                          # Main entry point for AI agents
-├── setup-acon.sh                      # Executable integration script
 ├── .claude/                           # Claude Code agent symlinks -> ../.acon/skills, ../.acon/rules
 ├── .cursor/                           # Cursor IDE agent symlinks -> ../.acon/skills, ../.acon/rules
 ├── .agents/                           # Universal / Antigravity agent symlinks -> ../.acon/skills, ../.acon/rules
 └── .acon/                             # Centralized Agent Assets
+    ├── INDEX.md                       # Fast symptom & stack lookup matrix
     ├── README.md
     ├── commands.md
     ├── knowledge-base.md
@@ -27,13 +27,11 @@ acon/
     │       ├── data-eloquent-relationships.md
     │       └── filament-resource-standards.md
     └── skills/                        # Modular Agent Skills
-        ├── acon-reference.md          # Built-in reference file for AI agents
         ├── conventional-commits/
         │   └── SKILL.md
         ├── laravel-projects/
         │   ├── SKILL.md
         │   ├── commands.md
-        │   ├── knowledge-base.md
         │   ├── laravel/v13.x/ (SKILL.md + 104 docs)
         │   └── filament/v5.x/ (SKILL.md + 14 docs)
         ├── security-audit/            # Security Audit Skill Suite (Optional)
@@ -52,76 +50,59 @@ acon/
 
 ---
 
-## How to Integrate ACON into Any Target Project
+## How to Use ACON in Any Project (Manual Symlinks)
 
-Integrating `acon` into any project takes seconds and ensures **100% zero naming conflicts** (even if the target repository already has `agents/`, `.claude/`, or `.cursor/`).
+Integrate ACON into any target project in 3 simple copy-paste steps (without git pollution or conflicts):
 
----
-
-### Method 1: Using `setup-acon.sh` (Recommended)
-
-#### Option A: Run inside target project folder
+### Step 1: Symlink `.acon` Container
 ```bash
 cd /path/to/target-project
-/home/mewho/ai-stuff/acon/setup-acon.sh
-```
 
-#### Option B: Run from anywhere by passing target path
-```bash
-/home/mewho/ai-stuff/acon/setup-acon.sh /path/to/target-project
-```
-
-#### Option C: Install `setup-acon` system command (Optional)
-```bash
-sudo ln -s /home/mewho/ai-stuff/acon/setup-acon.sh /usr/local/bin/setup-acon
-
-# Now run anywhere:
-cd /path/to/target-project
-setup-acon
-```
-
----
-
-### Method 2: Manual Terminal Commands
-
-If you prefer to perform integration manually without the script:
-
-#### Step 1: Open Target Project & Symlink `.acon`
-```bash
-cd /path/to/target-project
-ln -s /home/mewho/ai-stuff/acon/.acon .acon
+# Symlink your central .acon folder
+ln -s /path/to/acon/.acon .acon
 echo ".acon" >> .git/info/exclude
 ```
 
-#### Step 2: Configure AI Platforms (.claude, .cursor, .agents)
+---
 
-**Case A: If `.claude/`, `.cursor/`, or `.agents/` ALREADY exist in the project**:
-Symlink the built-in `acon-reference.md` file:
+### Step 2: Symlink Platform Dot-Folders (.claude, .cursor, .agents)
 ```bash
-mkdir -p .claude/skills .cursor/skills .agents/skills
-
-ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .claude/skills/acon-reference.md
-ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .cursor/skills/acon-reference.md
-ln -sf /home/mewho/ai-stuff/acon/.acon/skills/acon-reference.md .agents/skills/acon-reference.md
-
-echo ".claude/skills/acon-reference.md" >> .git/info/exclude
-echo ".cursor/skills/acon-reference.md" >> .git/info/exclude
-echo ".agents/skills/acon-reference.md" >> .git/info/exclude
-```
-
-**Case B: If `.claude/`, `.cursor/`, or `.agents/` DO NOT exist in the project**:
-Create standard relative symlinks:
-```bash
+# Create platform tool directories
 mkdir -p .claude .cursor .agents
 
+# Symlink skills and rules to .acon
 ln -sf ../.acon/skills .claude/skills && ln -sf ../.acon/rules .claude/rules
 ln -sf ../.acon/skills .cursor/skills && ln -sf ../.acon/rules .cursor/rules
 ln -sf ../.acon/skills .agents/skills && ln -sf ../.acon/rules .agents/rules
 
+# Exclude platform folders from Git
 echo ".claude" >> .git/info/exclude
 echo ".cursor" >> .git/info/exclude
 echo ".agents" >> .git/info/exclude
 ```
+
+---
+
+### Step 3: Append Reference to `AGENTS.md` (Optional)
+
+If the project already has an `AGENTS.md`, append this section to the bottom:
+
+```bash
+cat << 'EOF' >> AGENTS.md
+
+## ACON Skills & Rules Reference
+Refer to [`.acon/INDEX.md`](.acon/INDEX.md) and [`.acon/skills/`](.acon/skills/) for coding standards and security audit skills.
+EOF
+```
+
+---
+
+### Selective Skill Activation in Chat
+
+You can activate any specific skill on demand simply by telling your AI agent in chat:
+
+> *"Activate `.acon/skills/laravel-projects/SKILL.md` for this task."*  
+> *"Use `.acon/skills/security-audit/SKILL.md` to perform a code review."*
 
 ---
 

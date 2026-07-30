@@ -55,6 +55,29 @@ Agent tools reference configuration files through standard dot-folders symlinked
 
 ---
 
+## Flexible Integration for Existing Repositories
+
+When integrating `acon` into any project (even if `AGENTS.md` or `.claude/` already exist):
+
+### 1. Symlink `.acon`
+```bash
+ln -s /path/to/acon/.acon .acon && echo ".acon" >> .git/info/exclude
+```
+
+### 2. Append Reference to Existing `AGENTS.md`
+If the project already has an `AGENTS.md`, append this block to the bottom (without overwriting their existing instructions):
+
+```markdown
+## ACON Skills & Rules Reference
+Refer to [`.acon/INDEX.md`](.acon/INDEX.md) and [`.acon/skills/`](.acon/skills/) for coding standards and security audit skills.
+```
+
+### 3. Selective Skill Activation in Chat
+Tell your AI agent directly in chat:
+> *"Activate `.acon/skills/laravel-projects/SKILL.md` for this task."*
+
+---
+
 ## References & Inspiration
 
 - **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Structure pattern for `.claude`, `.cursor`, `.agents` symlinks, rules, skills, commands, and knowledge-base structure.
