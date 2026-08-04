@@ -12,6 +12,7 @@ Refer to the central **[`.acon/INDEX.md`](.acon/INDEX.md)** for a complete looku
 
 ## Skills Navigation (`.acon/skills/`)
 
+- **[`.acon/skills/multi-agent-orchestration/SKILL.md`](.acon/skills/multi-agent-orchestration/SKILL.md)**: Parallel multi-agent task orchestration, subagent delegation, and batch multi-file editing boundaries.
 - **[`.acon/skills/laravel-projects/SKILL.md`](.acon/skills/laravel-projects/SKILL.md)**: Master skill for Laravel 13.x and Filament 5.x projects.
   - **Laravel 13.x**: [`.acon/skills/laravel-projects/laravel/v13.x/SKILL.md`](.acon/skills/laravel-projects/laravel/v13.x/SKILL.md) (104 official doc files in `docs/`).
   - **Filament 5.x**: [`.acon/skills/laravel-projects/filament/v5.x/SKILL.md`](.acon/skills/laravel-projects/filament/v5.x/SKILL.md) (Official doc files in `docs/`).
@@ -34,6 +35,7 @@ Refer to the central **[`.acon/INDEX.md`](.acon/INDEX.md)** for a complete looku
 ### Global / Universal Rules
 - **[`.acon/rules/quality-simplicity.md`](.acon/rules/quality-simplicity.md)**: Zero dead code, minimal implementation, mandatory test verification.
 - **[`.acon/rules/git-conventional-commits.md`](.acon/rules/git-conventional-commits.md)**: Branching strategy, Conventional Commit formatting, and mandatory user confirmation before `git commit`.
+- **[`.acon/rules/multi-agent-delegation.md`](.acon/rules/multi-agent-delegation.md)**: Mandatory subagent delegation threshold (5+ files), non-overlapping file scoping, reactive notifications.
 
 ### Framework-Specific Rules (`.acon/rules/laravel-projects/`)
 - **[`api-thin-controllers.md`](.acon/rules/laravel-projects/api-thin-controllers.md)**: Thin controllers & FormRequest validation.
@@ -59,12 +61,18 @@ Agent tools reference configuration files through standard dot-folders symlinked
 
 When integrating `acon` into any project (even if `AGENTS.md` or `.claude/` already exist):
 
-### 1. Symlink `.acon`
+### 1. Copy `.acon` Folder
+Copy the `.acon` directory directly into your target project:
 ```bash
-ln -s /path/to/acon/.acon .acon && echo ".acon" >> .git/info/exclude
+cp -r /path/to/acon/.acon .acon
 ```
 
-### 2. Append Reference to Existing `AGENTS.md`
+### 2. Configure Platform Folders (.claude, .cursor, .agents)
+- **Folder Does Not Exist**: Create directory and symlink `skills` and `rules` to `.acon`.
+- **Folder Already Exists**: Symlink or copy specific skill subfolders manually into their existing directory.
+- **Pure `AGENTS.md` Reference**: Skip folder creation entirely and append the reference to `AGENTS.md`.
+
+### 3. Append Reference to Existing `AGENTS.md`
 If the project already has an `AGENTS.md`, append this block to the bottom (without overwriting their existing instructions):
 
 ```markdown
@@ -72,9 +80,9 @@ If the project already has an `AGENTS.md`, append this block to the bottom (with
 Refer to [`.acon/INDEX.md`](.acon/INDEX.md) and [`.acon/skills/`](.acon/skills/) for coding standards and security audit skills.
 ```
 
-### 3. Selective Skill Activation in Chat
+### 4. Selective Skill Activation in Chat
 Tell your AI agent directly in chat:
-> *"Activate `.acon/skills/laravel-projects/SKILL.md` for this task."*
+> *"Activate `.acon/skills/multi-agent-orchestration/SKILL.md` for this task."*
 
 ---
 

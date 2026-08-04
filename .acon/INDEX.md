@@ -10,6 +10,7 @@ Use this section to quickly identify which skill or rule resolves your immediate
 
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
+| **Batch multi-file edits / Subagent delegation** | 5+ files to edit, parallel refactoring, multi-component generation | [`.acon/skills/multi-agent-orchestration/SKILL.md`](skills/multi-agent-orchestration/SKILL.md), [`.acon/rules/multi-agent-delegation.md`](rules/multi-agent-delegation.md) |
 | **SQL injection / Raw query vulnerability** | Concatenation in `DB::raw()`, `FromSqlRaw()`, `sequelize.query()` | [`.acon/skills/security-audit/checklists/coverage-matrix.md`](skills/security-audit/checklists/coverage-matrix.md), [`.acon/skills/security-audit/languages/php.md`](skills/security-audit/languages/php.md) |
 | **IDOR / User accessing another user's data** | Missing ownership validation in `find($id)` or controller | [`.acon/skills/security-audit/security/auth-oauth-jwt.md`](skills/security-audit/security/auth-oauth-jwt.md), [`.acon/skills/security-audit/checklists/coverage-matrix.md`](skills/security-audit/checklists/coverage-matrix.md) |
 | **Mass assignment / Unrestricted fields updated** | `$request->all()` passed directly into `create()` / `update()` | [`.acon/rules/laravel-projects/api-thin-controllers.md`](rules/laravel-projects/api-thin-controllers.md), [`.acon/skills/security-audit/security/business-logic.md`](skills/security-audit/security/business-logic.md) |
@@ -27,12 +28,13 @@ Summary of all available skill suites and rule categories in `.acon/`:
 
 | Category | Skills / Rules Count | Target Scope | Main Entry File |
 | :--- | :--- | :--- | :--- |
+| **`skills/multi-agent-orchestration/`** | 1 Skill | Subagent delegation, parallel file edits, non-overlapping file scopes | [`.acon/skills/multi-agent-orchestration/SKILL.md`](skills/multi-agent-orchestration/SKILL.md) |
 | **`skills/laravel-projects/`** | 2 Sub-skills + 118 Docs | Laravel 13.x, Filament 5.x, Eloquent, Livewire 3, Pest | [`.acon/skills/laravel-projects/SKILL.md`](skills/laravel-projects/SKILL.md) |
 | **`skills/security-audit/`** | 21 Modules | Static security code analysis across PHP, JS/Node, Python, C# | [`.acon/skills/security-audit/SKILL.md`](skills/security-audit/SKILL.md) |
 | **`skills/conventional-commits/`** | 1 Skill | Git Conventional Commits v1.0.0 header specification | [`.acon/skills/conventional-commits/SKILL.md`](skills/conventional-commits/SKILL.md) |
 | **`skills/technical-writing-for-engineers/`** | 1 Skill | Engineering post-mortems, RFCs, and architecture docs | [`.acon/skills/technical-writing-for-engineers/SKILL.md`](skills/technical-writing-for-engineers/SKILL.md) |
+| **`rules/` (Global)** | 3 Rules | Quality & simplicity, commit confirmation policy, multi-agent delegation | [`.acon/rules/multi-agent-delegation.md`](rules/multi-agent-delegation.md) |
 | **`rules/laravel-projects/`** | 4 Rules | Coding standards for Controllers, Actions, Eloquent, Filament | [`.acon/rules/laravel-projects/`](rules/laravel-projects/) |
-| **`rules/` (Global)** | 2 Rules | Quality & simplicity, git commit confirmation policy | [`.acon/rules/quality-simplicity.md`](rules/quality-simplicity.md) |
 
 ---
 
@@ -56,6 +58,7 @@ The security auditing skill is divided into 7 specialized subcategories:
 
 | Technology | Available Skills & Rules |
 | :--- | :--- |
+| **Multi-Agent / Orchestration** | Skill: [multi-agent-orchestration](skills/multi-agent-orchestration/SKILL.md)<br>Rule: [multi-agent-delegation](rules/multi-agent-delegation.md) |
 | **Laravel 13.x / PHP 8.2+** | Skill: [laravel-projects](skills/laravel-projects/SKILL.md)<br>Docs: [Laravel 13.x Docs](skills/laravel-projects/laravel/v13.x/SKILL.md)<br>Rules: [api-thin-controllers](rules/laravel-projects/api-thin-controllers.md), [architecture-action-pattern](rules/laravel-projects/architecture-action-pattern.md), [data-eloquent-relationships](rules/laravel-projects/data-eloquent-relationships.md)<br>Security: [PHP Deep Guide](skills/security-audit/languages/php.md), [Laravel Security](skills/security-audit/frameworks/laravel.md) |
 | **Filament 5.x** | Skill: [laravel-projects](skills/laravel-projects/SKILL.md)<br>Docs: [Filament 5.x Docs](skills/laravel-projects/filament/v5.x/SKILL.md)<br>Rules: [filament-resource-standards](rules/laravel-projects/filament-resource-standards.md) |
 | **JavaScript / Node.js / Express** | Skill: [security-audit](skills/security-audit/SKILL.md)<br>Security: [JS Deep Guide](skills/security-audit/languages/javascript.md), [Express/Next.js Security](skills/security-audit/frameworks/express-nextjs.md) |

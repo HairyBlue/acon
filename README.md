@@ -21,12 +21,15 @@ acon/
     ├── rules/                         # Categorized Agent Rules
     │   ├── quality-simplicity.md     # Global rule
     │   ├── git-conventional-commits.md # Global rule
+    │   ├── multi-agent-delegation.md # Global rule
     │   └── laravel-projects/          # Laravel-Specific Rules
     │       ├── api-thin-controllers.md
     │       ├── architecture-action-pattern.md
     │       ├── data-eloquent-relationships.md
     │       └── filament-resource-standards.md
     └── skills/                        # Modular Agent Skills
+        ├── multi-agent-orchestration/ # Parallel Subagent Delegation Skill
+        │   └── SKILL.md
         ├── conventional-commits/
         │   └── SKILL.md
         ├── laravel-projects/
@@ -50,42 +53,60 @@ acon/
 
 ---
 
-## How to Use ACON in Any Project (Manual Symlinks)
+## How to Use ACON in Any Target Project
 
-Integrate ACON into any target project in 3 simple copy-paste steps (without git pollution or conflicts):
+Integrate ACON into any target project as a standalone `.acon` directory in 3 simple steps:
 
-### Step 1: Symlink `.acon` Container
+### Step 1: Copy `.acon` into Your Target Project
+
+Clone or download the `acon` repository, then copy `.acon` into your target project root:
+
 ```bash
 cd /path/to/target-project
 
-# Symlink your central .acon folder
-ln -s /path/to/acon/.acon .acon
+# Copy .acon directory to your project root
+cp -r /path/to/acon/.acon .acon
+
+# (Optional) Exclude .acon from Git if you prefer not to commit it
 echo ".acon" >> .git/info/exclude
 ```
 
 ---
 
-### Step 2: Symlink Platform Dot-Folders (.claude, .cursor, .agents)
+### Step 2: Configure Platform Folders (.claude, .cursor, .agents)
+
+Choose the setup option that best fits your target project:
+
+#### Option A: If `.claude/`, `.cursor/`, or `.agents/` DO NOT exist yet
+Create the directories and symlink `skills` and `rules` directly to `.acon`:
+
 ```bash
-# Create platform tool directories
 mkdir -p .claude .cursor .agents
 
-# Symlink skills and rules to .acon
 ln -sf ../.acon/skills .claude/skills && ln -sf ../.acon/rules .claude/rules
 ln -sf ../.acon/skills .cursor/skills && ln -sf ../.acon/rules .cursor/rules
 ln -sf ../.acon/skills .agents/skills && ln -sf ../.acon/rules .agents/rules
-
-# Exclude platform folders from Git
-echo ".claude" >> .git/info/exclude
-echo ".cursor" >> .git/info/exclude
-echo ".agents" >> .git/info/exclude
 ```
+
+#### Option B: If `.claude/`, `.cursor/`, or `.agents/` ALREADY exist in your project
+Do not overwrite their folder. Either symlink or copy individual skills into their existing folder:
+
+```bash
+# Example: Symlink specific skills into existing .claude/skills/
+ln -sf /path/to/target-project/.acon/skills/laravel-projects .claude/skills/laravel-projects
+
+# OR copy skill files directly into their existing folder:
+cp -r .acon/skills/laravel-projects .claude/skills/
+```
+
+#### Option C: Pure `AGENTS.md` Reference (Zero Symlinking / Copying)
+Skip creating or modifying platform folders entirely! Simply append references to your existing `AGENTS.md` (see Step 3 below).
 
 ---
 
-### Step 3: Append Reference to `AGENTS.md` (Optional)
+### Step 3: Append Reference to `AGENTS.md`
 
-If the project already has an `AGENTS.md`, append this section to the bottom:
+If your project already has an `AGENTS.md`, append this section to the bottom:
 
 ```bash
 cat << 'EOF' >> AGENTS.md
@@ -101,6 +122,7 @@ EOF
 
 You can activate any specific skill on demand simply by telling your AI agent in chat:
 
+> *"Activate `.acon/skills/multi-agent-orchestration/SKILL.md` for this task."*  
 > *"Activate `.acon/skills/laravel-projects/SKILL.md` for this task."*  
 > *"Use `.acon/skills/security-audit/SKILL.md` to perform a code review."*
 
