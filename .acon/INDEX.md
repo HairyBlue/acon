@@ -18,6 +18,7 @@ Use this section to quickly identify which skill or rule resolves your immediate
 | **N+1 query performance bottleneck** | Lazy loading Eloquent relationships in loops | [`.acon/rules/laravel-projects/data-eloquent-relationships.md`](rules/laravel-projects/data-eloquent-relationships.md) |
 | **Filament v5 Resource schema unorganized** | Ad-hoc form inputs or missing table column definitions | [`.acon/rules/laravel-projects/filament-resource-standards.md`](rules/laravel-projects/filament-resource-standards.md) |
 | **Git commit message unformatted or unapproved** | Missing Conventional Commit format or direct main commit | [`.acon/rules/git-conventional-commits.md`](rules/git-conventional-commits.md), [`.acon/skills/conventional-commits/SKILL.md`](skills/conventional-commits/SKILL.md) |
+| **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.acon/skills/daily-progress-report/SKILL.md`](skills/daily-progress-report/SKILL.md) |
 | **Technical post-mortem or RFC writing** | Unstructured engineering docs or missing narrative arc | [`.acon/skills/technical-writing-for-engineers/SKILL.md`](skills/technical-writing-for-engineers/SKILL.md) |
 
 ---
@@ -32,6 +33,7 @@ Summary of all available skill suites and rule categories in `.acon/`:
 | **`skills/laravel-projects/`** | 2 Sub-skills + 118 Docs | Laravel 13.x, Filament 5.x, Eloquent, Livewire 3, Pest | [`.acon/skills/laravel-projects/SKILL.md`](skills/laravel-projects/SKILL.md) |
 | **`skills/security-audit/`** | 21 Modules | Static security code analysis across PHP, JS/Node, Python, C# | [`.acon/skills/security-audit/SKILL.md`](skills/security-audit/SKILL.md) |
 | **`skills/conventional-commits/`** | 1 Skill | Git Conventional Commits v1.0.0 header specification | [`.acon/skills/conventional-commits/SKILL.md`](skills/conventional-commits/SKILL.md) |
+| **`skills/daily-progress-report/`** | 1 Skill | Automated daily progress report generator & Notion publisher | [`.acon/skills/daily-progress-report/SKILL.md`](skills/daily-progress-report/SKILL.md) |
 | **`skills/technical-writing-for-engineers/`** | 1 Skill | Engineering post-mortems, RFCs, and architecture docs | [`.acon/skills/technical-writing-for-engineers/SKILL.md`](skills/technical-writing-for-engineers/SKILL.md) |
 | **`rules/` (Global)** | 3 Rules | Quality & simplicity, commit confirmation policy, multi-agent delegation | [`.acon/rules/multi-agent-delegation.md`](rules/multi-agent-delegation.md) |
 | **`rules/laravel-projects/`** | 4 Rules | Coding standards for Controllers, Actions, Eloquent, Filament | [`.acon/rules/laravel-projects/`](rules/laravel-projects/) |
@@ -65,3 +67,4 @@ The security auditing skill is divided into 7 specialized subcategories:
 | **Python / Django / FastAPI** | Skill: [security-audit](skills/security-audit/SKILL.md)<br>Security: [Python Deep Guide](skills/security-audit/languages/python.md), [Django/FastAPI Security](skills/security-audit/frameworks/django-fastapi.md) |
 | **C# / .NET Core / ASP.NET** | Skill: [security-audit](skills/security-audit/SKILL.md)<br>Security: [C# Deep Guide](skills/security-audit/languages/dotnet.md), [ASP.NET Security](skills/security-audit/frameworks/dotnet-asp.md) |
 | **Git / Source Control** | Skill: [conventional-commits](skills/conventional-commits/SKILL.md)<br>Rules: [git-conventional-commits](rules/git-conventional-commits.md) |
+| **Notion / Daily Reporting** | Skill: [daily-progress-report](skills/daily-progress-report/SKILL.md) |

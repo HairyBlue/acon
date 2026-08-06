@@ -26,6 +26,7 @@ Refer to the central **[`.acon/INDEX.md`](.acon/INDEX.md)** for a complete looku
   - **WooYun Intelligence**: [`wooyun/`](.acon/skills/security-audit/wooyun/) (Parameter priorities & bypass techniques).
   - **Reporting**: [`reporting/report-template.md`](.acon/skills/security-audit/reporting/report-template.md).
 - **[`.acon/skills/conventional-commits/SKILL.md`](.acon/skills/conventional-commits/SKILL.md)**: Conventional Commits (v1.0.0) Skill.
+- **[`.acon/skills/daily-progress-report/SKILL.md`](.acon/skills/daily-progress-report/SKILL.md)**: Automated daily progress report generator and Notion publisher based on Git commits & conversation history.
 - **[`.acon/skills/technical-writing-for-engineers/SKILL.md`](.acon/skills/technical-writing-for-engineers/SKILL.md)**: Guidelines for technical articles & engineering post-mortems.
 
 ---

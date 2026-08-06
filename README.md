@@ -32,6 +32,8 @@ acon/
         │   └── SKILL.md
         ├── conventional-commits/
         │   └── SKILL.md
+        ├── daily-progress-report/     # Automated Daily Summary & Notion Publishing Skill
+        │   └── SKILL.md
         ├── laravel-projects/
         │   ├── SKILL.md
         │   ├── commands.md
