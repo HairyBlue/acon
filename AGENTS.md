@@ -37,6 +37,7 @@ Refer to the central **[`.acon/INDEX.md`](.acon/INDEX.md)** for a complete looku
 - **[`.acon/rules/quality-simplicity.md`](.acon/rules/quality-simplicity.md)**: Zero dead code, minimal implementation, mandatory test verification.
 - **[`.acon/rules/git-conventional-commits.md`](.acon/rules/git-conventional-commits.md)**: Branching strategy, Conventional Commit formatting, and mandatory user confirmation before `git commit`.
 - **[`.acon/rules/multi-agent-delegation.md`](.acon/rules/multi-agent-delegation.md)**: Mandatory subagent delegation threshold (5+ files), non-overlapping file scoping, reactive notifications.
+- **[`.acon/rules/progress-report-exclusions.md`](.acon/rules/progress-report-exclusions.md)**: Mandatory exclusion of meta/AI conversations and MCP tool execution logs from all daily progress reports.
 
 ### Framework-Specific Rules (`.acon/rules/laravel-projects/`)
 - **[`api-thin-controllers.md`](.acon/rules/laravel-projects/api-thin-controllers.md)**: Thin controllers & FormRequest validation.

@@ -35,7 +35,7 @@ Summary of all available skill suites and rule categories in `.acon/`:
 | **`skills/conventional-commits/`** | 1 Skill | Git Conventional Commits v1.0.0 header specification | [`.acon/skills/conventional-commits/SKILL.md`](skills/conventional-commits/SKILL.md) |
 | **`skills/daily-progress-report/`** | 1 Skill | Automated daily progress report generator & Notion publisher | [`.acon/skills/daily-progress-report/SKILL.md`](skills/daily-progress-report/SKILL.md) |
 | **`skills/technical-writing-for-engineers/`** | 1 Skill | Engineering post-mortems, RFCs, and architecture docs | [`.acon/skills/technical-writing-for-engineers/SKILL.md`](skills/technical-writing-for-engineers/SKILL.md) |
-| **`rules/` (Global)** | 3 Rules | Quality & simplicity, commit confirmation policy, multi-agent delegation | [`.acon/rules/multi-agent-delegation.md`](rules/multi-agent-delegation.md) |
+| **`rules/` (Global)** | 4 Rules | Quality & simplicity, commit confirmation policy, multi-agent delegation, report exclusions | [`.acon/rules/progress-report-exclusions.md`](rules/progress-report-exclusions.md) |
 | **`rules/laravel-projects/`** | 4 Rules | Coding standards for Controllers, Actions, Eloquent, Filament | [`.acon/rules/laravel-projects/`](rules/laravel-projects/) |
 
 ---
