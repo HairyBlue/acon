@@ -16,5 +16,5 @@ Write simple, maintainable code. Never over-engineer solutions, and never declar
 ## Quality Rules:
 - **No Leftover Debugging**: Remove all `dd()`, `dump()`, `ray()`, `var_dump()`, and `console.log()` statements before finalizing code.
 - **Zero Dead Code**: Delete unused imports, commented-out logic blocks, and orphan helper functions.
-- **Mandatory Test Verification**: Run Pest / PHPUnit tests (`./vendor/bin/pest` or `php artisan test`) after writing or refactoring code.
-- **Strict Typing**: Add `declare(strict_types=1);` to all newly created PHP files.
+- **Mandatory Test Verification**: Run relevant automated test suites (e.g., Pest, PHPUnit, Vitest, Pytest) after writing or refactoring code. 100% green pass rate required.
+- **Strict Language Typing**: Enforce language-appropriate strict typing (e.g., `declare(strict_types=1);` in PHP, strict mode in TypeScript, type hints in Python).

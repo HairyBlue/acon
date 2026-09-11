@@ -12,4 +12,4 @@ Run typechecking regularly, single test files regularly, and the full test suite
 
 Once done, use /code-review to review the work.
 
-Commit your work to the current branch.
+Present a concise diff and test summary to the Control Plane. Never commit directly; all git commits require explicit Captain authorization and are executed via a dedicated Git Ops worker.

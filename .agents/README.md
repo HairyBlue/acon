@@ -1,24 +1,37 @@
 # Centralized Agent Resources
 
-This directory contains repository-wide rules, skills, commands, and knowledge bases for AI agents:
+This directory contains repository-wide rules, skills, and the lookup index for AI agents:
 
-- **[INDEX.md](INDEX.md)**: Comprehensive lookup matrix for developer symptoms, tasks, and tech stacks.
-- **[commands.md](commands.md)**: Maintenance commands.
-- **[knowledge-base.md](knowledge-base.md)**: Architecture and agent design principles.
-- **[rules/](rules/)**: Categorized agent rules:
-  - **Global**: `quality-simplicity.md`, `git-conventional-commits.md`, `multi-agent-delegation.md`, `progress-report-exclusions.md`
-  - **[`laravel-projects/`](rules/laravel-projects/)**: `api-thin-controllers.md`, `architecture-action-pattern.md`, `data-eloquent-relationships.md`, `filament-resource-standards.md`
-- **[skills/](skills/)**:
-  - **`infer-conventions/`**: Repository convention analysis.
-  - **`laravel-best-practices/`**: Laravel architecture, queries, caching, queues, events.
-  - **`laravel-boost/`**: Laravel Boost MCP and search-docs integration.
-  - **`laravel-projects/`**: Laravel 13.x & Filament 5.x offline documentation.
-  - **`inertia-vue-development/`**: Inertia v3 + Vue 3 client-side development.
-  - **`tailwindcss-development/`**: Tailwind CSS styling.
-  - **`wayfinder-development/`**: Laravel Wayfinder TypeScript route bindings.
-  - **`testing-best-practices/`**: Pest and PHPUnit testing standards.
-  - **`multi-agent-orchestration/`**: Parallel subagent task delegation.
-  - **`security-audit/`**: Static code security analysis suite (PHP, JS, Python, C#).
-  - **`conventional-commits/`**: Conventional Commits v1.0.0.
-  - **`daily-progress-report/`**: Daily progress report & Notion publisher.
-  - **`technical-writing-for-engineers/`**: Engineering post-mortems and RFCs.
+- **[INDEX.md](INDEX.md)**: Comprehensive lookup matrix mapping developer symptoms, tasks, and tech stacks to specialist skills.
+- **[rules/](rules/)**: Repository and agent operational rules:
+  - [`agent-control-plane.md`](rules/agent-control-plane.md): Enforceable multi-agent delegation thresholds, boundary isolation, and Captain authority gates.
+  - [`git-conventional-commits.md`](rules/git-conventional-commits.md): Conventional Commits v1.0.0 enforcement.
+  - [`progress-report-exclusions.md`](rules/progress-report-exclusions.md): Rules for daily progress report exclusions.
+  - [`quality-simplicity.md`](rules/quality-simplicity.md): Code quality and simplicity guidelines.
+- **[skills/](skills/)**: 113 curated skills organized across 6 specialized domains:
+  - **[`agent-control-plane/`](skills/agent-control-plane/SKILL.md)**: Firstmate-inspired multi-agent orchestration, specialist dispatch, and fleet bearings status.
+  - **[`design/`](skills/design/README.md)** (68 skills): Master design orchestrator, craft engineering (`interface-design`, anti-slop, hierarchy), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.).
+  - **[`engineering/`](skills/engineering/README.md)** (18 skills): Master orchestrator, TDD, code review, systematic bug diagnosis, domain modeling, codebase design, refactoring, API design, zero-downtime migrations, and merge conflicts.
+  - **[`frameworks/`](skills/frameworks/README.md)** (8 skills): Master orchestrator, Laravel 13.x, Filament 5.x, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, and Pest testing.
+  - **[`productivity/`](skills/productivity/README.md)** (12 skills): Master orchestrator, 9-dimension intent extraction (`prompt-master`), anti-overengineering (`ponytail`), plan interrogation (`grilling`, `grill-me`), context compaction (`handoff`), interactive coaching, RFC authoring, and progress reporting.
+  - **[`security-devops/`](skills/security-devops/README.md)** (6 skills): Master orchestrator, static security audits (50+ vulnerabilities), git guardrails, git worktrees, shell scripting, conventional commits, and pre-commit hooks.
+
+---
+
+## 📚 References & Prior Art
+
+ACON builds upon and draws architectural inspiration from pioneering patterns in the AI agent and developer tooling ecosystem:
+
+- **[Firstmate](https://github.com/kunchenguid/firstmate)**: Architectural standard for the Agent Control Plane (*"Talk to one agent. Ship with a crew."*), First Mate liaison model, Ship vs. Scout task shaping, non-overlapping file boundary isolation, and Fleet Bearings status digests.
+- **[nidhinjs / prompt-master](https://github.com/nidhinjs/prompt-master)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefing templates.
+- **[Dammyjay93 / interface-design](https://github.com/Dammyjay93/interface-design)**: Craft-first interface design engineering, anti-slop rules, subtle surface elevation, and persistent design memory.
+- **[bergside / awesome-design-skills](https://github.com/bergside/awesome-design-skills)**: Curated registry of 67 design system skill presets and token specifications.
+- **[Matt Pocock's Skills](https://github.com/mattpocock/skills)**: Modular agent skill conventions, disciplined engineering workflows, specification synthesis, and reproducible agent interactions.
+- **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Structural pattern for `.claude`, `.cursor`, and `.agents` symlinks, centralized rules, and cross-IDE agent tooling configuration.
+- **[3stoneBrother / code-audit](https://github.com/3stoneBrother/code-audit)**: Static code security analysis methodology, vulnerability checklists (PHP, JS, Python, C#), taint tracking, and verification techniques.
+- **[marcelorodrigo / agent-skills](https://github.com/marcelorodrigo/agent-skills)**: Curated agent skills ecosystem, engineering workflows, and prompt architecture.
+- **[dietrichgebert / ponytail](https://github.com/dietrichgebert/ponytail)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), and code-level anti-overengineering reviews.
+
+> **Heartfelt Acknowledgement:** Immense gratitude to the countless open-source developers, researchers, and community builders whose gists, discussions, and experiments have quietly advanced modern agentic conventions and developer tooling. Even where not cited individually by name, your work and shared knowledge form the collective bedrock of this project. Thank you!
+
+

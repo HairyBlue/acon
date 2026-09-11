@@ -14,8 +14,9 @@ tags: git, commits, branching, workflow
 Enforce clean branch naming, mandatory user confirmation before committing, and Conventional Commits v1.0.0 for all code changes.
 
 ## Git Execution & Commit Policy:
-- **Mandatory User Confirmation**: Agents must **NEVER** execute `git commit` or `git push` directly without asking for explicit user approval first.
-- Always stage changes (`git add`) or present the proposed commit message to the user, and wait for explicit permission before creating a git commit.
+- **Mandatory User Confirmation**: Agents must **NEVER** execute `git commit` or `git push` directly without asking for explicit Captain approval first.
+- **Worker-Only Git Execution**: Once approved, git commits and pushes must NEVER be executed directly in the Control Plane command thread. They MUST be delegated to a dedicated `Git Ops & Release Specialist` subagent via `invoke_subagent` to prevent locking the main thread and queueing incoming messages.
+- Always stage changes (`git add`) or present the proposed commit message and diff to the user, and wait for explicit permission before executing.
 
 ## Branching Conventions:
 - Do not commit directly to `main` or `master` unless explicitly instructed by the user.

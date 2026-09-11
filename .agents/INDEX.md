@@ -1,6 +1,6 @@
-# ACON Index — Skill, Rule & Memory File Lookup Matrix
+# ACON Index — Skill & Rule Lookup Matrix
 
-This index maps developer symptoms, task goals, technology stacks, and engineering workflows to the exact skill or rule in `.agents/` and template memory files in `memory-files/`.
+This index maps developer symptoms, task goals, technology stacks, and engineering workflows to the exact skill or rule in `.agents/` and the root `AGENTS.md` Control Plane constitution.
 
 ---
 
@@ -8,12 +8,16 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
-| **New Project Bootstrap / Agent Setup** | Need pre-configured `AGENTS.md` for a project stack | [`memory-files/`](../memory-files/) (Laravel, Node/Express, FastAPI, .NET, Fullstack) |
-| **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
+| **Agent Orchestration & Control Plane** | Multi-agent coordination, specialist dispatch, Ship vs. Scout, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/skills/agent-control-plane/SKILL.md`](skills/agent-control-plane/SKILL.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
+| **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grilling/SKILL.md`](skills/productivity/grilling/SKILL.md), [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
 | **Grill plan while generating ADRs & domain docs** | Need to sharpen domain terms while interrogating a design | [`.agents/skills/engineering/grill-with-docs/SKILL.md`](skills/engineering/grill-with-docs/SKILL.md), [`.agents/skills/engineering/domain-modeling/SKILL.md`](skills/engineering/domain-modeling/SKILL.md) |
 | **Turn conversation into a formal spec** | Architecture settled, need an actionable specification | [`.agents/skills/engineering/to-spec/SKILL.md`](skills/engineering/to-spec/SKILL.md) |
+| **API & RESTful contract design** | Resource modeling, RFC 7807 problem details, idempotency keys, cursor pagination | [`.agents/skills/engineering/api-design/SKILL.md`](skills/engineering/api-design/SKILL.md) |
+| **Prompt engineering & agent briefing** | Brain dump to clean task spec, 9-dimension extraction, model calibration | [`.agents/skills/productivity/prompt-master/SKILL.md`](skills/productivity/prompt-master/SKILL.md) |
 | **Break plan into tracer-bullet tickets** | Large task needing modular tickets with blocking dependencies | [`.agents/skills/engineering/to-tickets/SKILL.md`](skills/engineering/to-tickets/SKILL.md) |
 | **Execute spec with TDD and code review** | Building feature from spec/tickets via red-green loop | [`.agents/skills/engineering/implement/SKILL.md`](skills/engineering/implement/SKILL.md), [`.agents/skills/engineering/tdd/SKILL.md`](skills/engineering/tdd/SKILL.md) |
+| **Refactoring & code smell cleanup** | Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, strangler fig | [`.agents/skills/engineering/refactoring/SKILL.md`](skills/engineering/refactoring/SKILL.md) |
+| **Zero-downtime database migrations** | 5-phase Expand/Contract, concurrent indexing, lock timeouts, batched backfills | [`.agents/skills/engineering/zero-downtime-migrations/SKILL.md`](skills/engineering/zero-downtime-migrations/SKILL.md) |
 | **Rigorous code review (Standards + Spec)** | Two-axis diff review against coding standards and issue specs | [`.agents/skills/engineering/code-review/SKILL.md`](skills/engineering/code-review/SKILL.md) |
 | **Deep module & clean architecture design** | Designing interfaces with small surfaces and hidden complexity | [`.agents/skills/engineering/codebase-design/SKILL.md`](skills/engineering/codebase-design/SKILL.md), [`.agents/skills/engineering/improve-codebase-architecture/SKILL.md`](skills/engineering/improve-codebase-architecture/SKILL.md) |
 | **Enforce deep modules in TypeScript** | Setting up dependency-cruiser boundary rules | [`.agents/skills/engineering/setup-ts-deep-modules/SKILL.md`](skills/engineering/setup-ts-deep-modules/SKILL.md) |
@@ -29,7 +33,8 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Authoring skills & guidelines for AI** | Writing effective prompt files, skills, and AGENTS.md | [`.agents/skills/productivity/writing-for-agents/SKILL.md`](skills/productivity/writing-for-agents/SKILL.md) |
 | **Technical writing & post-mortems** | Authoring RFCs, architecture decisions, and post-mortems | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md) |
 | **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.agents/skills/productivity/daily-progress-report/SKILL.md`](skills/productivity/daily-progress-report/SKILL.md) |
-| **Batch multi-file edits / Subagents** | 5+ files to edit, parallel refactoring, multi-component work | [`.agents/skills/security-devops/multi-agent-orchestration/SKILL.md`](skills/security-devops/multi-agent-orchestration/SKILL.md), [`.agents/rules/multi-agent-delegation.md`](rules/multi-agent-delegation.md) |
+| **Anti-overengineering & YAGNI code razor** | Stop AI bloat, 7-Rung Decision Ladder, helper elimination, debt ledger | [`.agents/skills/productivity/ponytail/SKILL.md`](skills/productivity/ponytail/SKILL.md) |
+| **Multi-Agent Orchestration & Control Plane** | 5+ files, specialist subagents, Ship vs. Scout tasks, Bearings status | [`.agents/skills/agent-control-plane/SKILL.md`](skills/agent-control-plane/SKILL.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
 | **Discovering codebase conventions** | Analyzing patterns, naming conventions, and architecture | [`.agents/skills/frameworks/infer-conventions/SKILL.md`](skills/frameworks/infer-conventions/SKILL.md) |
 | **Laravel Boost MCP & Doc search** | Using `database-query`, `database-schema`, `search-docs`, `.ai/rules` | [`.agents/skills/frameworks/laravel-boost/SKILL.md`](skills/frameworks/laravel-boost/SKILL.md) |
 | **Laravel architecture & query tuning** | Advanced queries, caching, queues, events, db performance | [`.agents/skills/frameworks/laravel-best-practices/SKILL.md`](skills/frameworks/laravel-best-practices/SKILL.md) |
@@ -37,8 +42,14 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Inertia.js v3 + Vue 3 SPA development** | Page components, `<Link>`, `<Form>`, `useHttp`, deferred props | [`.agents/skills/frameworks/inertia-vue-development/SKILL.md`](skills/frameworks/inertia-vue-development/SKILL.md) |
 | **Tailwind CSS styling & UI components** | Layout structures, responsive design, utility classes | [`.agents/skills/frameworks/tailwindcss-development/SKILL.md`](skills/frameworks/tailwindcss-development/SKILL.md) |
 | **TypeScript route binding (Wayfinder)** | Type-safe Laravel routes in frontend `@/actions/` | [`.agents/skills/frameworks/wayfinder-development/SKILL.md`](skills/frameworks/wayfinder-development/SKILL.md) |
+| **Craft UI/UX design & intent routing** | Stop generic AI slop, enforce hierarchy, select from 67 styles | [`.agents/skills/design/SKILL.md`](skills/design/SKILL.md), [`.agents/skills/design/interface-design/SKILL.md`](skills/design/interface-design/SKILL.md) |
+| **Clean / Minimalist UI design** | Ample whitespace, 8pt grid, clear contrast, low clutter | [`.agents/skills/design/styles/clean/SKILL.md`](skills/design/styles/clean/SKILL.md), [`.agents/skills/design/styles/minimal/SKILL.md`](skills/design/styles/minimal/SKILL.md) |
+| **Slick / Modern SaaS UI design** | Linear/Vercel feel, dark elevation, Inter + Mono, subtle borders | [`.agents/skills/design/styles/sleek/SKILL.md`](skills/design/styles/sleek/SKILL.md), [`.agents/skills/design/styles/bento/SKILL.md`](skills/design/styles/bento/SKILL.md) |
+| **Audit or strip generic AI design slop** | Eliminate unmotivated purple gradients, flat hierarchy, monotone grid | [`.agents/skills/design/interface-design/commands/design-deslop.md`](skills/design/interface-design/commands/design-deslop.md), [`.agents/skills/design/interface-design/commands/design-review.md`](skills/design/interface-design/commands/design-review.md) |
 | **Static code security audit** | OWASP Top 10, WooYun parameter priorities, taint analysis | [`.agents/skills/security-devops/security-audit/SKILL.md`](skills/security-devops/security-audit/SKILL.md) |
 | **Git pre-commit hooks & guardrails** | Block destructive git commands or set up Husky/lint-staged | [`.agents/skills/security-devops/git-guardrails-claude-code/SKILL.md`](skills/security-devops/git-guardrails-claude-code/SKILL.md), [`.agents/skills/security-devops/setup-pre-commit/SKILL.md`](skills/security-devops/setup-pre-commit/SKILL.md) |
+| **Git worktrees & branch isolation** | Multi-agent worktree isolation topology, lifecycle, collision avoidance | [`.agents/skills/security-devops/git-worktrees/SKILL.md`](skills/security-devops/git-worktrees/SKILL.md) |
+| **Shell automation & bash scripts** | Strict modes (`set -euo pipefail`), cleanup traps, safe quoting, `getopts` | [`.agents/skills/security-devops/shell-scripting/SKILL.md`](skills/security-devops/shell-scripting/SKILL.md) |
 
 ---
 
@@ -46,9 +57,10 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 
 | Category / Directory | Count | Main Entry File |
 | :--- | :--- | :--- |
-| **[`memory-files/`](../memory-files/)** | 5 Templates | Ready-to-copy `AGENTS.md` memory files (Laravel, Node/Express, FastAPI, .NET, Fullstack) |
-| **[`skills/engineering/`](skills/engineering/)** | 15 Skills | Problem solving, architecture, TDD, debugging, code review, merge conflicts, ticket mapping |
-| **[`skills/productivity/`](skills/productivity/)** | 8 Skills | Interrogation (`grill-me`), handoffs, questionnaires, technical writing, coaching |
+| **[`skills/agent-control-plane/`](skills/agent-control-plane/)** | 1 Master Skill | Firstmate-inspired control plane, specialist subagent dispatch, Ship vs. Scout, Bearings status |
+| **[`skills/design/`](skills/design/)** | 68 Skills | Master design orchestrator, craft engineering (`interface-design`, anti-slop, hierarchy), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
+| **[`skills/engineering/`](skills/engineering/)** | 18 Skills | Problem solving, architecture, TDD, debugging, code review, merge conflicts, ticket mapping, refactoring, API design, zero-downtime migrations |
+| **[`skills/productivity/`](skills/productivity/)** | 12 Skills | Interrogation (`grilling`, `grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, questionnaires, coaching |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |
-| **[`skills/security-devops/`](skills/security-devops/)** | 5 Skills | Security audit (21 modules), multi-agent orchestration, git guardrails, conventional commits |
-| **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`quality-simplicity.md`, `git-conventional-commits.md`, `multi-agent-delegation.md`, `progress-report-exclusions.md`) |
+| **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
+| **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `quality-simplicity.md`, `git-conventional-commits.md`, `progress-report-exclusions.md`) |

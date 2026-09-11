@@ -16,6 +16,7 @@ This skill serves as the primary router and master guide for all core software e
 
 | Skill Name | Description & When to Activate | Child Path |
 | :--- | :--- | :--- |
+| **`api-design`** | RESTful modeling, RFC 7807 problem details, idempotency keys, keyset pagination, and HMAC webhook reliability. | [`api-design/SKILL.md`](api-design/SKILL.md) |
 | **`code-review`** | Two-axis diff review (Standards adherence + Spec conformance) via parallel subagents. | [`code-review/SKILL.md`](code-review/SKILL.md) |
 | **`codebase-design`** | Discipline and vocabulary for designing deep modules with narrow interfaces and clean seams. | [`codebase-design/SKILL.md`](codebase-design/SKILL.md) |
 | **`diagnosing-bugs`** | Systematic bug diagnosis loop: red-test creation $\rightarrow$ minimize $\rightarrow$ hypothesize $\rightarrow$ instrument $\rightarrow$ fix $\rightarrow$ regression-test. | [`diagnosing-bugs/SKILL.md`](diagnosing-bugs/SKILL.md) |
@@ -24,6 +25,7 @@ This skill serves as the primary router and master guide for all core software e
 | **`implement`** | Spec-driven implementation loop driving TDD at agreed seams and ending in code review. | [`implement/SKILL.md`](implement/SKILL.md) |
 | **`improve-codebase-architecture`** | Scans codebase for deepening opportunities and presents an actionable improvement report. | [`improve-codebase-architecture/SKILL.md`](improve-codebase-architecture/SKILL.md) |
 | **`prototype`** | Rapid throwaway HTML/UI prototypes to validate state and interaction design before production code. | [`prototype/SKILL.md`](prototype/SKILL.md) |
+| **`refactoring`** | Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, guard clauses, extract method, polymorphism, and strangler fig. | [`refactoring/SKILL.md`](refactoring/SKILL.md) |
 | **`research`** | Primary-source technical investigations captured as cited Markdown documents. | [`research/SKILL.md`](research/SKILL.md) |
 | **`resolving-merge-conflicts`** | Hunk-by-hunk conflict resolution tracing original commit intent. | [`resolving-merge-conflicts/SKILL.md`](resolving-merge-conflicts/SKILL.md) |
 | **`setup-ts-deep-modules`** | Enforces deep module boundaries in TypeScript with `dependency-cruiser`. | [`setup-ts-deep-modules/SKILL.md`](setup-ts-deep-modules/SKILL.md) |
@@ -31,15 +33,18 @@ This skill serves as the primary router and master guide for all core software e
 | **`to-spec`** | Synthesizes active architectural conversations into an actionable specification. | [`to-spec/SKILL.md`](to-spec/SKILL.md) |
 | **`to-tickets`** | Breaks any plan or spec into tracer-bullet tickets with explicit blocking edges. | [`to-tickets/SKILL.md`](to-tickets/SKILL.md) |
 | **`wizard`** | Generates an interactive CLI bash wizard for manual human tasks (cloud setup, secrets). | [`wizard/SKILL.md`](wizard/SKILL.md) |
+| **`zero-downtime-migrations`** | 5-phase Expand/Contract pattern, online index creation, lock timeouts, and batched non-locking backfills. | [`zero-downtime-migrations/SKILL.md`](zero-downtime-migrations/SKILL.md) |
 
 ---
 
 ## Workflow Guide
 
 ```
-Plan / Ideate ──> [grill-with-docs] / [domain-modeling]
+Plan / Ideate ──> [grill-with-docs] / [domain-modeling] / [api-design]
         │
         ├──> [to-spec] ──> [to-tickets]
         │
-        └──> [implement] ──> [tdd] ──> [code-review]
+        └──> [implement] ──> [tdd] ──> [refactoring] ──> [code-review]
+                                 │
+                                 └──> [zero-downtime-migrations]
 ```

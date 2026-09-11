@@ -1,8 +1,166 @@
-# ACON - Agent Collections & Memory Files
+# ACON — Agentic Conventions & Control Plane Network
 
-**ACON** is a centralized, plug-and-play repository of production-grade **`AGENTS.md` templates**, **AI agent skills**, **coding rules**, and **security auditing suites**.
+> **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*
 
-Skills are organized into four dedicated, bloat-free suites: **Engineering**, **Productivity**, **Frameworks**, and **Security & DevOps**.
+**ACON** is an autonomous multi-agent orchestration distro and skill network. It transforms your primary AI coding assistant into an **Agent Control Plane** (the *First Mate*), delegating complex implementation, audits, and spikes to specialized subagents (*Crewmates*) while serving you, the **Captain**.
+
+No external bash daemons or runtime terminal multiplexers required—ACON operates natively within AI agent harnesses using tool-level delegation (`invoke_subagent`, `manage_subagents`, `send_message`).
+
+---
+
+## 🏛️ Core Architecture: Bridge vs. Workshop
+
+ACON resolves the tension between project-level rules and multi-agent coordination by separating concerns into two distinct layers:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        THE COMMAND BRIDGE                               │
+│                         (ACON / AGENTS.md)                              │
+│  • One Captain, One Liaison                                             │
+│  • Task Shaping: SHIP (code/tests) vs. SCOUT (read-only spikes)         │
+│  • Mutually Exclusive File Scopes (Zero Write Collisions)               │
+│  • Zero-Token Reactive Waiting (No Busy-Polling Loops)                  │
+│  • On-Demand Fleet Bearings Status Reporting                            │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                    [Dispatches Specialist Subagents]
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        THE WORKSHOP MANUAL                              │
+│              (Target Repo AGENTS.md / CLAUDE.md)                        │
+│  • Local build, test, and lint commands                                 │
+│  • Framework architecture and directory conventions                     │
+│  • Team coding styles and language standards                            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **The Command Bridge (`AGENTS.md` / `agent-control-plane`)**: Governs *who commands, how work is partitioned, boundary safety, and status reporting*.
+2. **The Workshop Manual (Target Repo `AGENTS.md` / `CLAUDE.md`)**: Governs *local codebase rules*. Dispatched specialists automatically inspect and follow the target repo's local manual without polluting it.
+
+---
+
+## 🔄 The End-to-End Fleet Operating Workflow
+
+The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle:
+
+```mermaid
+flowchart TD
+    Captain["👨‍✈️ 1. Captain (The User)"] -->|"Issues goal / raw objective"| FirstMate["🧭 2. Control Plane (First Mate)"]
+    
+    subgraph Alignment ["Phase I: Front-Loaded Alignment"]
+        FirstMate -->|"9-dimension intent extraction"| PM1["prompt-master Intent Extraction"]
+        PM1 -->|"If forks or ambiguities exist"| Grill["grill-me (1–3 sharp questions)"]
+        Grill -->|"Quick alignment (~30 sec)"| Captain
+    end
+    
+    subgraph Shaping ["Phase II: Task Shaping & Briefing"]
+        Captain -.->|"Answers trade-offs"| Briefing["Task Decomposition"]
+        Briefing -->|"Calibrates airtight briefs (Template H / M)"| PM2["prompt-master Specialist Briefs"]
+        PM2 -->|"Partitions non-overlapping files (Ship vs Scout)"| Contracts["Task Contracts & Bounds"]
+    end
+    
+    subgraph Flight ["Phase III: Autonomous Crew Flight"]
+        Contracts -->|"invoke_subagent"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
+        Crew -->|"TDD, lint, compile, self-verify"| Crew
+        FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
+    end
+    
+    subgraph Synthesis ["Phase IV: Synthesis & Gatekeeping"]
+        Crew -->|"Finished deliverables & diffs"| ControlPlane["Control Plane Synthesis"]
+        ControlPlane -->|"Edits shared entry points & runs integration checks"| ControlPlane
+        ControlPlane -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
+        Bearings -->|"Captain approval for git commit / destructive ops"| Captain
+    end
+```
+
+1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to lock architecture.
+2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition (`to-spec` / `to-tickets`), strict `SHIP` vs. `SCOUT` task shaping, non-overlapping file boundaries, and calibrated prompt briefs.
+3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via `invoke_subagent`, zero-token reactive waiting (harness yields), and self-verifying automated test execution.
+4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Central file integration, anti-slop verification, the 4-section Fleet Bearings digest, and explicit Captain approval for git commits and destructive operations.
+
+---
+
+## 🚀 How to Utilize the Control Plane
+
+### Pattern 1: Central Command Hub (Firstmate Style — Recommended)
+Run your primary agent directly inside the **ACON** workspace. You can direct it to work on any local repository without adding extra files to that repository:
+
+```text
+Captain: "Inspect /home/mewho/projects/billing-app. Decompose the Stripe webhook refactor
+          into backend service and feature tests, and dispatch specialists."
+```
+
+* The Control Plane analyzes `/home/mewho/projects/billing-app`.
+* It spawns a `Backend Specialist` and a `Test Engineer` targeting only the specific billing directories.
+* The specialists read `/home/mewho/projects/billing-app/CLAUDE.md` to follow the project's local coding conventions and test runners.
+* The Control Plane synthesizes results, verifies integration, and briefs you.
+
+---
+
+### Pattern 2: Non-Invasive 3-Line Hook in Coworker Repos
+When collaborating directly inside a coworker's repository that already has its own `AGENTS.md` or `CLAUDE.md`, you don't need to rewrite their file. Simply append this 3-line delegation directive:
+
+```markdown
+## Multi-Agent Delegation
+When a task spans 5+ files or multiple domains, activate the `agent-control-plane` skill.
+The primary agent acts as the Control Plane and delegates to specialist subagents.
+```
+
+Your coworkers' coding standards, test commands, and lint rules remain untouched.
+
+---
+
+### Pattern 3: Global Personal Skill (Universal Availability)
+Install `agent-control-plane` into your personal global agent skills catalog so it is available in **every** repository on your machine:
+
+```bash
+# For Gemini / Antigravity CLI:
+mkdir -p ~/.gemini/config/skills/agent-control-plane
+cp -r /path/to/acon/.agents/skills/agent-control-plane/* ~/.gemini/config/skills/agent-control-plane/
+
+# For Claude Code CLI:
+mkdir -p ~/.claude/skills/agent-control-plane
+cp -r /path/to/acon/.agents/skills/agent-control-plane/* ~/.claude/skills/agent-control-plane/
+```
+
+Whenever you launch an agent in *any* directory, simply say:
+> *"Activate the agent-control-plane. Give me bearings and dispatch specialists to handle this issue."*
+
+---
+
+## ⚓ Fleet Status Protocol (The Bearings Digest)
+
+Whenever you ask:
+> *"What is the status?"*, *"Give me bearings"*, *"Where are we at?"*, or *"Recap"*
+
+The Control Plane renders the canonical **4-section Bearings digest**:
+
+```markdown
+### ⚓ Fleet Bearings Digest
+
+#### 1. Captain's Call
+*ONLY unsuppressed items needing the Captain's action now: decisions, blockers, PR approvals.*
+- **[Decision #1]**: Choose between Redis vs. Database cache locks for Stripe webhook idempotency.
+  - *Option A (Recommended):* Redis Cache Locks (`Cache::lock`) — atomic and high-throughput.
+  - *Option B:* Database transactions — higher latency but zero external dependencies.
+*(Empty-state: "Nothing needs your action right now.")*
+
+#### 2. Recently Landed
+*Bounded recent completions: verified code, merged PRs, or completed scout reports.*
+- **[Stripe Webhook Idempotency]** (`Ship`): Implemented `app/Services/Billing/WebhookHandler.php`, 8 Pest tests passing.
+*(Empty-state: "No recent completions are in the current baseline.")*
+
+#### 3. Underway
+*Live work progressing on its own: one line of current state per active specialist.*
+- **[Test Engineer]** (`Ship`): Authoring concurrency tests in `tests/Feature/Billing/` [In flight]
+*(Empty-state: "Nothing is underway.")*
+
+#### 4. Charted Next
+*Queued work waiting on active dependencies.*
+- **[Frontend UI Notification]**: Blocked on backend webhook payload finalization.
+*(Empty-state: "Nothing is queued.")*
+```
 
 ---
 
@@ -10,132 +168,91 @@ Skills are organized into four dedicated, bloat-free suites: **Engineering**, **
 
 ```
 acon/
-├── README.md                          # Human-facing guide and catalog
-├── memory-files/                      # Ready-to-copy AGENTS.md templates per stack
-│   ├── laravel-project/AGENTS.md      # Laravel (Foundation, PHP, Eloquent, Inertia/Vue, Wayfinder, Pint, Pest)
-│   ├── node-express-project/AGENTS.md # Node.js, Express, TypeScript, Zod, Vitest
-│   ├── python-fastapi-project/AGENTS.md # Python 3.11+, FastAPI, Pydantic v2, Pytest, Ruff
-│   ├── dotnet-asp-project/AGENTS.md   # C# / .NET 8/9, ASP.NET Core, EF Core, xUnit
-│   └── generic-fullstack/AGENTS.md    # Universal fullstack template (Quality, Commits, Delegation)
-├── .agents/                           # Central physical source of truth
-│   ├── INDEX.md                       # Comprehensive symptom, stack, and skill matrix
-│   ├── README.md
-│   ├── commands.md
-│   ├── knowledge-base.md
-│   ├── rules/                         # Global Cross-Project Rules
-│   │   ├── quality-simplicity.md
-│   │   ├── git-conventional-commits.md
-│   │   ├── multi-agent-delegation.md
-│   │   └── progress-report-exclusions.md
-│   └── skills/                        # 36 Curated Modular Agent Skills
-│       ├── engineering/               # 15 Skills (tdd, code-review, diagnosing-bugs, domain-modeling, to-spec...)
-│       ├── productivity/              # 8 Skills (grill-me, handoff, teach, to-questionnaire, writing-for-agents...)
-│       ├── frameworks/                # 8 Skills (laravel-best-practices, laravel-boost, inertia-vue, wayfinder...)
-│       └── security-devops/           # 5 Skills (security-audit, multi-agent-orchestration, git-guardrails...)
-├── .claude/                           # Claude Code CLI (symlinked to individual skills & rules)
-└── .cursor/                           # Cursor IDE (symlinked to individual skills & rules)
+├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
+├── CLAUDE.md                                     # Symlink -> AGENTS.md
+├── README.md                                     # Human-facing guide and operational instructions
+├── .claude/                                      # Claude Code IDE integration
+│   ├── INDEX.md -> ../.agents/INDEX.md
+│   ├── README.md -> ../.agents/README.md
+│   ├── rules -> ../.agents/rules
+│   └── skills/                                   # Domain symlinks -> ../../.agents/skills/*
+├── .cursor/                                      # Cursor IDE integration
+│   ├── INDEX.md -> ../.agents/INDEX.md
+│   ├── README.md -> ../.agents/README.md
+│   ├── rules -> ../.agents/rules
+│   └── skills/                                   # Domain symlinks -> ../../.agents/skills/*
+└── .agents/                                      # Central Physical Source of Truth
+    ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
+    ├── README.md                                 # Internal catalog
+    ├── rules/                                    # Non-Negotiable Agent Rules
+    │   ├── agent-control-plane.md                # Delegation, Bearings, and task contracts
+    │   ├── quality-simplicity.md                 # Code simplicity and dead code elimination
+    │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
+    │   └── progress-report-exclusions.md         # Clean diff reporting standards
+    └── skills/                                   # 113 Curated Modular Agent Skills
+        ├── agent-control-plane/                  # Firstmate-inspired control plane & bearings
+        ├── design/                               # 68 Skills (interface-design craft & 67 style presets)
+        ├── engineering/                          # 18 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
+        ├── frameworks/                           # 8 Skills (laravel-best-practices, inertia-vue, wayfinder...)
+        ├── productivity/                         # 12 Skills (prompt-master, ponytail, grilling, grill-me, handoff...)
+        └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
 
 ---
 
-## 🚀 How to Use ACON in Your Projects
+## 🛠️ Curated Specialist Skills (`.agents/skills/`)
 
-### Workflow 1: Bootstrap a New Project in Seconds
+When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-Copy the appropriate `AGENTS.md` memory template into your target project:
+### ⚓ 1. Agent Control Plane (`.agents/skills/agent-control-plane/`)
+- **`agent-control-plane`**: Specialist subagent dispatch, Ship vs. Scout task shaping, non-overlapping boundary isolation, zero-token reactive waiting, stuck-worker recovery ladder, and 4-section Bearings status reporting.
 
-```bash
-cd /path/to/my-target-project
+### 🎨 2. Design & UI/UX (`.agents/skills/design/` - 68 Skills)
+- **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
+- **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
+  - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/SKILL.md), [`styles/minimal`](.agents/skills/design/styles/minimal/SKILL.md), [`styles/spacious`](.agents/skills/design/styles/spacious/SKILL.md) (ample whitespace, 8pt grid, low cognitive load).
+  - **Slick & Modern Tech**: [`styles/sleek`](.agents/skills/design/styles/sleek/SKILL.md), [`styles/bento`](.agents/skills/design/styles/bento/SKILL.md), [`styles/shadcn`](.agents/skills/design/styles/shadcn/SKILL.md), [`styles/modern`](.agents/skills/design/styles/modern/SKILL.md) (Inter + JetBrains Mono, dark elevation, subtle borders).
+  - **Enterprise & Dense**: [`styles/ant`](.agents/skills/design/styles/ant/SKILL.md), [`styles/corporate`](.agents/skills/design/styles/corporate/SKILL.md), [`styles/enterprise`](.agents/skills/design/styles/enterprise/SKILL.md), [`styles/matrix`](.agents/skills/design/styles/matrix/SKILL.md) (compact tables, tabular numerals).
+  - **Bold & Expressive**: [`styles/neobrutalism`](.agents/skills/design/styles/neobrutalism/SKILL.md), [`styles/bold`](.agents/skills/design/styles/bold/SKILL.md), [`styles/neon`](.agents/skills/design/styles/neon/SKILL.md) (hard shadows, black outlines, saturated contrast).
+  - **Warm & Editorial**: [`styles/editorial`](.agents/skills/design/styles/editorial/SKILL.md), [`styles/claude`](.agents/skills/design/styles/claude/SKILL.md), [`styles/paper`](.agents/skills/design/styles/paper/SKILL.md) (serif headlines, parchment warmth, natural earth tones).
+  - **Playful & Retro**: [`styles/claymorphism`](.agents/skills/design/styles/claymorphism/SKILL.md), [`styles/glassmorphism`](.agents/skills/design/styles/glassmorphism/SKILL.md), [`styles/retro`](.agents/skills/design/styles/retro/SKILL.md) (3D pill depth, frosted glass, 8-bit nostalgia).
 
-# Example 1: Setting up a Laravel project
-cp /path/to/acon/memory-files/laravel-project/AGENTS.md ./AGENTS.md
-
-# Example 2: Setting up a Node / Express project
-cp /path/to/acon/memory-files/node-express-project/AGENTS.md ./AGENTS.md
-
-# Example 3: Setting up a Python / FastAPI project
-cp /path/to/acon/memory-files/python-fastapi-project/AGENTS.md ./AGENTS.md
-```
-
----
-
-### Workflow 2: Selectively Import Skill Suites
-
-Because skills are categorized into subdirectories, you can import only the specific suites your project needs:
-
-```bash
-cd /path/to/my-target-project
-mkdir -p .agents/skills
-
-# Copy only Laravel & frontend framework skills:
-cp -r /path/to/acon/.agents/skills/frameworks/* .agents/skills/
-
-# Copy engineering problem-solving skills (TDD, code-review, diagnosing-bugs):
-cp -r /path/to/acon/.agents/skills/engineering/* .agents/skills/
-
-# Copy security & git guardrail skills:
-cp -r /path/to/acon/.agents/skills/security-devops/* .agents/skills/
-```
-
----
-
-### Workflow 3: Full Project Symlink
-
-```bash
-cd /path/to/my-target-project
-
-# Symlink whole .agents directory
-ln -sf /path/to/acon/.agents .agents
-
-# Symlink for Claude Code or Cursor IDE
-mkdir -p .claude .cursor
-ln -sf /path/to/acon/.claude/skills .claude/skills && ln -sf /path/to/acon/.agents/rules .claude/rules
-ln -sf /path/to/acon/.cursor/skills .cursor/skills && ln -sf /path/to/acon/.agents/rules .cursor/rules
-```
-
----
-
-## 🛠️ Curated Skills Directory (`.agents/skills/`)
-
-### ⚙️ 1. Engineering (`.agents/skills/engineering/` - 15 Skills)
+### ⚙️ 3. Engineering (`.agents/skills/engineering/` - 18 Skills)
+- **`refactoring`**: Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, guard clauses, extract method, polymorphism, and strangler fig.
+- **`api-design`**: RESTful modeling, RFC 7807 problem details, idempotency keys, keyset/cursor pagination, and HMAC webhooks.
+- **`zero-downtime-migrations`**: 5-phase Expand/Contract pattern, online index creation, lock timeouts, and batched non-locking backfills.
+- **`tdd`** & **`implement`**: Strict red-green-refactor loop and spec-driven implementation.
 - **`code-review`**: Parallel two-axis review (Standards adherence + Spec conformance).
-- **`codebase-design`**: Deep module design principles (small interfaces, clean seams).
-- **`diagnosing-bugs`**: Systematic red-test feedback loop, hypothesis testing, and regression verification.
+- **`diagnosing-bugs`**: Systematic red-test feedback loop and regression verification.
 - **`domain-modeling`**: Ubiquitous language definition, scenario testing, and ADR tracking.
-- **`grill-with-docs`**: Grilling sessions that simultaneously build domain models and ADRs.
-- **`implement`**: Spec-driven implementation loop driving TDD and code review.
-- **`improve-codebase-architecture`**: Scans codebase for deepening opportunities.
-- **`prototype`**: Rapid throwaway HTML/UI prototypes to validate state and interaction design.
-- **`research`**: Primary-source technical investigations captured as cited Markdown documents.
+- **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
+- **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
 - **`resolving-merge-conflicts`**: Hunk-by-hunk conflict resolution tracing original commit intent.
-- **`tdd`**: Strict red-green-refactor loop.
-- **`to-spec` & `to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
-- **`setup-ts-deep-modules`**: Enforces deep module boundaries in TypeScript with dependency-cruiser.
-- **`wizard`**: Interactive CLI wizard generation for manual cloud and human setup tasks.
 
-### 🧠 2. Productivity (`.agents/skills/productivity/` - 8 Skills)
-- **`grill-me`**: Relentless design & plan interrogation to eliminate edge-case blind spots.
+### 🧠 4. Productivity (`.agents/skills/productivity/` - 12 Skills)
+- **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
+- **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
+- **`grilling`**: Core design tree interview engine in rounds along the decision frontier.
+- **`grill-me`**: Relentless design & plan interrogation trigger (alias invoking `grilling`).
 - **`handoff`**: Compacts conversation context into a structured handoff document.
 - **`teach`**: Multi-session interactive technical coaching with glossaries and learning records.
 - **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
-- **`wait-what`**: Re-explains unclear concepts in plain English with missing context.
-- **`writing-for-agents`**: Guidelines for authoring skills, rules, and prompt memory files.
-- **`daily-progress-report`**: Work summary and Notion publishing via MCP.
+- **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.
 - **`technical-writing-for-engineers`**: Technical RFCs, architecture decisions, and post-mortems.
+- **`daily-progress-report`**: Work summary and Notion publishing via MCP.
 
-### 🌐 3. Frameworks (`.agents/skills/frameworks/` - 8 Skills)
+### 🌐 5. Frameworks (`.agents/skills/frameworks/` - 8 Skills)
 - **`laravel-best-practices`**: 19 comprehensive rules covering queries, caching, queues, events, db performance.
 - **`laravel-boost`**: Modular guidance for Laravel Boost MCP tools and `.ai/rules` persistence.
-- **`laravel-projects`**: Complete offline documentation for Laravel 13.x and Filament 5.x.
 - **`inertia-vue-development`**: Inertia v3 + Vue 3 client-side SPA patterns, forms, hooks, deferred props.
 - **`tailwindcss-development`**: Tailwind CSS layout structures and responsive styling.
 - **`wayfinder-development`**: Laravel Wayfinder TypeScript route binding generator.
 - **`testing-best-practices`**: Pest and PHPUnit testing standards, isolation, assertions.
-- **`infer-conventions`**: Repository convention analysis and discovery checklist.
 
-### 🔒 4. Security & DevOps (`.agents/skills/security-devops/` - 5 Skills)
+### 🔒 6. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
 - **`security-audit`**: Static security analysis (50+ vulnerability types across PHP, JS, Python, C#).
-- **`multi-agent-orchestration`**: Subagent task delegation for 5+ file tasks.
+- **`shell-scripting`**: Production bash scripting, `set -euo pipefail`, cleanup traps, safe quoting, and option parsing.
+- **`git-worktrees`**: Multi-agent git worktree isolation topology, lifecycle management, and branch collision avoidance.
 - **`conventional-commits`**: Conventional Commits v1.0.0 specification enforcement.
 - **`git-guardrails-claude-code`**: PreToolUse hooks blocking destructive git operations.
 - **`setup-pre-commit`**: Husky + lint-staged + Prettier / typecheck pre-commit hooks.
@@ -144,4 +261,23 @@ ln -sf /path/to/acon/.cursor/skills .cursor/skills && ln -sf /path/to/acon/.agen
 
 ## 🔍 Central Lookup Matrix
 
-Refer to **[`.agents/INDEX.md`](.agents/INDEX.md)** for a fast symptom, stack, and rule lookup matrix.
+Refer to **[`.agents/INDEX.md`](.agents/INDEX.md)** for a fast symptom, task, and skill lookup matrix.
+
+---
+
+## 📚 References & Prior Art
+
+ACON builds upon and draws architectural inspiration from pioneering patterns in the AI agent and developer tooling ecosystem:
+
+- **[Firstmate](https://github.com/kunchenguid/firstmate)**: Architectural standard for the Agent Control Plane (*"Talk to one agent. Ship with a crew."*), First Mate liaison model, Ship vs. Scout task shaping, non-overlapping file boundary isolation, and Fleet Bearings status digests.
+- **[nidhinjs / prompt-master](https://github.com/nidhinjs/prompt-master)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefing templates.
+- **[Dammyjay93 / interface-design](https://github.com/Dammyjay93/interface-design)**: Craft-first interface design engineering, anti-slop rules, subtle surface elevation, and persistent design memory.
+- **[bergside / awesome-design-skills](https://github.com/bergside/awesome-design-skills)**: Curated registry of 67 design system skill presets and token specifications.
+- **[Matt Pocock's Skills](https://github.com/mattpocock/skills)**: Modular agent skill conventions, disciplined engineering workflows, specification synthesis, and reproducible agent interactions.
+- **[Cal.diy Repository](https://github.com/calcom/cal.diy/tree/main)**: Structural pattern for `.claude`, `.cursor`, and `.agents` symlinks, centralized rules, and cross-IDE agent tooling configuration.
+- **[3stoneBrother / code-audit](https://github.com/3stoneBrother/code-audit)**: Static code security analysis methodology, vulnerability checklists (PHP, JS, Python, C#), taint tracking, and verification techniques.
+- **[marcelorodrigo / agent-skills](https://github.com/marcelorodrigo/agent-skills)**: Curated agent skills ecosystem, engineering workflows, and prompt architecture.
+- **[dietrichgebert / ponytail](https://github.com/dietrichgebert/ponytail)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), and code-level anti-overengineering reviews.
+
+> **Heartfelt Acknowledgement:** Immense gratitude to the countless open-source developers, researchers, and community builders whose gists, discussions, and experiments have quietly advanced modern agentic conventions and developer tooling. Even where not cited individually by name, your work and shared knowledge form the collective bedrock of this project. Thank you!
+
