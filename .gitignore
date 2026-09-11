@@ -1,0 +1,21 @@
+# ACON (Agentic Conventions & Orchestration Network) Git Ignore
+
+# Ephemeral bridge files generated during task dispatch
+.agents/bridge/*
+!.agents/bridge/.gitkeep
+!.agents/bridge/.gitignore
+
+# Operating System & Editor Artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/

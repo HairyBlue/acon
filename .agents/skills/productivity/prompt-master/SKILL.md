@@ -78,7 +78,7 @@ Model names, defaults, controls, and availability change quickly. When the user 
 
 **Claude (claude.ai, Claude API, Claude 5 / current Claude models)**
 
-Do not assume one universal Claude default. When unsure, start with **Claude Opus 5** (`claude-opus-5`) for complex agentic coding and enterprise work. Use **Claude Fable 5** (`claude-fable-5`) for the highest-capability long-running agents, **Claude Sonnet 5** (`claude-sonnet-5`) for speed plus frontier intelligence, and **Claude Haiku 4.5** for fast, economical workloads. Ask which model only when the distinction changes the prompt.
+Do not assume one universal Claude default. When unsure, start with **Claude Opus** for complex agentic coding and enterprise work. Use **Claude Fable** for the highest-capability long-running agents, **Claude Sonnet** for speed plus frontier intelligence, and **Claude Haiku** for fast, economical workloads. Ask which model only when the distinction changes the prompt.
 
 *Durable across current Claude models:*
 - Be clear and direct. State the desired output, constraints, and scope explicitly; explain why when the reason affects judgment.

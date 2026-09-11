@@ -40,15 +40,15 @@ metadata:
 
 When decomposing a complex objective, the Control Plane defines or invokes specialized experts tailored to specific domains:
 
-| Specialist Role | Expert Domain & Responsibilities | Common Tool Access & Archetype |
-| :--- | :--- | :--- |
-| **Architect / System Lead** | High-level module architecture, API contract design, schema modeling, dependency boundary definition. | Read tools, spec authoring, plan decomposition. |
-| **Backend Specialist** | Service classes, API controllers, database queries, background jobs, caching, event listeners. | Write tools, language runtime, linting/unit tests. |
-| **Frontend / UI Specialist** | Component hierarchies, reactive client state, design token styling (Tailwind), client routing. | Write tools, bundler (`npm run build`), component specs. |
-| **Test & QA Engineer** | Pest / PHPUnit / Pytest / Vitest test suites, edge case verification, regression suites, mocks. | Write tools, test runners (`pest`, `pytest`, `npm test`). |
-| **Security & DevOps Auditor** | Static analysis (OWASP), vulnerability sweeps, credential leaks, CI workflows, git guardrails. | Read tools, security audit matrix, lint rules. |
-| **Git Ops & Release Specialist** | Staging, conventional commits, branch management, worktree isolation, tag releases, and git push upon explicit Captain authorization. | Write tools, git CLI, worktree commands. |
-| **Scout / Research Specialist**| Read-only codebase archaeology, external library evaluation, feasibility spikes, diagnostic reproduction. | Read tools, web search, doc readers. |
+| Specialist Role | Expert Domain & Responsibilities | Common Tool Access | Task Shape & Archetype |
+| :--- | :--- | :--- | :--- |
+| **Architect / System Lead** | High-level module architecture, API contract design, schema modeling, dependency boundary definition. | Read tools, spec authoring, plan decomposition. | `SHIP (Architecture)` / `SCOUT (Spike)` |
+| **Backend Specialist** | Service classes, API controllers, database queries, background jobs, caching, event listeners. | Write tools, language runtime, linting/unit tests. | `SHIP (Implementation)` |
+| **Frontend / UI Specialist** | Component hierarchies, reactive client state, design token styling (Tailwind), client routing. | Write tools, bundler (`npm run build`), component specs. | `SHIP (Implementation / UI)` |
+| **Test & QA Engineer** | Pest / PHPUnit / Pytest / Vitest test suites, edge case verification, regression suites, mocks. | Write tools, test runners (`pest`, `pytest`, `npm test`). | `SHIP (Verification / QA)` |
+| **Security & DevOps Auditor** | Static analysis (OWASP), vulnerability sweeps, credential leaks, CI workflows, git guardrails. | Read tools, security audit matrix, lint rules. | `SCOUT (Audit)` / `SHIP (Remediation)` |
+| **Git Ops & Release Specialist** | Staging, conventional commits, branch management, worktree isolation, tag releases, and git push upon explicit Captain authorization. | Write tools, git CLI, worktree commands. | `SHIP (Release / Git)` |
+| **Scout / Research Specialist** | Read-only codebase archaeology, external library evaluation, feasibility spikes, diagnostic reproduction. | Read tools, web search, doc readers. | `SCOUT (Spike)` |
 
 ---
 
@@ -242,3 +242,41 @@ When escalating an unresolved blocker, dilemma, or architectural fork to the Cap
 | **Install New Dependencies** | Propose Options | Prohibited | **YES (Hold for Captain)** |
 | **Git Commit & Stage** | Gatekeep & Brief Worker | Executed by Git Ops Specialist | **YES (Hold for Captain)** |
 | **Git Push / Destructive Action**| Gatekeep & Brief Worker | Executed by Git Ops Specialist | **YES (Explicit Word Required)** |
+
+---
+
+## 10. Cross-Harness Execution Engine & Declarative Model Governance (`acon.yaml`)
+
+### 10.1 Master Configuration (`acon.yaml`) & Bridge Architecture
+- **Control Plane Permanence:** The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the First Mate liaison and supervisor.
+- **Role of `acon.yaml`:** The [`acon.yaml`](../../../acon.yaml) file at repository root strictly configures the external **Cross-Harness Bridge** under the `bridge:` section:
+  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`.agents/adapters/dispatch.sh`](../../adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
+  * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
+- **The Main-First Escalation Invariant:** Even when `bridge.enabled: true` and `prefer_main_first: true`, tasks that can be executed reliably by the main engine MUST default to the main model. External bridge models (e.g., specialized deep-reasoning or research engines) are invoked strictly by exception when task difficulty, architectural complexity, or specific domain requirements warrant them.
+- **Configuration Fields:** Controls default harness, reasoning effort levels, main model, bridge directory (`.agents/bridge`), and execution timeout.
+- **Model Governance & Exclusion Policy:** Strict disallow-list enforcing models that may never be executed across any harness.
+- **Dispatch Routing Rules:** Intent keyword regex patterns that automatically bind task classifications to specific harness adapters, models, fallbacks, and reasoning effort levels.
+
+### 10.2 Declarative Model Governance & Single Source of Truth
+Rather than hardcoding specific model identifiers, versions, or exclusion lists into skills or constitutional guidelines, [`acon.yaml`](../../../acon.yaml) serves as the single declarative source of truth:
+- **Declarative Routing:** Intent keywords dynamically map task domains (e.g., architecture, implementation, research spikes, formatting) to specific harness adapters, target models, fallbacks, and reasoning effort levels.
+- **Universal Governance Exclusions:** Models disallowed across the workspace are declared in `acon.yaml` under `models.exclude`. The dispatch runner enforces these exclusions at invocation time and immediately aborts prior to runtime execution if an excluded model is requested.
+- **Decoupled Architecture:** As models evolve or new versions become available, updates are made strictly in `acon.yaml` without modifying agent prompts, constitutions, or skill instructions.
+
+### 10.3 Automated Fallback to Main Engine
+If any secondary model or adapter encounters an execution error (e.g., API rate limit, process timeout, or non-zero exit code), the dispatch runner automatically catches the failure and cascades back to the main engine configured in `acon.yaml`. A task only fails if both the primary model and the fallback engine fail.
+
+### 10.4 Adapter Layer Architecture ([`.agents/adapters/`](../../adapters/README.md))
+The adapter layer isolates the Control Plane from local CLI binaries and external APIs:
+- **`dispatch.sh`**: Master routing script ([`dispatch.sh`](../../adapters/dispatch.sh)). Resolves intent rules from `acon.yaml`, enforces governance exclusions, writes task briefs to ephemeral bridge files (`.agents/bridge/task_<uuid>.md`), dispatches to the matched adapter, and captures JSON results in `.agents/bridge/result_<uuid>.json` (auto-cleaned on exit).
+- **`agy.sh`**: Antigravity CLI print-mode runner with structured JSON output and reasoning effort controls.
+- **`claude.sh`**: Claude Code CLI non-interactive execution adapter.
+- **`api-runner.py`**: Zero-dependency Python runner for direct model API execution when CLI binaries are unavailable.
+
+### 10.5 How the Control Plane Orchestrates Across Models
+1. **Analyze Intent:** The Control Plane extracts intent via `prompt-master` and classifies the task contract (`SHIP` vs. `SCOUT`).
+2. **Select Model & Harness:** Intent keywords match against `dispatch.rules` in `acon.yaml` (or explicit flags).
+3. **Dispatch Asynchronously:** Dispatches via `invoke_subagent` or triggers background tasks via `.agents/adapters/dispatch.sh`.
+4. **Zero-Token Reactive Waiting:** The Control Plane immediately yields its turn, avoiding synchronous blocking loops so Captain messages are never queued.
+5. **Central Synthesis:** Upon completion notification, the Control Plane inspects results, resolves shared integration seams, and presents the canonical 4-section Fleet Bearings digest.
+

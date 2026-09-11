@@ -88,13 +88,13 @@ flowchart TD
 Run your primary agent directly inside the **ACON** workspace. You can direct it to work on any local repository without adding extra files to that repository:
 
 ```text
-Captain: "Inspect /home/mewho/projects/billing-app. Decompose the Stripe webhook refactor
+Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
           into backend service and feature tests, and dispatch specialists."
 ```
 
-* The Control Plane activates the Foreign Boundary Trigger and immediately dispatches a `Codebase Scout` subagent in turn 1 to inspect `/home/mewho/projects/billing-app`.
+* The Control Plane activates the Foreign Boundary Trigger and immediately dispatches a `Codebase Scout` subagent in turn 1 to inspect `/path/to/billing-app`.
 * Based on the scout's findings, it shapes tasks and spawns a `Backend Specialist` and a `Test Engineer` targeting only the specific billing directories.
-* The specialists read `/home/mewho/projects/billing-app/CLAUDE.md` to follow the project's local coding conventions and test runners.
+* The specialists read `/path/to/billing-app/CLAUDE.md` to follow the project's local coding conventions and test runners.
 * The Control Plane synthesizes results, verifies integration, and briefs you.
 
 ---
@@ -165,10 +165,31 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 
 ---
 
+## 🌉 Cross-Harness Bridge & Model Governance (`acon.yaml`)
+
+ACON provides an optional cross-harness execution layer that decouples the Control Plane from local CLI tools and external APIs:
+
+- **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the First Mate liaison and supervisor.
+- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
+  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`.agents/adapters/dispatch.sh`](.agents/adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
+  * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
+- **The Main-First Escalation Invariant**:
+  Even when `bridge.enabled: true`, tasks that can be executed reliably by the main engine MUST default to the main model. External bridge models are invoked strictly by exception when task difficulty, architectural complexity, or specific domain requirements warrant them.
+- **Declarative Capability Archetypes (`acon.yaml`)**:
+  * **Main Session / Control Plane**: Main Engine (fast, unblocked command bridge, triage, and universal fallback).
+  * **Deep Reasoning & Architecture**: Deep Reasoning Model for complex architecture, system refactoring, and security audits.
+  * **Core Coding & TDD**: Core Implementation Model for feature implementation, test-driven development, and mechanical linting.
+  * **Web Research & Diagnostics**: Research Spike Model for read-only spikes, codebase archaeology, and documentation research.
+- **Declarative Model Governance**: Universal model exclusions, target model slugs, reasoning effort levels, and dispatch patterns are defined solely in [`acon.yaml`](acon.yaml).
+- **Automated Fallback**: If any secondary model or adapter encounters an issue, the dispatch runner automatically catches the failure and cascades back to the main engine configured in `acon.yaml`.
+
+---
+
 ## 📁 Repository Structure
 
 ```
 acon/
+├── acon.yaml                                     # Cross-Harness Bridge configuration & model routing
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
 ├── CLAUDE.md                                     # Symlink -> AGENTS.md
 ├── README.md                                     # Human-facing guide and operational instructions
@@ -185,6 +206,7 @@ acon/
 └── .agents/                                      # Central Physical Source of Truth
     ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
     ├── README.md                                 # Internal catalog
+    ├── adapters/                                 # Cross-harness execution adapters (dispatch.sh, agy, claude)
     ├── rules/                                    # Non-Negotiable Agent Rules
     │   ├── agent-control-plane.md                # Delegation, Bearings, and task contracts
     │   ├── quality-simplicity.md                 # Code simplicity and dead code elimination

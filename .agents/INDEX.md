@@ -9,6 +9,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
 | **Agent Orchestration & Control Plane** | Multi-agent coordination, specialist dispatch, Ship vs. Scout, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/skills/agent-control-plane/SKILL.md`](skills/agent-control-plane/SKILL.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
+| **Cross-Harness Model Routing & Governance** | Multi-model routing, model exclusions, adapter dispatch layer, automated fallback | [`acon.yaml`](../acon.yaml), [`.agents/adapters/`](adapters/README.md), [`AGENTS.md`](../AGENTS.md), [`.agents/skills/agent-control-plane/SKILL.md`](skills/agent-control-plane/SKILL.md) |
 | **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grilling/SKILL.md`](skills/productivity/grilling/SKILL.md), [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
 | **Grill plan while generating ADRs & domain docs** | Need to sharpen domain terms while interrogating a design | [`.agents/skills/engineering/grill-with-docs/SKILL.md`](skills/engineering/grill-with-docs/SKILL.md), [`.agents/skills/engineering/domain-modeling/SKILL.md`](skills/engineering/domain-modeling/SKILL.md) |
 | **Turn conversation into a formal spec** | Architecture settled, need an actionable specification | [`.agents/skills/engineering/to-spec/SKILL.md`](skills/engineering/to-spec/SKILL.md) |
@@ -63,4 +64,5 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **[`skills/productivity/`](skills/productivity/)** | 12 Skills | Interrogation (`grilling`, `grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, questionnaires, coaching |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
+| **[`adapters/`](adapters/README.md)** | 5 Harness Adapters | Cross-harness execution layer (`dispatch.sh`), model governance (`acon.yaml`), CLI runners (`agy`, `claude`), API fallback |
 | **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `quality-simplicity.md`, `git-conventional-commits.md`, `progress-report-exclusions.md`) |

@@ -34,7 +34,7 @@ Before logging an item in the debt registry, apply this critical distinction:
 
 ## 2. The Debt Ledger: `.agents/debt.md`
 
-When a project chooses an intentional pragmatic shortcut, record it in `/home/mewho/ai-stuff/acon/.agents/debt.md` (or the project root `.agents/debt.md`).
+When a project chooses an intentional pragmatic shortcut, record it in `.agents/debt.md` (at the project root).
 
 ### Registry Schema & Card Format
 
@@ -44,7 +44,7 @@ Each entry in `.agents/debt.md` follows this standardized template:
 ### DEBT-[000]: [Short Descriptive Title]
 
 - **Status:** `Active` | `Retired` | `Superseded`
-- **Location:** `[filepath#Lxx-Lyy](file:///absolute/path/to/file#Lxx-Lyy)`
+- **Location:** `[filepath#Lxx-Lyy](filepath#Lxx-Lyy)`
 - **Pragmatic Choice:** [What was implemented instead of the heavy enterprise pattern?]
 - **Value Captured:** [Lines of code saved, dependencies avoided, build complexity spared]
 - **Inflection Trigger:** [Concrete metric or event when this decision MUST be revisited]
@@ -65,7 +65,7 @@ Each entry in `.agents/debt.md` follows this standardized template:
 ### DEBT-001: In-Memory Token Blacklist instead of Redis
 
 - **Status:** `Active`
-- **Location:** [`src/auth/tokenBlacklist.ts#L10-L28`](file:///home/mewho/ai-stuff/acon/src/auth/tokenBlacklist.ts#L10-L28)
+- **Location:** [`src/auth/tokenBlacklist.ts#L10-L28`](src/auth/tokenBlacklist.ts#L10-L28)
 - **Pragmatic Choice:** Used an in-memory `Set<string>` with TTL eviction to track invalidated JWTs instead of provisioning and connecting a Redis cluster.
 - **Value Captured:** Avoided adding `ioredis` package, saved 120 lines of connection/retry boilerplate, zero infrastructure operational overhead for MVP.
 - **Inflection Trigger:** Deployment across more than 1 server node or memory usage of the Set exceeding 50MB (~500k revoked tokens).

@@ -44,3 +44,13 @@ When operating as the primary AI assistant in this workspace, the agent MUST act
    - **2. Recently Landed:** Completed deliverables and scout reports.
    - **3. Underway:** Active specialists in flight (Role, Shape, Scope, State).
    - **4. Charted Next:** Queued work waiting on active dependencies.
+
+8. **Model Governance & Cross-Harness Bridge (`acon.yaml`):**  
+   - **Control Plane Permanence:** The Control Plane is the permanent operational constitution of ACON and is NEVER enabled/disabled.
+   - **Bridge Dispatch Configuration:** [`acon.yaml`](../../acon.yaml) strictly configures the external cross-harness adapter bridge (`bridge:` section).
+     * When `bridge.enabled: true`: Dispatches are routed via the external adapter bridge ([`.agents/adapters/dispatch.sh`](../adapters/dispatch.sh)) based on the declarative routing table in `acon.yaml`.
+     * When `bridge.enabled: false`: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
+   - **Main-First Escalation**: Even with `bridge.enabled: true`, use the main engine by default if the task is within its capabilities. Only escalate to specialized models when high reasoning effort or specific capabilities are genuinely required.
+   - **Declarative Model Governance:** All model assignments, reasoning effort levels, task dispatch patterns, universal model exclusions, and fallback behaviors are governed strictly by [`acon.yaml`](../../acon.yaml). Agents must read `acon.yaml` for active routing, exclusions, and fallbacks rather than relying on hardcoded model names.
+
+

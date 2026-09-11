@@ -307,7 +307,7 @@ By passing additional arguments to the `prompt` method, you may override the def
 $response = (new SalesCoach)->prompt(
     'Analyze this sales transcript...',
     provider: Lab::Anthropic,
-    model: 'claude-sonnet-5',
+    model: 'claude-default',
     timeout: 120,
 );
 ```
@@ -1303,7 +1303,7 @@ use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Promptable;
 
 #[Provider(Lab::Anthropic)]
-#[Model('claude-sonnet-5')]
+#[Model('claude-default')]
 #[MaxSteps(10)]
 #[MaxTokens(4096)]
 #[Temperature(0.7)]
@@ -1798,7 +1798,7 @@ use Laravel\Ai\Enums\Lab;
 $summary = Str::of($article)->summarize(
     sentences: 4,
     provider: Lab::Anthropic,
-    model: 'claude-sonnet-5',
+    model: 'claude-default',
     timeout: 30,
 );
 
@@ -2319,7 +2319,7 @@ use Laravel\Ai\Enums\Lab;
 $response = (new SalesCoach)->prompt(
     'Analyze this sales transcript...',
     provider: [
-        Lab::Gemini->value => 'gemini-3-flash-preview',
+        Lab::Gemini->value => 'gemini-flash-preview',
         Lab::DeepSeek->value => 'deepseek-v4-pro',
     ],
 );

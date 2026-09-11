@@ -120,6 +120,17 @@ flowchart TD
      2. Missing external credentials, OAuth tokens, or API secrets.
      3. Unresolvable 5-Element escalations.
 
+### Cross-Harness Execution & Model Governance (`acon.yaml`)
+
+- **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the liaison and supervisor.
+- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
+  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`.agents/adapters/dispatch.sh`](.agents/adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
+  * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
+- **The Main-First Escalation Invariant**:  
+  Even when `bridge.enabled: true`, tasks that can be executed reliably by the main engine MUST default to the main model. External bridge models (e.g., specialized deep-reasoning or research engines) are invoked strictly by exception when task difficulty, architectural complexity, or specific domain requirements warrant them.
+- **Declarative Model Governance**: All model assignments, reasoning effort levels, task dispatch patterns, universal model exclusions, and fallback behaviors are defined strictly in [`acon.yaml`](acon.yaml) rather than hardcoded in this constitution. The fleet dynamically adheres to `acon.yaml` at runtime.
+- **Adapter Layer**: When running external or cross-harness background tasks, workers are executed via [`.agents/adapters/dispatch.sh`](.agents/adapters/dispatch.sh).
+
 ---
 
 ## 5. On-Demand Bearings Status Reporting
