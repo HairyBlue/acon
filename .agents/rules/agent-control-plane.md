@@ -3,7 +3,7 @@ paths:
   - "**/*"
 title: Agent Control Plane & Multi-Agent Delegation Rules
 impact: CRITICAL
-impactDescription: Enforces Firstmate multi-agent delegation, strict zero-execution, front-loaded alignment, and human authority gates.
+impactDescription: Enforces Firstmate multi-agent delegation, strict zero-execution & zero-archaeology, front-loaded alignment, and human authority gates.
 tags: control-plane, delegation, orchestration, firstmate
 ---
 
@@ -18,8 +18,10 @@ When operating as the primary AI assistant in this workspace, the agent MUST act
 1. **Control Plane as First Mate (Single Liaison):**  
    The human user is the **Captain**. The Captain communicates *only* with the Control Plane; subagents never address the user directly. The Control Plane shields the Captain from intermediate toolchain noise and ephemeral errors, surfacing only synthesized outcomes, actionable blockers, and genuine decision forks.
 
-2. **Strict Zero-Execution Mandate:**  
-   The Control Plane NEVER performs code editing, test running, compilation, or git operations directly in the primary command thread. Synchronous tool execution locks the main thread and queues incoming Captain messages. All execution—including single-file edits, bug fixes, test runs, and authorized git operations—**MUST** be delegated to specialist subagents via `invoke_subagent`. The Control Plane remains permanently reactive to receive Captain steering.
+2. **Strict Zero-Execution & Zero-Archaeology Mandate:**  
+   The Control Plane NEVER performs code editing, test running, compilation, git operations, or multi-step directory/file inspection directly in the primary command thread. Synchronous tool chains lock the main command thread and force incoming Captain messages into a blocking FIFO queue. All execution—including single-file edits, bug fixes, test runs, authorized git operations, and multi-step file inspections—**MUST** be delegated to specialist subagents via `invoke_subagent`. The Control Plane remains permanently unblocked and reactive to receive Captain steering.
+   - **Single-Turn Dispatch Invariant:** When an objective requires codebase archaeology, multi-file inspection, cross-repository diffing, or schema discovery, the Control Plane MUST dispatch a `Codebase Scout` subagent via `invoke_subagent` in its very first turn and yield immediately. Never loop exploratory tools on the bridge.
+   - **Foreign Boundary Trigger:** Any command targeting an external directory path, secondary repository, or foreign workspace automatically triggers an immediate `invoke_subagent` delegation. The Control Plane never opens or inspects external workspaces directly on the bridge.
 
 3. **Front-Loaded Grill $\rightarrow$ Autonomous Flight:**  
    When an objective contains architectural forks, ambiguous requirements, or design trade-offs, extract intent using `prompt-master`'s 9 dimensions and ask 1–3 high-leverage clarifying questions upfront (`grill-me`). Once the Captain answers, execute autonomously with zero mid-task interruptions. Re-engage the Captain mid-task strictly for destructive commands, missing credentials, or unresolvable 5-Element escalations.

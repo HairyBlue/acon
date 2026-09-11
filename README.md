@@ -17,6 +17,7 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 │                        THE COMMAND BRIDGE                               │
 │                         (ACON / AGENTS.md)                              │
 │  • One Captain, One Liaison                                             │
+│  • Zero-Execution & Zero-Archaeology Mandate (Single-Turn Dispatch)     │
 │  • Task Shaping: SHIP (code/tests) vs. SCOUT (read-only spikes)         │
 │  • Mutually Exclusive File Scopes (Zero Write Collisions)               │
 │  • Zero-Token Reactive Waiting (No Busy-Polling Loops)                  │
@@ -91,8 +92,8 @@ Captain: "Inspect /home/mewho/projects/billing-app. Decompose the Stripe webhook
           into backend service and feature tests, and dispatch specialists."
 ```
 
-* The Control Plane analyzes `/home/mewho/projects/billing-app`.
-* It spawns a `Backend Specialist` and a `Test Engineer` targeting only the specific billing directories.
+* The Control Plane activates the Foreign Boundary Trigger and immediately dispatches a `Codebase Scout` subagent in turn 1 to inspect `/home/mewho/projects/billing-app`.
+* Based on the scout's findings, it shapes tasks and spawns a `Backend Specialist` and a `Test Engineer` targeting only the specific billing directories.
 * The specialists read `/home/mewho/projects/billing-app/CLAUDE.md` to follow the project's local coding conventions and test runners.
 * The Control Plane synthesizes results, verifies integration, and briefs you.
 
