@@ -268,3 +268,98 @@ The Control Plane invokes adapters asynchronously using subagent delegation:
 3. **Asynchronous Dispatch:** The Control Plane invokes `dispatch.sh` or delegates directly to a specialist subagent via `invoke_subagent`.
 4. **Zero-Token Reactive Waiting:** The Control Plane immediately yields its turn, waiting reactively for execution completion without blocking loops.
 5. **Central Synthesis:** The Control Plane verifies diffs, centralizes shared entry-point merges, and renders the 4-section **Fleet Bearings Digest**.
+
+---
+
+## 7. Universal Machine-Wide Distro & Global Installation (`install-global.sh`)
+
+ACON establishes a machine-wide agent distro across **any** AI CLI or editor environment on your system via a clean **Hub-and-Spoke Distro Architecture**.
+
+```
+                           +------------------------+
+                           |   Master Hub (~/.acon) |
+                           |  acon.yaml | skills/   |
+                           |  rules/    | adapters/ |
+                           +-----------+------------+
+                                       |
+        +------------------------------+------------------------------+
+        |                              |                              |
+        v                              v                              v
++------------------+          +------------------+          +------------------+
+| Antigravity CLI  |          | Claude Code CLI  |          |    Cursor IDE    |
+| ~/.gemini/config |          |     ~/.claude    |          |     ~/.cursor    |
+| skills, rules,   |          | skills, rules,   |          |  skills, rules   |
+| config, adapters |          |    CLAUDE.md     |          |                  |
++------------------+          +------------------+          +------------------+
+                                       |
+                                       v
+                           +------------------------+
+                           | Universal CLI (~/.local/bin/acon)        |
+                           | acon status | acon sync | acon dispatch  |
+                           +------------------------------------------+
+```
+
+### 7.1 Architecture: Hub-and-Spoke Distro
+
+1. **Master Hub (`~/.acon/`):**
+   - The single canonical source of truth on the user's host machine.
+   - Contains dereferenced physical copies of `acon.yaml`, the full 114-skill catalog (`skills/`), constitutional rules (`rules/`), cross-harness runners (`adapters/`), and `AGENTS.md`.
+   - Records the source repository in `~/.acon/.source_repo` for seamless background refreshes.
+
+2. **Multi-CLI Spokes (Auto-Detection & Provisioning):**
+   - The installer inspects the host and automatically provisions active agent environments:
+     * **Antigravity CLI (`agy`):** Targets `~/.gemini/config/`. Provisions domain skill packages into `skills/` (preserving any pre-existing user or cloud provider skills), links/copies `rules/`, `acon.yaml`, and `adapters/`.
+     * **Claude Code CLI (`claude`):** Targets `~/.claude/`. Provisions `skills/`, `rules/`, and mirrors `AGENTS.md` to `CLAUDE.md`.
+     * **Cursor IDE (`cursor`):** Targets `~/.cursor/`. Provisions `skills/` and `rules/`.
+     * **Custom Targets:** User-defined directories via `--target custom --target-dir <path>`.
+
+3. **Universal Executable (`~/.local/bin/acon`):**
+   - A lightweight command-line binary available globally in your PATH:
+     * `acon status`: Displays a comprehensive machine-wide health dashboard showing hub status, active spokes, skill/rule counts, and symlink integrity.
+     * `acon sync [REPO]`: Synchronizes Master Hub and all spokes against the latest upstream repository with a single command.
+     * `acon dispatch [ARGS...]`: Invokes the cross-harness task dispatcher (`dispatch.sh`) globally from any directory.
+     * `acon adopt [REPO]`: Deploys ACON into a target repository using `adopt.sh`.
+
+### 7.2 Installer Options & CLI Flags
+
+The global installer is located at `.agents/adapters/install-global.sh`:
+
+```bash
+./.agents/adapters/install-global.sh [OPTIONS]
+```
+
+| Flag | Description |
+| :--- | :--- |
+| `-d, --detect` | Auto-detect active AI CLIs on this host (default behavior). |
+| `-a, --all` | Provision all supported CLIs (`agy`, `claude`, `cursor`). |
+| `-t, --target <name>` | Provision specific CLI target: `agy`, `claude`, `cursor`, `custom` (repeatable). |
+| `--target-dir <dir>` | Destination directory when using `--target custom`. |
+| `-m, --mode <mode>` | Provisioning mode: `link` (default, spoke symlinks to hub) or `copy` (physical copies). |
+| `-n, --dry-run` | Preview hub setup and spoke provisioning without altering filesystem. |
+| `-f, --force` | Overwrite existing configurations or links without confirmation. |
+| `--hub-dir <dir>` | Custom master hub path (default: `~/.acon`). |
+| `--bin-dir <dir>` | Custom executable directory (default: `~/.local/bin`). |
+| `-h, --help` | Show usage documentation and exit. |
+
+### 7.3 Usage Examples
+
+```bash
+# Preview provisioning plan for all supported CLIs (Zero Risk)
+./.agents/adapters/install-global.sh --dry-run --all
+
+# Auto-detect and provision host CLIs (creates ~/.acon and ~/.local/bin/acon)
+./.agents/adapters/install-global.sh --detect
+
+# Provision specific targets
+./.agents/adapters/install-global.sh --target agy --target cursor
+
+# Pure physical copy mode (for environments where symlinks are restricted)
+./.agents/adapters/install-global.sh --mode copy --all
+
+# Check machine-wide health via universal CLI
+acon status
+
+# Refresh global skills from upstream repository
+acon sync /path/to/acon-repo
+```
+

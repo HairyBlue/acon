@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# ACON Universal CLI: acon
+# Description: Machine-wide command-line interface for ACON
+#              (Agentic Conventions & Orchestration Network)
+#
+# Commands:
+#   acon status        - Displays global installation status across all CLIs
+#   acon sync [REPO]   - Refreshes global skills and configuration from repository
+#   acon dispatch ...  - Wraps dispatch.sh cross-harness task dispatcher
+#   acon adopt ...     - Wraps adopt.sh repository adoption suite
+#   acon help          - Shows this help message
+# ==============================================================================
+set -euo pipefail
+IFS=$'\n\t'
+
+VERSION="1.0.0"
+HUB_DIR="${ACON_HUB_DIR:-${HOME}/.acon}"
+
+usage() {
+  cat <<USAGE_EOF
+ACON Universal CLI (v${VERSION})
+Talk to one agent. Ship with a crew.
+
+Usage:
+  acon <command> [arguments...]
+
+Commands:
+  status               Show machine-wide ACON installation status across AI CLIs
+  sync [REPO_PATH]     Refresh Master Hub skills, rules, and adapters from repository
+  dispatch [ARGS...]   Execute cross-harness task dispatcher (wraps dispatch.sh)
+  adopt [ARGS...]      Adopt ACON into a target repository (wraps adopt.sh)
+  help, --help, -h     Show this help message
+  version, -v          Show ACON version
+
+Environment Variables:
+  ACON_HUB_DIR         Custom ACON Master Hub path (default: ~/.acon)
+
+Examples:
+  acon status
+  acon sync
+  acon sync /home/mewho/ai-stuff/acon
+  acon dispatch --task "audit authentication flow" --dry-run
+  acon adopt /path/to/project
+USAGE_EOF
+}
+
+cmd_status() {
+  echo "================================================================================"
+  echo "⚓ ACON Machine-Wide Distro Status (v${VERSION})"
+  echo "================================================================================"
+
+  # 1. Master Hub Inspection
+  echo "[1. Master Hub: ${HUB_DIR}]"
+  if [[ -d "${HUB_DIR}" ]]; then
+    local source_repo="Not recorded"
+    if [[ -f "${HUB_DIR}/.source_repo" ]]; then
+      source_repo="$(cat "${HUB_DIR}/.source_repo")"
+    fi
+    local skill_count=0
+    local rule_count=0
+    local adapter_count=0
+
+    if [[ -d "${HUB_DIR}/skills" ]]; then
+      skill_count=$(find "${HUB_DIR}/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
+    fi
+    if [[ -d "${HUB_DIR}/rules" ]]; then
+      rule_count=$(find "${HUB_DIR}/rules" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    fi
+    if [[ -d "${HUB_DIR}/adapters" ]]; then
+      adapter_count=$(find "${HUB_DIR}/adapters" -maxdepth 1 \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
+    fi
+
+    echo "  • Status          : ACTIVE"
+    echo "  • Source Repo     : ${source_repo}"
+    echo "  • Configuration   : $([[ -f "${HUB_DIR}/acon.yaml" ]] && echo "Present (${HUB_DIR}/acon.yaml)" || echo "MISSING")"
+    echo "  • Skills Library  : ${skill_count} skills active"
+    echo "  • Rules Library   : ${rule_count} rules active"
+    echo "  • Adapter Runners : ${adapter_count} adapters active"
+  else
+    echo "  • Status          : NOT INSTALLED"
+    echo "  • Hint            : Run 'install-global.sh' to establish Master Hub."
+  fi
+  echo ""
+
+  # 2. Spoke Inspection
+  echo "[2. Multi-CLI Spoke Integrations]"
+
+  # Antigravity (agy)
+  local agy_bin=""
+  agy_bin=$(command -v agy 2>/dev/null || true)
+  local agy_spoke="${HOME}/.gemini/config"
+  echo "  • Antigravity CLI (agy):"
+  echo "    - Binary        : $([[ -n "${agy_bin}" ]] && echo "Installed (${agy_bin})" || echo "Not found in PATH")"
+  echo "    - Spoke Dir     : ${agy_spoke}"
+  if [[ -d "${agy_spoke}" ]]; then
+    local agy_skills_ok="No"
+    if [[ -d "${agy_spoke}/skills/agent-control-plane" || -L "${agy_spoke}/skills/agent-control-plane" ]]; then
+      agy_skills_ok="Yes"
+    fi
+    local agy_rules_ok="No"
+    if [[ -d "${agy_spoke}/rules" || -L "${agy_spoke}/rules" ]]; then
+      agy_rules_ok="Yes"
+    fi
+    local agy_config_ok="No"
+    if [[ -f "${agy_spoke}/acon.yaml" || -L "${agy_spoke}/acon.yaml" ]]; then
+      agy_config_ok="Yes"
+    fi
+    local agy_adapters_ok="No"
+    if [[ -d "${agy_spoke}/adapters" || -L "${agy_spoke}/adapters" ]]; then
+      agy_adapters_ok="Yes"
+    fi
+    echo "    - Provisioned   : Skills (${agy_skills_ok}), Rules (${agy_rules_ok}), Config (${agy_config_ok}), Adapters (${agy_adapters_ok})"
+  else
+    echo "    - Provisioned   : Directory not present"
+  fi
+
+  # Claude Code (claude)
+  local claude_bin=""
+  claude_bin=$(command -v claude 2>/dev/null || true)
+  local claude_spoke="${HOME}/.claude"
+  echo "  • Claude Code CLI (claude):"
+  echo "    - Binary        : $([[ -n "${claude_bin}" ]] && echo "Installed (${claude_bin})" || echo "Not found in PATH")"
+  echo "    - Spoke Dir     : ${claude_spoke}"
+  if [[ -d "${claude_spoke}" ]]; then
+    local claude_skills_ok="No"
+    if [[ -d "${claude_spoke}/skills" || -L "${claude_spoke}/skills" ]]; then
+      claude_skills_ok="Yes"
+    fi
+    local claude_rules_ok="No"
+    if [[ -d "${claude_spoke}/rules" || -L "${claude_spoke}/rules" ]]; then
+      claude_rules_ok="Yes"
+    fi
+    echo "    - Provisioned   : Skills (${claude_skills_ok}), Rules (${claude_rules_ok})"
+  else
+    echo "    - Provisioned   : Directory not present"
+  fi
+
+  # Cursor IDE (cursor)
+  local cursor_bin=""
+  cursor_bin=$(command -v cursor 2>/dev/null || true)
+  local cursor_spoke="${HOME}/.cursor"
+  echo "  • Cursor IDE (cursor):"
+  echo "    - Binary        : $([[ -n "${cursor_bin}" ]] && echo "Installed (${cursor_bin})" || echo "Not found in PATH")"
+  echo "    - Spoke Dir     : ${cursor_spoke}"
+  if [[ -d "${cursor_spoke}" ]]; then
+    local cursor_skills_ok="No"
+    if [[ -d "${cursor_spoke}/skills" || -L "${cursor_spoke}/skills" ]]; then
+      cursor_skills_ok="Yes"
+    fi
+    local cursor_rules_ok="No"
+    if [[ -d "${cursor_spoke}/rules" || -L "${cursor_spoke}/rules" ]]; then
+      cursor_rules_ok="Yes"
+    fi
+    echo "    - Provisioned   : Skills (${cursor_skills_ok}), Rules (${cursor_rules_ok})"
+  else
+    echo "    - Provisioned   : Directory not present"
+  fi
+  echo ""
+
+  # 3. Universal Executable
+  echo "[3. Universal Command-Line Executable]"
+  local acon_bin=""
+  acon_bin=$(command -v acon 2>/dev/null || true)
+  echo "  • Executable      : $([[ -n "${acon_bin}" ]] && echo "${acon_bin}" || echo "Not in standard PATH")"
+  echo "  • PATH Check      : $([[ ":${PATH}:" == *":${HOME}/.local/bin:"* ]] && echo "~/.local/bin is in PATH" || echo "WARNING: ~/.local/bin is not in PATH")"
+
+  # 4. Broken Symlinks Audit
+  local broken_links=0
+  for target_dir in "${HUB_DIR}" "${agy_spoke}" "${claude_spoke}" "${cursor_spoke}"; do
+    if [[ -d "${target_dir}" ]]; then
+      while IFS= read -r link; do
+        if [[ -L "${link}" && ! -e "${link}" ]]; then
+          broken_links=$((broken_links + 1))
+          echo "    [BROKEN SYMLINK] ${link} -> $(readlink "${link}")"
+        fi
+      done < <(find "${target_dir}" -type l 2>/dev/null || true)
+    fi
+  done
+  echo "  • Symlink Health  : $([[ ${broken_links} -eq 0 ]] && echo "100% HEALTHY (0 broken links)" || echo "ALERT: ${broken_links} broken link(s) found")"
+  echo "================================================================================"
+}
+
+cmd_sync() {
+  local target_repo="${1:-}"
+
+  if [[ -z "${target_repo}" ]]; then
+    if [[ -f "./acon.yaml" && -d "./.agents/skills" ]]; then
+      target_repo="$(pwd)"
+    elif [[ -f "${HUB_DIR}/.source_repo" ]]; then
+      target_repo="$(cat "${HUB_DIR}/.source_repo")"
+    fi
+  fi
+
+  if [[ -z "${target_repo}" || ! -d "${target_repo}" ]]; then
+    echo "[ERROR] Cannot locate ACON source repository." >&2
+    echo "Provide path explicitly: acon sync /path/to/acon" >&2
+    exit 1
+  fi
+
+  target_repo="$(cd "${target_repo}" && pwd)"
+
+  if [[ ! -f "${target_repo}/acon.yaml" || ! -d "${target_repo}/.agents/skills" ]]; then
+    echo "[ERROR] Directory does not appear to be a valid ACON repository: ${target_repo}" >&2
+    exit 1
+  fi
+
+  echo "================================================================================"
+  echo "Refreshing ACON Master Hub (${HUB_DIR}) from ${target_repo}..."
+  echo "================================================================================"
+
+  mkdir -p "${HUB_DIR}/skills" "${HUB_DIR}/rules" "${HUB_DIR}/adapters"
+
+  # Dereferenced rsync copies
+  rsync -avL --delete "${target_repo}/.agents/skills/" "${HUB_DIR}/skills/"
+  rsync -avL --delete "${target_repo}/.agents/rules/" "${HUB_DIR}/rules/"
+  rsync -avL --delete \
+    --exclude='bridge/task_*' \
+    --exclude='bridge/result_*' \
+    "${target_repo}/.agents/adapters/" "${HUB_DIR}/adapters/"
+
+  cp "${target_repo}/acon.yaml" "${HUB_DIR}/acon.yaml"
+  if [[ -f "${target_repo}/AGENTS.md" ]]; then
+    cp "${target_repo}/AGENTS.md" "${HUB_DIR}/AGENTS.md"
+  fi
+
+  chmod +x "${HUB_DIR}/adapters/"*.sh 2>/dev/null || true
+  if [[ -f "${HUB_DIR}/adapters/api-runner.py" ]]; then
+    chmod +x "${HUB_DIR}/adapters/api-runner.py"
+  fi
+  if [[ -f "${HUB_DIR}/adapters/acon" ]]; then
+    chmod +x "${HUB_DIR}/adapters/acon"
+  fi
+
+  echo "${target_repo}" > "${HUB_DIR}/.source_repo"
+
+  local skill_count
+  skill_count=$(find "${HUB_DIR}/skills" -name "SKILL.md" | wc -l | tr -d ' ')
+  local rule_count
+  rule_count=$(find "${HUB_DIR}/rules" -name "*.md" | wc -l | tr -d ' ')
+
+  echo "--------------------------------------------------------------------------------"
+  echo "✓ Master Hub Synchronized Successfully!"
+  echo "  • Total Skills : ${skill_count}"
+  echo "  • Total Rules  : ${rule_count}"
+  echo "  • Source Repo  : ${target_repo}"
+  echo "================================================================================"
+}
+
+cmd_dispatch() {
+  local dispatch_bin="${HUB_DIR}/adapters/dispatch.sh"
+  if [[ ! -x "${dispatch_bin}" ]]; then
+    echo "[ERROR] dispatch runner not found or not executable at: ${dispatch_bin}" >&2
+    echo "Run 'acon sync' or re-install via install-global.sh" >&2
+    exit 1
+  fi
+
+  exec "${dispatch_bin}" "$@"
+}
+
+cmd_adopt() {
+  local adopt_bin="${HUB_DIR}/adapters/adopt.sh"
+  if [[ ! -x "${adopt_bin}" ]]; then
+    echo "[ERROR] adopt runner not found or not executable at: ${adopt_bin}" >&2
+    echo "Run 'acon sync' or re-install via install-global.sh" >&2
+    exit 1
+  fi
+
+  exec "${adopt_bin}" "$@"
+}
+
+# Main command dispatcher
+COMMAND="${1:-}"
+if [[ -z "${COMMAND}" ]]; then
+  cmd_status
+  exit 0
+fi
+shift
+
+case "${COMMAND}" in
+  status)
+    cmd_status "$@"
+    ;;
+  sync)
+    cmd_sync "$@"
+    ;;
+  dispatch)
+    cmd_dispatch "$@"
+    ;;
+  adopt)
+    cmd_adopt "$@"
+    ;;
+  version|-v|--version)
+    echo "ACON Universal CLI v${VERSION}"
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "[ERROR] Unknown command: ${COMMAND}" >&2
+    usage
+    exit 1
+    ;;
+esac

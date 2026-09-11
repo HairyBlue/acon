@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution, 114-skill catalog, rules, adapters, and configuration into any new or existing repository. Enforces the Universal Physical Copy Invariant (zero symlinks across all directories including .cursor, .claude, and .agents), the Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification."
+description: "Universal adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution, 114-skill catalog, rules, adapters, and configuration into any new or existing repository, or establishing ACON as a machine-wide agent distro across any AI CLI (Antigravity agy, Claude Code claude, Cursor) via install-global.sh and the acon CLI."
 license: MIT
 metadata:
   author: acon
@@ -223,10 +223,88 @@ The automated adoption script is located at `.agents/adapters/adopt.sh`.
 
 ---
 
-## 6. Adoption Checklist & Quality Invariants
+## 6. Machine-Wide Global Distro Mode (`install-global.sh` & `acon` CLI)
 
-When verifying an adopted repository, complete this checklist:
+In addition to per-repository adoption, ACON can be installed as a machine-wide agent distribution across **any** AI CLI or editor installed on the host machine.
 
+### The Hub-and-Spoke Distro Model
+While repository adoption enforces the **Universal Physical Copy Invariant** for git portability and CI/CD isolation, the **Machine-Wide Global Distro** uses a **Hub-and-Spoke Architecture**:
+
+```
+                 +--------------------------+
+                 | Master Hub (~/.acon)     |
+                 | - Master acon.yaml       |
+                 | - 114 Skills Library     |
+                 | - Constitutional Rules   |
+                 | - Cross-Harness Adapters |
+                 +------------+-------------+
+                              |
+      +-----------------------+-----------------------+
+      |                       |                       |
+      v                       v                       v
++---------------+       +---------------+       +---------------+
+| Antigravity   |       |  Claude Code  |       |  Cursor IDE   |
+| Spoke         |       |  Spoke        |       |  Spoke        |
+| ~/.gemini/    |       |  ~/.claude/   |       |  ~/.cursor/   |
+| config/       |       |               |       |               |
++---------------+       +---------------+       +---------------+
+                              |
+                              v
+                 +--------------------------+
+                 | Universal Executable     |
+                 | ~/.local/bin/acon        |
+                 +--------------------------+
+```
+
+1. **Master Hub (`~/.acon/`):**
+   - Stores the master dereferenced copies of `acon.yaml`, `skills/` (114 skills), `rules/`, `adapters/`, and `AGENTS.md`.
+   - Records the source repository in `.source_repo` for automated background updates.
+2. **Multi-CLI Auto-Detection & Spoke Provisioning:**
+   - **Antigravity CLI (`agy`):** Provisions `~/.gemini/config/skills/` with ACON category packages (safely preserving existing cloud provider skills), links/copies rules, configuration, and adapters.
+   - **Claude Code CLI (`claude`):** Provisions `~/.claude/skills/`, `~/.claude/rules/`, and links `CLAUDE.md`.
+   - **Cursor IDE (`cursor`):** Provisions `~/.cursor/skills/` and `~/.cursor/rules/`.
+   - **Custom:** User-specified directory via `--target custom --target-dir <path>`.
+3. **Universal Executable (`~/.local/bin/acon`):**
+   - Provides machine-wide commands:
+     * `acon status`: Inspect distro health across all CLIs.
+     * `acon sync`: Refresh Master Hub and spokes from upstream repo.
+     * `acon dispatch`: Run cross-harness task dispatcher globally.
+     * `acon adopt`: Adopt ACON into any project.
+
+### Global Installer Reference (`install-global.sh`)
+Located at `.agents/adapters/install-global.sh`:
+
+```bash
+# Preview provisioning plan across all supported CLIs (Zero Risk)
+./.agents/adapters/install-global.sh --dry-run --all
+
+# Auto-detect installed CLIs and provision machine-wide
+./.agents/adapters/install-global.sh --detect
+
+# Provision specific CLIs
+./.agents/adapters/install-global.sh --target agy --target claude
+
+# Provision using physical copies instead of symlinks
+./.agents/adapters/install-global.sh --mode copy --all
+```
+
+### Two Topologies Compared
+
+| Feature | Per-Repository Adoption (`adopt.sh`) | Machine-Wide Global Distro (`install-global.sh`) |
+| :--- | :--- | :--- |
+| **Target Scope** | Individual project repository | Host user account (`~/.acon`) |
+| **Symlink Rule** | **Strict 0 Symlinks** (Universal Physical Copy Invariant) | Hub-and-Spoke symlinks (or copies via `--mode copy`) |
+| **Portability** | 100% portable for Git, Docker, CI/CD, and team members | Machine-wide baseline for all CLI sessions |
+| **Entry Point** | Target repo's `AGENTS.md` and `.agents/` | `~/.local/bin/acon` command-line executable |
+| **Spokes Supported**| Target repo (`.agents/`, `.cursor/`, `.claude/`) | Antigravity (`~/.gemini/config`), Claude (`~/.claude`), Cursor (`~/.cursor`) |
+
+---
+
+## 7. Adoption Checklist & Quality Invariants
+
+When verifying an adopted repository or global installation, complete this checklist:
+
+### Repository Adoption Checklist
 - [ ] **Physical Copy Invariant:** No symlinks in `$TARGET/.agents`, `$TARGET/.cursor`, or `$TARGET/.claude`.
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.
 - [ ] **CLAUDE.md Parity:** `$TARGET/CLAUDE.md` is present as a real physical file matching `AGENTS.md`.
@@ -235,3 +313,11 @@ When verifying an adopted repository, complete this checklist:
 - [ ] **Dispatch Dry-Run:** `$TARGET/.agents/adapters/dispatch.sh --dry-run --task "verify"` exits with code 0.
 - [ ] **Catalog Integrity:** All 114 skills exist physically under `$TARGET/.agents/skills/`.
 - [ ] **Zero Execution on Bridge:** Primary agent in target repository acts strictly as Control Plane, delegating all code edits and multi-file archaeology to subagents.
+
+### Global Distro Checklist
+- [ ] **Master Hub Established:** `~/.acon/acon.yaml`, `~/.acon/skills/`, `~/.acon/rules/`, and `~/.acon/adapters/` present.
+- [ ] **Universal Binary Active:** `~/.local/bin/acon` is executable and passes `acon status`.
+- [ ] **Multi-CLI Auto-Detection:** Detected CLIs provisioned without clobbering existing user skills.
+- [ ] **Zero Broken Symlinks:** All provisioned spoke symlinks resolve to existing Master Hub targets.
+- [ ] **Global Dispatch Verified:** `acon dispatch --dry-run --task "verify"` exits with code 0.
+

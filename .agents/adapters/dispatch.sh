@@ -12,8 +12,25 @@ IFS=$'\n\t'
 # ------------------------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ACON_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-CONFIG_FILE="${ACON_ROOT}/acon.yaml"
-BRIDGE_DIR="${ACON_ROOT}/.agents/bridge"
+
+# Configuration & Bridge Resolution (Repository Mode vs Global Hub Mode)
+if [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
+  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+elif [[ -f "${SCRIPT_DIR}/../acon.yaml" ]]; then
+  ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+elif [[ -n "${ACON_CONFIG:-}" && -f "${ACON_CONFIG}" ]]; then
+  CONFIG_FILE="${ACON_CONFIG}"
+  ACON_ROOT="$(cd "$(dirname "${CONFIG_FILE}")" && pwd)"
+else
+  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+fi
+
+if [[ -d "${ACON_ROOT}/.agents" ]]; then
+  BRIDGE_DIR="${ACON_ROOT}/.agents/bridge"
+else
+  BRIDGE_DIR="${ACON_ROOT}/bridge"
+fi
 
 # CLI Options & Defaults
 TASK_ARG=""
