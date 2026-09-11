@@ -3,6 +3,7 @@
 Communication, alignment, coaching, and documentation workflows:
 
 - **[SKILL.md](SKILL.md)**: Master productivity suite orchestrator.
+- **[adopt-acon](adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
 - **[grilling](grilling/SKILL.md)**: Stress-test thinking in rounds across the decision frontier until the design tree is fully settled.
 - **[grill-me](grill-me/SKILL.md)**: Relentless design and plan interrogation (alias invoking `grilling`).
 - **[handoff](handoff/SKILL.md)**: Context compacting and session handoff.

@@ -35,6 +35,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Technical writing & post-mortems** | Authoring RFCs, architecture decisions, and post-mortems | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md) |
 | **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.agents/skills/productivity/daily-progress-report/SKILL.md`](skills/productivity/daily-progress-report/SKILL.md) |
 | **Anti-overengineering & YAGNI code razor** | Stop AI bloat, 7-Rung Decision Ladder, helper elimination, debt ledger | [`.agents/skills/productivity/ponytail/SKILL.md`](skills/productivity/ponytail/SKILL.md) |
+| **Adopt ACON into repository / sync** | Bootstrap Control Plane, 114 skills, zero-symlink invariant, Two-Tier AGENTS.md | [`.agents/skills/productivity/adopt-acon/SKILL.md`](skills/productivity/adopt-acon/SKILL.md) |
 | **Multi-Agent Orchestration & Control Plane** | 5+ files, specialist subagents, Ship vs. Scout tasks, Bearings status | [`.agents/skills/agent-control-plane/SKILL.md`](skills/agent-control-plane/SKILL.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
 | **Discovering codebase conventions** | Analyzing patterns, naming conventions, and architecture | [`.agents/skills/frameworks/infer-conventions/SKILL.md`](skills/frameworks/infer-conventions/SKILL.md) |
 | **Laravel Boost MCP & Doc search** | Using `database-query`, `database-schema`, `search-docs`, `.ai/rules` | [`.agents/skills/frameworks/laravel-boost/SKILL.md`](skills/frameworks/laravel-boost/SKILL.md) |
@@ -61,7 +62,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **[`skills/agent-control-plane/`](skills/agent-control-plane/)** | 1 Master Skill | Firstmate-inspired control plane, specialist subagent dispatch, Ship vs. Scout, Bearings status |
 | **[`skills/design/`](skills/design/)** | 68 Skills | Master design orchestrator, craft engineering (`interface-design`, anti-slop, hierarchy), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
 | **[`skills/engineering/`](skills/engineering/)** | 18 Skills | Problem solving, architecture, TDD, debugging, code review, merge conflicts, ticket mapping, refactoring, API design, zero-downtime migrations |
-| **[`skills/productivity/`](skills/productivity/)** | 12 Skills | Interrogation (`grilling`, `grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, questionnaires, coaching |
+| **[`skills/productivity/`](skills/productivity/)** | 13 Skills | Repository adoption (`adopt-acon`), interrogation (`grilling`, `grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`adapters/`](adapters/README.md)** | 5 Harness Adapters | Cross-harness execution layer (`dispatch.sh`), model governance (`acon.yaml`), CLI runners (`agy`, `claude`), API fallback |

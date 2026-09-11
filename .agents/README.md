@@ -8,12 +8,12 @@ This directory contains repository-wide rules, skills, and the lookup index for 
   - [`git-conventional-commits.md`](rules/git-conventional-commits.md): Conventional Commits v1.0.0 enforcement.
   - [`progress-report-exclusions.md`](rules/progress-report-exclusions.md): Rules for daily progress report exclusions.
   - [`quality-simplicity.md`](rules/quality-simplicity.md): Code quality and simplicity guidelines.
-- **[skills/](skills/)**: 113 curated skills organized across 6 specialized domains:
+- **[skills/](skills/)**: 114 curated skills organized across 6 specialized domains:
   - **[`agent-control-plane/`](skills/agent-control-plane/SKILL.md)**: Firstmate-inspired multi-agent orchestration, specialist dispatch, and fleet bearings status.
   - **[`design/`](skills/design/README.md)** (68 skills): Master design orchestrator, craft engineering (`interface-design`, anti-slop, hierarchy), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.).
   - **[`engineering/`](skills/engineering/README.md)** (18 skills): Master orchestrator, TDD, code review, systematic bug diagnosis, domain modeling, codebase design, refactoring, API design, zero-downtime migrations, and merge conflicts.
   - **[`frameworks/`](skills/frameworks/README.md)** (8 skills): Master orchestrator, Laravel 13.x, Filament 5.x, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, and Pest testing.
-  - **[`productivity/`](skills/productivity/README.md)** (12 skills): Master orchestrator, 9-dimension intent extraction (`prompt-master`), anti-overengineering (`ponytail`), plan interrogation (`grilling`, `grill-me`), context compaction (`handoff`), interactive coaching, RFC authoring, and progress reporting.
+  - **[`productivity/`](skills/productivity/README.md)** (13 skills): Master orchestrator, repository adoption (`adopt-acon`), 9-dimension intent extraction (`prompt-master`), anti-overengineering (`ponytail`), plan interrogation (`grilling`, `grill-me`), context compaction (`handoff`), interactive coaching, RFC authoring, and progress reporting.
   - **[`security-devops/`](skills/security-devops/README.md)** (6 skills): Master orchestrator, static security audits (50+ vulnerabilities), git guardrails, git worktrees, shell scripting, conventional commits, and pre-commit hooks.
 
 ---

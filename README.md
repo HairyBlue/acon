@@ -212,12 +212,12 @@ acon/
     │   ├── quality-simplicity.md                 # Code simplicity and dead code elimination
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-report-exclusions.md         # Clean diff reporting standards
-    └── skills/                                   # 113 Curated Modular Agent Skills
+    └── skills/                                   # 114 Curated Modular Agent Skills
         ├── agent-control-plane/                  # Firstmate-inspired control plane & bearings
         ├── design/                               # 68 Skills (interface-design craft & 67 style presets)
         ├── engineering/                          # 18 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── frameworks/                           # 8 Skills (laravel-best-practices, inertia-vue, wayfinder...)
-        ├── productivity/                         # 12 Skills (prompt-master, ponytail, grilling, grill-me, handoff...)
+        ├── productivity/                         # 13 Skills (adopt-acon, prompt-master, ponytail, grilling, handoff...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
 
@@ -252,7 +252,8 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
 - **`resolving-merge-conflicts`**: Hunk-by-hunk conflict resolution tracing original commit intent.
 
-### 🧠 4. Productivity (`.agents/skills/productivity/` - 12 Skills)
+### 🧠 4. Productivity (`.agents/skills/productivity/` - 13 Skills)
+- **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces the Universal Physical Copy Invariant (zero symlinks across all directories including .cursor, .claude, and .agents), the Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
 - **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
 - **`grilling`**: Core design tree interview engine in rounds along the decision frontier.
