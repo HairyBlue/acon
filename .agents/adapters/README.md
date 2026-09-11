@@ -72,17 +72,21 @@ ACON decouples agent tasks from specific model names by operating on abstract ca
 
 - **Capability Archetypes:**
   - **Main Session / Control Plane:** Main Engine for unblocked command bridge operations, quick scans, triage, and universal fallback.
-  - **Deep Reasoning & Architecture:** Deep Reasoning Model for system architecture, complex refactoring, ADR authoring, and security audits (`effort: high`).
-  - **Core Coding & TDD:** Core Implementation Model for feature implementation, test-driven development, and mechanical formatting (`effort: high`).
-  - **Web Research & Diagnostics:** Research Spike Model for read-only codebase archaeology, external doc research, and feasibility spikes (`effort: high`).
+  - **Deep Reasoning & Architecture:** Deep Reasoning Model for system architecture, complex refactoring, ADR authoring, and security audits (`effort: auto` -> resolves to `high`).
+  - **Core Coding & TDD:** Core Implementation Model for feature implementation, test-driven development, and mechanical formatting (`effort: auto` -> resolves to `high`).
+  - **Web Research & Diagnostics:** Research Spike Model for read-only codebase archaeology, external doc research, and feasibility spikes (`effort: auto` -> resolves to `medium`).
 
 - **Universal Exclusions (Strict Governance Policy):**
   - Excluded models are defined solely in `acon.yaml` under `models.exclude`.
   - The dispatch layer enforces this policy at invocation time and aborts immediately if an excluded model is requested.
 
-- **Standard Reasoning Effort Policy:**
-  - Reasoning effort defaults to `high` across task rules to guarantee thorough chain-of-thought analysis, edge-case exploration, and high-fidelity code generation.
-  - Can be explicitly overridden using `--effort` (`low`, `medium`, `high`) when needed.
+- **Intelligent Reasoning Effort Policy (`effort: auto`):**
+  - Reasoning effort defaults to `auto` across bridge configuration and dispatch rules.
+  - Under `auto`, the harness adapter dynamically resolves each model to its optimal maximum supported effort:
+    - Deep reasoning and core coding models (e.g., Claude Opus/Sonnet, Gemini) run at `high` effort for thorough chain-of-thought analysis and maximum fidelity.
+    - Medium-capped models (such as `gpt-oss-120b`) automatically resolve to `medium` effort.
+  - **Auto-Clamping Resilience:** If `high` effort is explicitly requested or passed to a medium-capped model (`gpt-oss-120b`), the adapter automatically clamps effort to `medium` and logs an informational notice, guaranteeing zero crashes and avoiding unnecessary fallbacks.
+  - Can be explicitly overridden using `--effort` (`auto`, `low`, `medium`, `high`) when needed.
 
 - **Automated Fallback & Resilience Cascade:**
   - The main engine configured in `acon.yaml` serves as the universal fallback across all dispatch rules.
@@ -127,7 +131,7 @@ Pattern Match  : scout|research|audit|spike
 Target Harness : agy
 Target Model   : <target_model>
 Fallback Model : <main_fallback_model>
-Effort Level   : high
+Effort Level   : auto
 Policy Check   : PASSED (Model is permitted by acon.yaml)
 Adapter Script : .../.agents/adapters/agy.sh
 Bridge Task    : .../.agents/bridge/task_<uuid>.md
@@ -231,7 +235,7 @@ dispatch:
       match: "opencode|community|deepseek"
       harness: "opencode"
       model: "deepseek-coder-v2"
-      effort: "medium"
+      effort: "auto"
 ```
 
 ### Step 3: Verify with `--dry-run`

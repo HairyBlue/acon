@@ -14,7 +14,7 @@ bridge:
   # models for tasks that genuinely require deep reasoning or specialized capability.
   mode: "cli"   # Supported modes: "cli" | "app" | "ide"
   default_harness: "agy"
-  default_effort: "high"
+  default_effort: "auto"
   main_model: "gemini-3.8-flash"
   bridge_dir: ".agents/bridge"
   timeout_seconds: 600
@@ -23,9 +23,9 @@ bridge:
 models:
   # Available Models in CLI environment:
   #   gemini-3.8-flash (Fast Control Plane, universal fallback & quick scans)
-  #   claude-opus-4-6 (Deepest reasoning / effort: high)
-  #   claude-sonnet-4-6 (Core coding & TDD / effort: high)
-  #   gpt-oss-120b (Web research & spikes / effort: high)
+  #   claude-opus-4-6 (Deepest reasoning / effort: auto -> high)
+  #   claude-sonnet-4-6 (Core coding & TDD / effort: auto -> high)
+  #   gpt-oss-120b (Web research & spikes / effort: auto -> medium capped)
   #
   # Models explicitly disallowed across all harnesses.
   # The dispatch layer enforces this policy and aborts if any match is requested.
@@ -43,7 +43,7 @@ dispatch:
       harness: "agy"
       model: "gpt-oss-120b"
       fallback: "gemini-3.8-flash"
-      effort: "high"
+      effort: "auto"
 
     - name: "architecture-deep-reasoning"
       description: "Complex system design, deep reasoning, security audits, and structural refactoring"
@@ -51,7 +51,7 @@ dispatch:
       harness: "agy"
       model: "claude-opus-4-6"
       fallback: "gemini-3.8-flash"
-      effort: "high"
+      effort: "auto"
 
     - name: "core-implementation-tdd"
       description: "Production code changes, feature implementation, and test-driven development"
@@ -59,7 +59,7 @@ dispatch:
       harness: "agy"
       model: "claude-sonnet-4-6"
       fallback: "gemini-3.8-flash"
-      effort: "high"
+      effort: "auto"
 
     - name: "mechanical-formatting"
       description: "Mechanical transformations, boilerplate generation, code formatting, and linting"
@@ -67,4 +67,4 @@ dispatch:
       harness: "agy"
       model: "claude-sonnet-4-6"
       fallback: "gemini-3.8-flash"
-      effort: "high"
+      effort: "auto"

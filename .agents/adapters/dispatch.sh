@@ -40,7 +40,7 @@ Options:
   -f, --file <brief.md>   Path to existing task brief markdown file
   -H, --harness <name>    Explicitly override target execution harness (e.g. agy, claude, api)
   -m, --model <model>     Explicitly override target model (e.g. model slug from acon.yaml)
-  -e, --effort <level>    Explicitly override reasoning effort level (e.g. low, medium, high)
+  -e, --effort <level>    Explicitly override reasoning effort level (e.g. auto, low, medium, high)
   -n, --dry-run           Preview routing, rule matching, and policy checks without executing
   -k, --keep-bridge       Retain ephemeral task and result files in .agents/bridge/
   -c, --config <path>     Path to custom acon.yaml configuration file
@@ -181,7 +181,7 @@ except Exception as e:
 
 bridge_cfg = cfg.get("bridge", cfg.get("control_plane", {}))
 default_harness = bridge_cfg.get("default_harness", "agy")
-default_effort = bridge_cfg.get("default_effort", "high")
+default_effort = bridge_cfg.get("default_effort", "auto")
 main_model = bridge_cfg.get("main_model", "")
 models_cfg = cfg.get("models", {})
 exclude_raw = models_cfg.get("exclude", [])
@@ -228,7 +228,7 @@ for r in rules:
 resolved_harness = cli_harness or (matched_rule.get("harness") if matched_rule else default_harness)
 resolved_model = cli_model or (matched_rule.get("model") if matched_rule else main_model)
 fallback_model = (matched_rule.get("fallback") if matched_rule else None) or main_model
-effort = cli_effort or (matched_rule.get("effort") if matched_rule else None) or default_effort
+effort = cli_effort or (matched_rule.get("effort") if matched_rule else None) or default_effort or "auto"
 rule_name = matched_rule.get("name") if matched_rule else "default"
 match_pattern = matched_rule.get("match") if matched_rule else None
 
@@ -277,7 +277,7 @@ MATCH_PATTERN="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get
 RESOLVED_HARNESS="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('harness', 'agy'))" "${RESOLVED_JSON}")"
 RESOLVED_MODEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('model', ''))" "${RESOLVED_JSON}")"
 FALLBACK_MODEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('fallback') or 'none')" "${RESOLVED_JSON}")"
-EFFORT_LEVEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('effort') or 'high')" "${RESOLVED_JSON}")"
+EFFORT_LEVEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('effort') or 'auto')" "${RESOLVED_JSON}")"
 
 # ------------------------------------------------------------------------------
 # Ephemeral Bridge File Setup

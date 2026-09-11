@@ -20,7 +20,7 @@ Usage: agy.sh <prompt_file> <model> [effort]
 Arguments:
   <prompt_file>   Path to markdown or text file containing the task brief
   <model>         Target model identifier defined in acon.yaml
-  [effort]        Optional reasoning effort (low, medium, high)
+  [effort]        Optional reasoning effort (auto, low, medium, high)
 USAGE_EOF
   exit 1
 }
@@ -74,9 +74,24 @@ if ! command -v agy >/dev/null 2>&1; then
   exit 127
 fi
 
+# Resolve reasoning effort
+RESOLVED_EFFORT=""
+if [[ -z "${EFFORT}" || "${EFFORT}" == "auto" ]]; then
+  if [[ "${MODEL}" =~ gpt-oss ]]; then
+    RESOLVED_EFFORT="medium"
+  else
+    RESOLVED_EFFORT="high"
+  fi
+elif [[ "${EFFORT}" == "high" && "${MODEL}" =~ gpt-oss ]]; then
+  echo "[INFO] Model '${MODEL}' max effort is medium; auto-clamping from high to medium" >&2
+  RESOLVED_EFFORT="medium"
+else
+  RESOLVED_EFFORT="${EFFORT}"
+fi
+
 EFFORT_ARGS=()
-if [[ -n "${EFFORT}" && "${EFFORT}" != "standard" && "${EFFORT}" != "none" ]]; then
-  EFFORT_ARGS+=(--effort "${EFFORT}")
+if [[ -n "${RESOLVED_EFFORT}" && "${RESOLVED_EFFORT}" != "standard" && "${RESOLVED_EFFORT}" != "none" ]]; then
+  EFFORT_ARGS+=(--effort "${RESOLVED_EFFORT}")
 fi
 
 # Execute agy CLI in print mode with JSON output
