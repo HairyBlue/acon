@@ -36,7 +36,7 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-1. **The Command Bridge (`AGENTS.md` / `agent-control-plane`)**: Governs *who commands, how work is partitioned, boundary safety, and status reporting*.
+1. **The Command Bridge (`AGENTS.md`)**: Governs *who commands, how work is partitioned, boundary safety, and status reporting*.
 2. **The Workshop Manual (Target Repo `AGENTS.md` / `CLAUDE.md`)**: Governs *local codebase rules*. Dispatched specialists automatically inspect and follow the target repo's local manual without polluting it.
 
 ---
@@ -99,34 +99,12 @@ Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
 
 ---
 
-### Pattern 2: Non-Invasive 3-Line Hook in Coworker Repos
-When collaborating directly inside a coworker's repository that already has its own `AGENTS.md` or `CLAUDE.md`, you don't need to rewrite their file. Simply append this 3-line delegation directive:
-
-```markdown
-## Multi-Agent Delegation
-When a task spans 5+ files or multiple domains, activate the `agent-control-plane` skill.
-The primary agent acts as the Control Plane and delegates to specialist subagents.
-```
-
-Your coworkers' coding standards, test commands, and lint rules remain untouched.
-
----
-
-### Pattern 3: Global Personal Skill (Universal Availability)
-Install `agent-control-plane` into your personal global agent skills catalog so it is available in **every** repository on your machine:
-
+### Integrating ACON into Existing Projects
+If your repository already has an `AGENTS.md` or `CLAUDE.md`, you do not need to replace or overwrite it. Simply append ACON's Control Plane constitution to the bottom:
 ```bash
-# For Gemini / Antigravity CLI:
-mkdir -p ~/.gemini/config/skills/agent-control-plane
-cp -r /path/to/acon/.agents/skills/agent-control-plane/* ~/.gemini/config/skills/agent-control-plane/
-
-# For Claude Code CLI:
-mkdir -p ~/.claude/skills/agent-control-plane
-cp -r /path/to/acon/.agents/skills/agent-control-plane/* ~/.claude/skills/agent-control-plane/
+cat path/to/acon/AGENTS.md >> AGENTS.md
 ```
-
-Whenever you launch an agent in *any* directory, simply say:
-> *"Activate the agent-control-plane. Give me bearings and dispatch specialists to handle this issue."*
+Alternatively, invoke our built-in [`adopt-acon`](.agents/skills/productivity/adopt-acon/SKILL.md) skill to inspect, onboard, and configure any existing repository automatically.
 
 ---
 
@@ -209,15 +187,14 @@ acon/
     ├── adapters/                                 # Cross-harness execution adapters (dispatch.sh, agy, claude)
     ├── rules/                                    # Non-Negotiable Agent Rules
     │   ├── agent-control-plane.md                # Delegation, Bearings, and task contracts
-    │   ├── quality-simplicity.md                 # Code simplicity and dead code elimination
+    │   ├── security-secrets-guard.md             # Zero-leakage policy for credentials and secrets
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
-    │   └── progress-report-exclusions.md         # Clean diff reporting standards
-    └── skills/                                   # 114 Curated Modular Agent Skills
-        ├── agent-control-plane/                  # Firstmate-inspired control plane & bearings
-        ├── design/                               # 68 Skills (interface-design craft & 67 style presets)
-        ├── engineering/                          # 18 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
+    │   └── progress-reporting.md                 # Markdown-first daily reporting standards
+    └── skills/                                   # 109 Curated Modular Agent Skills
+        ├── design/                               # 2 Skills + 67 style presets (interface-design & 67 style presets)
+        ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── frameworks/                           # 8 Skills (laravel-best-practices, inertia-vue, wayfinder...)
-        ├── productivity/                         # 13 Skills (adopt-acon, prompt-master, ponytail, grilling, handoff...)
+        ├── productivity/                         # 10 Skills (adopt-acon, prompt-master, ponytail, grill-me, handoff...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
 
@@ -227,45 +204,39 @@ acon/
 
 When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-### ⚓ 1. Agent Control Plane (`.agents/skills/agent-control-plane/`)
-- **`agent-control-plane`**: Specialist subagent dispatch, Ship vs. Scout task shaping, non-overlapping boundary isolation, zero-token reactive waiting, stuck-worker recovery ladder, and 4-section Bearings status reporting.
-
-### 🎨 2. Design & UI/UX (`.agents/skills/design/` - 68 Skills)
+### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets)
 - **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
 - **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
-  - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/SKILL.md), [`styles/minimal`](.agents/skills/design/styles/minimal/SKILL.md), [`styles/spacious`](.agents/skills/design/styles/spacious/SKILL.md) (ample whitespace, 8pt grid, low cognitive load).
-  - **Slick & Modern Tech**: [`styles/sleek`](.agents/skills/design/styles/sleek/SKILL.md), [`styles/bento`](.agents/skills/design/styles/bento/SKILL.md), [`styles/shadcn`](.agents/skills/design/styles/shadcn/SKILL.md), [`styles/modern`](.agents/skills/design/styles/modern/SKILL.md) (Inter + JetBrains Mono, dark elevation, subtle borders).
-  - **Enterprise & Dense**: [`styles/ant`](.agents/skills/design/styles/ant/SKILL.md), [`styles/corporate`](.agents/skills/design/styles/corporate/SKILL.md), [`styles/enterprise`](.agents/skills/design/styles/enterprise/SKILL.md), [`styles/matrix`](.agents/skills/design/styles/matrix/SKILL.md) (compact tables, tabular numerals).
-  - **Bold & Expressive**: [`styles/neobrutalism`](.agents/skills/design/styles/neobrutalism/SKILL.md), [`styles/bold`](.agents/skills/design/styles/bold/SKILL.md), [`styles/neon`](.agents/skills/design/styles/neon/SKILL.md) (hard shadows, black outlines, saturated contrast).
-  - **Warm & Editorial**: [`styles/editorial`](.agents/skills/design/styles/editorial/SKILL.md), [`styles/claude`](.agents/skills/design/styles/claude/SKILL.md), [`styles/paper`](.agents/skills/design/styles/paper/SKILL.md) (serif headlines, parchment warmth, natural earth tones).
-  - **Playful & Retro**: [`styles/claymorphism`](.agents/skills/design/styles/claymorphism/SKILL.md), [`styles/glassmorphism`](.agents/skills/design/styles/glassmorphism/SKILL.md), [`styles/retro`](.agents/skills/design/styles/retro/SKILL.md) (3D pill depth, frosted glass, 8-bit nostalgia).
+  - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/DESIGN.md), [`styles/minimal`](.agents/skills/design/styles/minimal/DESIGN.md), [`styles/spacious`](.agents/skills/design/styles/spacious/DESIGN.md) (ample whitespace, 8pt grid, low cognitive load).
+  - **Slick & Modern Tech**: [`styles/sleek`](.agents/skills/design/styles/sleek/DESIGN.md), [`styles/bento`](.agents/skills/design/styles/bento/DESIGN.md), [`styles/shadcn`](.agents/skills/design/styles/shadcn/DESIGN.md), [`styles/modern`](.agents/skills/design/styles/modern/DESIGN.md) (Inter + JetBrains Mono, dark elevation, subtle borders).
+  - **Enterprise & Dense**: [`styles/ant`](.agents/skills/design/styles/ant/DESIGN.md), [`styles/corporate`](.agents/skills/design/styles/corporate/DESIGN.md), [`styles/enterprise`](.agents/skills/design/styles/enterprise/DESIGN.md), [`styles/matrix`](.agents/skills/design/styles/matrix/DESIGN.md) (compact tables, tabular numerals).
+  - **Bold & Expressive**: [`styles/neobrutalism`](.agents/skills/design/styles/neobrutalism/DESIGN.md), [`styles/bold`](.agents/skills/design/styles/bold/DESIGN.md), [`styles/neon`](.agents/skills/design/styles/neon/DESIGN.md) (hard shadows, black outlines, saturated contrast).
+  - **Warm & Editorial**: [`styles/editorial`](.agents/skills/design/styles/editorial/DESIGN.md), [`styles/claude`](.agents/skills/design/styles/claude/DESIGN.md), [`styles/paper`](.agents/skills/design/styles/paper/DESIGN.md) (serif headlines, parchment warmth, natural earth tones).
+  - **Playful & Retro**: [`styles/claymorphism`](.agents/skills/design/styles/claymorphism/DESIGN.md), [`styles/glassmorphism`](.agents/skills/design/styles/glassmorphism/DESIGN.md), [`styles/retro`](.agents/skills/design/styles/retro/DESIGN.md) (3D pill depth, frosted glass, 8-bit nostalgia).
 
-### ⚙️ 3. Engineering (`.agents/skills/engineering/` - 18 Skills)
+### ⚙️ 2. Engineering (`.agents/skills/engineering/` - 14 Skills)
 - **`refactoring`**: Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, guard clauses, extract method, polymorphism, and strangler fig.
 - **`api-design`**: RESTful modeling, RFC 7807 problem details, idempotency keys, keyset/cursor pagination, and HMAC webhooks.
 - **`zero-downtime-migrations`**: 5-phase Expand/Contract pattern, online index creation, lock timeouts, and batched non-locking backfills.
-- **`tdd`** & **`implement`**: Strict red-green-refactor loop and spec-driven implementation.
+- **`tdd`**: Strict red-green-refactor test-driven development loop.
 - **`code-review`**: Parallel two-axis review (Standards adherence + Spec conformance).
 - **`diagnosing-bugs`**: Systematic red-test feedback loop and regression verification.
 - **`domain-modeling`**: Ubiquitous language definition, scenario testing, and ADR tracking.
 - **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
 - **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
-- **`resolving-merge-conflicts`**: Hunk-by-hunk conflict resolution tracing original commit intent.
 
-### 🧠 4. Productivity (`.agents/skills/productivity/` - 13 Skills)
+### 🧠 3. Productivity (`.agents/skills/productivity/` - 10 Skills)
 - **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces the Universal Physical Copy Invariant (zero symlinks across all directories including .cursor, .claude, and .agents), the Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
 - **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
-- **`grilling`**: Core design tree interview engine in rounds along the decision frontier.
-- **`grill-me`**: Relentless design & plan interrogation trigger (alias invoking `grilling`).
+- **`grill-me`**: Relentless design & plan interrogation: core design tree interview engine in rounds along the decision frontier.
 - **`handoff`**: Compacts conversation context into a structured handoff document.
-- **`teach`**: Multi-session interactive technical coaching with glossaries and learning records.
 - **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
 - **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.
 - **`technical-writing-for-engineers`**: Technical RFCs, architecture decisions, and post-mortems.
 - **`daily-progress-report`**: Work summary and Notion publishing via MCP.
 
-### 🌐 5. Frameworks (`.agents/skills/frameworks/` - 8 Skills)
+### 🌐 4. Frameworks (`.agents/skills/frameworks/` - 8 Skills)
 - **`laravel-best-practices`**: 19 comprehensive rules covering queries, caching, queues, events, db performance.
 - **`laravel-boost`**: Modular guidance for Laravel Boost MCP tools and `.ai/rules` persistence.
 - **`inertia-vue-development`**: Inertia v3 + Vue 3 client-side SPA patterns, forms, hooks, deferred props.
@@ -273,7 +244,7 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`wayfinder-development`**: Laravel Wayfinder TypeScript route binding generator.
 - **`testing-best-practices`**: Pest and PHPUnit testing standards, isolation, assertions.
 
-### 🔒 6. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
+### 🔒 5. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
 - **`security-audit`**: Static security analysis (50+ vulnerability types across PHP, JS, Python, C#).
 - **`shell-scripting`**: Production bash scripting, `set -euo pipefail`, cleanup traps, safe quoting, and option parsing.
 - **`git-worktrees`**: Multi-agent git worktree isolation topology, lifecycle management, and branch collision avoidance.

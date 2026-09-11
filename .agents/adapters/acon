@@ -95,7 +95,7 @@ cmd_status() {
   echo "    - Spoke Dir     : ${agy_spoke}"
   if [[ -d "${agy_spoke}" ]]; then
     local agy_skills_ok="No"
-    if [[ -d "${agy_spoke}/skills/agent-control-plane" || -L "${agy_spoke}/skills/agent-control-plane" ]]; then
+    if [[ -d "${agy_spoke}/skills" || -L "${agy_spoke}/skills" ]]; then
       agy_skills_ok="Yes"
     fi
     local agy_rules_ok="No"

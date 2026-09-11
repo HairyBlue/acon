@@ -119,6 +119,10 @@ flowchart TD
      1. Destructive commands (`git reset --hard`, `git clean -fd`, dropping database tables).
      2. Missing external credentials, OAuth tokens, or API secrets.
      3. Unresolvable 5-Element escalations.
+7. **Engineering Governance (Anti-Overengineering Mandate):**  
+   Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
+8. **Concurrent Execution Isolation (Worktree Invariant):**  
+   When dispatching two or more concurrent `SHIP` specialists on the same repository, the Control Plane MUST enforce physical workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share a working directory or checkout the same branch. The Control Plane manages worktree lifecycle and verifies `.worktrees/` is ignored.
 
 ### Cross-Harness Execution & Model Governance (`acon.yaml`)
 
@@ -182,6 +186,6 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 ## 7. Authority & Gatekeeping: Separation of Authority from Execution
 
 - **Exclusive Captain Authority:** The Captain holds exclusive authority over repository mutations. Git commits, pushes, merges, branch deletions, destructive commands (`git reset --hard`, `git clean -fd`, table drops, file deletions), and new dependency installations require explicit Captain authorization.
-- **Control Plane as Gatekeeper:** The Control Plane verifies diffs, ensures clean linters and 100% test pass rates, formats conventional commits (Conventional Commits v1.0.0), and presents proposed commit messages and diffs to the Captain for approval.
+- **Control Plane as Gatekeeper:** The Control Plane verifies diffs, ensures clean linters and 100% test pass rates, audits for anti-overengineering compliance ([`ponytail`](.agents/skills/productivity/ponytail/SKILL.md)), formats conventional commits according to [`conventional-commits`](.agents/skills/security-devops/conventional-commits/SKILL.md) (Conventional Commits v1.0.0), and presents proposed commit messages and diffs to the Captain for approval.
 - **Worker-Only Git Execution (Zero Message Queuing):** Once the Captain authorizes a commit or push, the Control Plane **NEVER** executes `git commit` or `git push` directly in the main thread. Synchronous tool execution locks the command thread and queues incoming Captain messages. Instead, the Control Plane dispatches a `Git Ops & Release Specialist` via `invoke_subagent` to execute git operations asynchronously in the background while the Control Plane remains instantly responsive to the Captain.
 - **Verification First:** Always run linters and test suites before declaring work complete.

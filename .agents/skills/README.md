@@ -1,31 +1,26 @@
 # Agent Skills Catalog
 
-Welcome to the ACON skills directory. This directory contains 113 modular skills and domain orchestrators organized into 6 specialized domains:
+Welcome to the ACON skills directory. This directory contains modular skills and domain orchestrators organized into 5 specialized domains:
 
 ---
 
-## 1. Orchestration & Control Plane
-- **[`agent-control-plane/`](agent-control-plane/SKILL.md)**: Firstmate-inspired multi-agent orchestration. Manages specialist dispatch, strict Ship vs. Scout task shaping, non-overlapping file boundary isolation, zero-token reactive waiting, and real-time Fleet Bearings status reporting.
-
----
-
-## 2. Design & UI/UX Suite
+## 1. Design & UI/UX Suite
 Master Orchestrator: **[`design/SKILL.md`](design/SKILL.md)** | Full Suite Details: **[`design/README.md`](design/README.md)**
 
 - **[`interface-design/`](design/interface-design/SKILL.md)**: Foundational craft engineering, intentional visual hierarchy, subtle surface elevation, persistent design memory, and anti-slop review.
   - **[`commands/design-deslop.md`](design/interface-design/commands/design-deslop.md)**: Checklist to strip generic AI tells.
   - **[`commands/design-review.md`](design/interface-design/commands/design-review.md)**: Multi-pass visual craft auditor.
-- **[`styles/`](design/styles/)** (67 Curated Aesthetic Presets):
-  - **Clean & Minimalist**: [`styles/clean`](design/styles/clean/SKILL.md), [`styles/minimal`](design/styles/minimal/SKILL.md), [`styles/spacious`](design/styles/spacious/SKILL.md)
-  - **Slick & Modern Tech**: [`styles/sleek`](design/styles/sleek/SKILL.md), [`styles/bento`](design/styles/bento/SKILL.md), [`styles/shadcn`](design/styles/shadcn/SKILL.md), [`styles/modern`](design/styles/modern/SKILL.md)
-  - **Enterprise & Data-Heavy**: [`styles/ant`](design/styles/ant/SKILL.md), [`styles/enterprise`](design/styles/enterprise/SKILL.md), [`styles/corporate`](design/styles/corporate/SKILL.md)
-  - **Bold & Neo-Brutalist**: [`styles/neobrutalism`](design/styles/neobrutalism/SKILL.md), [`styles/bold`](design/styles/bold/SKILL.md), [`styles/brutalism`](design/styles/brutalism/SKILL.md)
-  - **Warm & Editorial**: [`styles/editorial`](design/styles/editorial/SKILL.md), [`styles/claude`](design/styles/claude/SKILL.md), [`styles/paper`](design/styles/paper/SKILL.md)
-  - **Playful & Retro**: [`styles/claymorphism`](design/styles/claymorphism/SKILL.md), [`styles/glassmorphism`](design/styles/glassmorphism/SKILL.md), [`styles/retro`](design/styles/retro/SKILL.md)
+- **[`styles/`](design/styles/)** (67 Curated Aesthetic Presets in `DESIGN.md`):
+  - **Clean & Minimalist**: [`styles/clean`](design/styles/clean/DESIGN.md), [`styles/minimal`](design/styles/minimal/DESIGN.md), [`styles/spacious`](design/styles/spacious/DESIGN.md)
+  - **Slick & Modern Tech**: [`styles/sleek`](design/styles/sleek/DESIGN.md), [`styles/bento`](design/styles/bento/DESIGN.md), [`styles/shadcn`](design/styles/shadcn/DESIGN.md), [`styles/modern`](design/styles/modern/DESIGN.md)
+  - **Enterprise & Data-Heavy**: [`styles/ant`](design/styles/ant/DESIGN.md), [`styles/enterprise`](design/styles/enterprise/DESIGN.md), [`styles/corporate`](design/styles/corporate/DESIGN.md)
+  - **Bold & Neo-Brutalist**: [`styles/neobrutalism`](design/styles/neobrutalism/DESIGN.md), [`styles/bold`](design/styles/bold/DESIGN.md), [`styles/brutalism`](design/styles/brutalism/DESIGN.md)
+  - **Warm & Editorial**: [`styles/editorial`](design/styles/editorial/DESIGN.md), [`styles/claude`](design/styles/claude/DESIGN.md), [`styles/paper`](design/styles/paper/DESIGN.md)
+  - **Playful & Retro**: [`styles/claymorphism`](design/styles/claymorphism/DESIGN.md), [`styles/glassmorphism`](design/styles/glassmorphism/DESIGN.md), [`styles/retro`](design/styles/retro/DESIGN.md)
 
 ---
 
-## 3. Engineering Suite
+## 2. Engineering Suite
 Master Orchestrator: **[`engineering/SKILL.md`](engineering/SKILL.md)** | Full Suite Details: **[`engineering/README.md`](engineering/README.md)**
 
 - **[`api-design`](engineering/api-design/SKILL.md)**: RESTful modeling, RFC 7807 problem details, idempotency keys, cursor pagination, and HMAC webhooks.
@@ -33,13 +28,9 @@ Master Orchestrator: **[`engineering/SKILL.md`](engineering/SKILL.md)** | Full S
 - **[`codebase-design`](engineering/codebase-design/SKILL.md)**: Deep module design principles.
 - **[`diagnosing-bugs`](engineering/diagnosing-bugs/SKILL.md)**: Systematic bug diagnosis and regression test loop.
 - **[`domain-modeling`](engineering/domain-modeling/SKILL.md)**: Domain model and ADR documentation.
-- **[`grill-with-docs`](engineering/grill-with-docs/SKILL.md)**: Grilling with inline ADR generation.
-- **[`implement`](engineering/implement/SKILL.md)**: Spec-driven implementation with TDD.
 - **[`improve-codebase-architecture`](engineering/improve-codebase-architecture/SKILL.md)**: Codebase deepening scanner.
 - **[`prototype`](engineering/prototype/SKILL.md)**: Rapid throwaway HTML/UI prototypes.
 - **[`refactoring`](engineering/refactoring/SKILL.md)**: Fowler refactoring catalog, green-to-green invariant, and strangler fig.
-- **[`research`](engineering/research/SKILL.md)**: Primary-source technical investigations.
-- **[`resolving-merge-conflicts`](engineering/resolving-merge-conflicts/SKILL.md)**: Hunk-by-hunk conflict resolution.
 - **[`setup-ts-deep-modules`](engineering/setup-ts-deep-modules/SKILL.md)**: Deep module enforcement in TypeScript.
 - **[`tdd`](engineering/tdd/SKILL.md)**: Red-green-refactor TDD loop.
 - **[`to-spec`](engineering/to-spec/SKILL.md)**: Conversation-to-spec extraction.
@@ -49,7 +40,7 @@ Master Orchestrator: **[`engineering/SKILL.md`](engineering/SKILL.md)** | Full S
 
 ---
 
-## 4. Fullstack & Frameworks Suite
+## 3. Fullstack & Frameworks Suite
 Master Orchestrator: **[`frameworks/SKILL.md`](frameworks/SKILL.md)** | Full Suite Details: **[`frameworks/README.md`](frameworks/README.md)**
 
 - **[`laravel-best-practices`](frameworks/laravel-best-practices/SKILL.md)**: 19 query, cache, queue, event, and architecture rules.
@@ -63,24 +54,22 @@ Master Orchestrator: **[`frameworks/SKILL.md`](frameworks/SKILL.md)** | Full Sui
 
 ---
 
-## 5. Productivity & Alignment Suite
+## 4. Productivity & Alignment Suite
 Master Orchestrator: **[`productivity/SKILL.md`](productivity/SKILL.md)** | Full Suite Details: **[`productivity/README.md`](productivity/README.md)**
 
-- **[`grilling`](productivity/grilling/SKILL.md)**: Design tree interview engine in rounds along the decision frontier.
-- **[`grill-me`](productivity/grill-me/SKILL.md)**: Relentless design and plan interrogation (alias invoking `grilling`).
+- **[`adopt-acon`](productivity/adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
+- **[`grill-me`](productivity/grill-me/SKILL.md)**: Relentless design and plan interrogation: design tree interview engine along the decision frontier.
 - **[`handoff`](productivity/handoff/SKILL.md)**: Context compacting and session handoff.
 - **[`ponytail`](productivity/ponytail/SKILL.md)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder, YAGNI reviews, and debt ledger.
 - **[`prompt-master`](productivity/prompt-master/SKILL.md)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
-- **[`teach`](productivity/teach/SKILL.md)**: Interactive coaching with glossaries and missions.
 - **[`to-questionnaire`](productivity/to-questionnaire/SKILL.md)**: Async decision-making questionnaires.
-- **[`wait-what`](productivity/wait-what/SKILL.md)**: Jargon-free plain-English concept re-pitching.
 - **[`writing-for-agents`](productivity/writing-for-agents/SKILL.md)**: Authoring skills and AGENTS.md instructions.
 - **[`technical-writing-for-engineers`](productivity/technical-writing-for-engineers/SKILL.md)**: Technical RFCs and post-mortems.
 - **[`daily-progress-report`](productivity/daily-progress-report/SKILL.md)**: Git work summaries and Notion publisher.
 
 ---
 
-## 6. Security & DevOps Suite
+## 5. Security & DevOps Suite
 Master Orchestrator: **[`security-devops/SKILL.md`](security-devops/SKILL.md)** | Full Suite Details: **[`security-devops/README.md`](security-devops/README.md)**
 
 - **[`conventional-commits`](security-devops/conventional-commits/SKILL.md)**: Conventional Commits v1.0.0 enforcement.

@@ -45,57 +45,57 @@ This suite provides the foundational craft engineering principles needed to make
 When the user or product specification expresses a desired aesthetic, route to the designated style skill:
 
 ### 1. "I want a CLEAN design" (Minimalist, Airy, Uncluttered)
-- **Primary Skill**: **[`styles/clean/`](styles/clean/SKILL.md)** | [Tokens & Specs](styles/clean/DESIGN.md)
+- **Primary Preset**: **[`styles/clean/DESIGN.md`](styles/clean/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/minimal/`](styles/minimal/SKILL.md)**: Extreme restraint, stark typography, zero ornamentation.
-  - **[`styles/spacious/`](styles/spacious/SKILL.md)**: Generous whitespace, relaxed reading pace, open layouts.
-  - **[`styles/basic/`](styles/basic/SKILL.md)**: Functional simplicity, predictable layouts, accessible defaults.
-  - **[`styles/refined/`](styles/refined/SKILL.md)**: Subtle luxury, understated typography, delicate borders.
+  - **[`styles/minimal/`](styles/minimal/DESIGN.md)**: Extreme restraint, stark typography, zero ornamentation.
+  - **[`styles/spacious/`](styles/spacious/DESIGN.md)**: Generous whitespace, relaxed reading pace, open layouts.
+  - **[`styles/basic/`](styles/basic/DESIGN.md)**: Functional simplicity, predictable layouts, accessible defaults.
+  - **[`styles/refined/`](styles/refined/DESIGN.md)**: Subtle luxury, understated typography, delicate borders.
 - **Visual Hallmarks**: 8pt baseline grid, ample whitespace, limited palette (neutral surface + single focused accent), high legibility (Roboto/Poppins), low cognitive load.
 
 ### 2. "I want a SLICK design" (Modern Tech, High-Craft SaaS, Precision)
-- **Primary Skill**: **[`styles/sleek/`](styles/sleek/SKILL.md)** | [Tokens & Specs](styles/sleek/DESIGN.md)
+- **Primary Preset**: **[`styles/sleek/DESIGN.md`](styles/sleek/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/bento/`](styles/bento/SKILL.md)**: Bento-grid card layouts, high-contrast badges, visual rhythm.
-  - **[`styles/shadcn/`](styles/shadcn/SKILL.md)**: Contemporary SaaS baseline, zinc/slate neutrals, subtle borders.
-  - **[`styles/modern/`](styles/modern/SKILL.md)**: Dynamic accents, layered surfaces, confident contrast.
-  - **[`styles/impeccable/`](styles/impeccable/SKILL.md)**: Pixel-perfect alignment, micro-interactions, dark elevation.
-  - **[`styles/agentic/`](styles/agentic/SKILL.md)**: AI-native ergonomics, streaming indicators, glowing pulses.
+  - **[`styles/bento/`](styles/bento/DESIGN.md)**: Bento-grid card layouts, high-contrast badges, visual rhythm.
+  - **[`styles/shadcn/`](styles/shadcn/DESIGN.md)**: Contemporary SaaS baseline, zinc/slate neutrals, subtle borders.
+  - **[`styles/modern/`](styles/modern/DESIGN.md)**: Dynamic accents, layered surfaces, confident contrast.
+  - **[`styles/impeccable/`](styles/impeccable/DESIGN.md)**: Pixel-perfect alignment, micro-interactions, dark elevation.
+  - **[`styles/agentic/`](styles/agentic/DESIGN.md)**: AI-native ergonomics, streaming indicators, glowing pulses.
 - **Visual Hallmarks**: Desktop-first expressive scale, Inter + JetBrains Mono, 60/30/10 color rule, subtle active press feedback (`scale(0.97)`), whisper-quiet surface steps (+7% lightness in dark mode), ambient drop shadows.
 
 ### 3. "I want an ENTERPRISE / DATA-HEAVY design" (High-Density, Pro Tools)
-- **Primary Skill**: **[`styles/ant/`](styles/ant/SKILL.md)** | [Tokens & Specs](styles/ant/DESIGN.md)
+- **Primary Preset**: **[`styles/ant/DESIGN.md`](styles/ant/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/corporate/`](styles/corporate/SKILL.md)**: Trustworthy, stable corporate identity, structured grids.
-  - **[`styles/enterprise/`](styles/enterprise/SKILL.md)**: High-scale data grids, bulk actions, clear status badges.
-  - **[`styles/professional/`](styles/professional/SKILL.md)**: Balanced business utility, neutral typography.
-  - **[`styles/matrix/`](styles/matrix/SKILL.md)** or **[`styles/mono/`](styles/mono/SKILL.md)**: Code-first terminal aesthetic, monospace hierarchy, tabular data.
+  - **[`styles/corporate/`](styles/corporate/DESIGN.md)**: Trustworthy, stable corporate identity, structured grids.
+  - **[`styles/enterprise/`](styles/enterprise/DESIGN.md)**: High-scale data grids, bulk actions, clear status badges.
+  - **[`styles/professional/`](styles/professional/DESIGN.md)**: Balanced business utility, neutral typography.
+  - **[`styles/matrix/`](styles/matrix/DESIGN.md)** or **[`styles/mono/`](styles/mono/DESIGN.md)**: Code-first terminal aesthetic, monospace hierarchy, tabular data.
 - **Visual Hallmarks**: Compact padding (12px–16px), dense tables, tabular figures (`tabular-nums`), high information throughput.
 
 ### 4. "I want a BOLD / NEO-BRUTALIST design" (High-Contrast, Expressive, Punchy)
-- **Primary Skill**: **[`styles/neobrutalism/`](styles/neobrutalism/SKILL.md)** | [Tokens & Specs](styles/neobrutalism/DESIGN.md)
+- **Primary Preset**: **[`styles/neobrutalism/DESIGN.md`](styles/neobrutalism/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/bold/`](styles/bold/SKILL.md)**: Heavy headline weights, saturated contrast, assertive layouts.
-  - **[`styles/brutalism/`](styles/brutalism/SKILL.md)**: Raw, unadorned HTML feel, mono fonts, harsh borders.
-  - **[`styles/neon/`](styles/neon/SKILL.md)**: Cyberpunk dark mode, saturated neon glows, high contrast.
-  - **[`styles/power/`](styles/power/SKILL.md)**: High-energy action branding, dynamic diagonal tensions.
+  - **[`styles/bold/`](styles/bold/DESIGN.md)**: Heavy headline weights, saturated contrast, assertive layouts.
+  - **[`styles/brutalism/`](styles/brutalism/DESIGN.md)**: Raw, unadorned HTML feel, mono fonts, harsh borders.
+  - **[`styles/neon/`](styles/neon/DESIGN.md)**: Cyberpunk dark mode, saturated neon glows, high contrast.
+  - **[`styles/power/`](styles/power/DESIGN.md)**: High-energy action branding, dynamic diagonal tensions.
 - **Visual Hallmarks**: Thick 2px–3px solid black borders, hard unblurred drop shadows (`shadow-[4px_4px_0px_#000]`), saturated retro accents, bold display type.
 
 ### 5. "I want a WARM / EDITORIAL design" (Human, Literary, Thoughtful)
-- **Primary Skill**: **[`styles/editorial/`](styles/editorial/SKILL.md)** | [Tokens & Specs](styles/editorial/DESIGN.md)
+- **Primary Preset**: **[`styles/editorial/DESIGN.md`](styles/editorial/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/claude/`](styles/claude/SKILL.md)**: Warm terracotta, calm editorial feel, serif headlines with clean body.
-  - **[`styles/cafe/`](styles/cafe/SKILL.md)**: Earthy tones, organic textures, cozy inviting layout.
-  - **[`styles/paper/`](styles/paper/SKILL.md)**: Print-like paper texture, subtle off-white parchment, ink contrast.
-  - **[`styles/terracotta/`](styles/terracotta/SKILL.md)**: Warm clay hues, Mediterranean terracotta warmth.
+  - **[`styles/claude/`](styles/claude/DESIGN.md)**: Warm terracotta, calm editorial feel, serif headlines with clean body.
+  - **[`styles/cafe/`](styles/cafe/DESIGN.md)**: Earthy tones, organic textures, cozy inviting layout.
+  - **[`styles/paper/`](styles/paper/DESIGN.md)**: Print-like paper texture, subtle off-white parchment, ink contrast.
+  - **[`styles/terracotta/`](styles/terracotta/DESIGN.md)**: Warm clay hues, Mediterranean terracotta warmth.
 - **Visual Hallmarks**: Serif display type (Merriweather, Playfair, Georgia), warm parchment backgrounds (`#FBFBF9`), natural earth accents, generous line height (~1.6).
 
 ### 6. "I want a PLAYFUL / CREATIVE design" (Soft, 3D, Nostalgic)
-- **Primary Skill**: **[`styles/claymorphism/`](styles/claymorphism/SKILL.md)** | [Tokens & Specs](styles/claymorphism/DESIGN.md)
+- **Primary Preset**: **[`styles/claymorphism/DESIGN.md`](styles/claymorphism/DESIGN.md)**
 - **Companions & Variations**:
-  - **[`styles/glassmorphism/`](styles/glassmorphism/SKILL.md)**: Frosted glass layers, `backdrop-blur`, translucent panels.
-  - **[`styles/retro/`](styles/retro/SKILL.md)**, **[`styles/sega/`](styles/sega/SKILL.md)**, **[`styles/tetris/`](styles/tetris/SKILL.md)**: 8-bit/16-bit arcade aesthetics, pixel fonts.
-  - **[`styles/doodle/`](styles/doodle/SKILL.md)**, **[`styles/sketch/`](styles/sketch/SKILL.md)**: Hand-drawn outlines, whimsical organic asymmetry.
+  - **[`styles/glassmorphism/`](styles/glassmorphism/DESIGN.md)**: Frosted glass layers, `backdrop-blur`, translucent panels.
+  - **[`styles/retro/`](styles/retro/DESIGN.md)**, **[`styles/sega/`](styles/sega/DESIGN.md)**, **[`styles/tetris/`](styles/tetris/DESIGN.md)**: 8-bit/16-bit arcade aesthetics, pixel fonts.
+  - **[`styles/doodle/`](styles/doodle/DESIGN.md)**, **[`styles/sketch/`](styles/sketch/DESIGN.md)**: Hand-drawn outlines, whimsical organic asymmetry.
 - **Visual Hallmarks**: Rounded pill geometry, multi-layered inset shadows for 3D depth, soft pastel tones.
 
 ---

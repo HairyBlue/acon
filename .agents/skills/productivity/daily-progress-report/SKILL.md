@@ -1,14 +1,16 @@
 ---
 name: daily-progress-report
-description: Automated daily progress report generator and Notion publisher. Gathers git commits, conversation history, and infrastructure updates, formats them into a structured report, and uploads to Notion via Notion MCP server.
+description: "Automated daily progress report generator. Gathers git commits and session achievements, writes a structured local Markdown report (Obsidian-ready), and optionally syncs to Notion, Obsidian, or other destinations via available MCP servers."
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
 # Daily Progress Report Skill
 
-This skill automates collecting code changes, session history, and deployment activities, formatting them into a high-level daily progress summary, and publishing it directly to Notion under **`PROGRESS REPORT` > `YYYY` > `<MONTH>` > `Week-<N>`**.
+This skill automates collecting code changes, session achievements, and infrastructure/deployment activities, formatting them into a structured daily progress report.
+
+It operates on a **Markdown-First** architecture: the report is **always written first** to a local Markdown file (Obsidian-ready with frontmatter metadata), serving as the canonical single source of truth. Once written locally, the report can optionally sync to Notion, Obsidian, or other destinations depending on active MCP servers or configured vault paths.
 
 ---
 
@@ -22,16 +24,19 @@ This skill automates collecting code changes, session history, and deployment ac
 
 ---
 
-## 2. Trigger & Usage
+## 2. Trigger Phrases & Usage
 
 Activate this skill when asked to:
+- "Generate daily progress report"
+- "Write today's progress report to file"
+- "Log today's work for Obsidian / Notion"
 - "Make a progress report of what I did today and upload to Notion."
 - "Generate daily summary from commits and conversation history."
 - "Publish today's progress report."
 
 ---
 
-## 2. Information Gathering Workflow
+## 3. Phase 1: Information Gathering Workflow
 
 ### Step 1: Collect Local & Remote Git Commits
 Run shell commands to retrieve commits made on the target day (`YYYY-MM-DD`):
@@ -46,40 +51,35 @@ git show <commit-hash> --stat
 
 ### Step 2: Extract Conversation & Task Context
 Review the active session and recent conversation transcripts (`.system_generated/logs/transcript.jsonl` or conversation summaries) for non-commit activities:
-- Architecture & Infrastructure design
+- Architecture & infrastructure design
 - VPS setup & deployment planning
 - Debugging & security auditing
+- Requirements analysis & technical specs
+
+Enforce the 3 strict content exclusions: filter out prompt-meta chatter, MCP logistics, and self-referential reporting steps.
 
 ---
 
-## 3. Notion MCP Publishing Workflow
+## 4. Phase 2: Local Markdown File Generation (Single Source of Truth)
 
-### Step 1: Locate Target Parent Page
-Search Notion for the `PROGRESS REPORT` root page, year subpage (`YYYY`), uppercase month subpage (e.g. `AUGUST`), and target week subpage (`Week-1`, `Week-2`, `Week-3`, or `Week-4`):
-- Call Notion MCP tool `API-post-search` with query `"PROGRESS REPORT"` or `"2026"`.
-- Obtain the parent page ID for `YYYY` (e.g. `3b43ba44-9377-80df-86e4-cf303ce04881`).
-- Locate or create the uppercase month subpage (`AUGUST`, `SEPTEMBER`, `OCTOBER`, `NOVEMBER`, `DECEMBER`).
-- Locate or create the target week subpage (`Week-1`, `Week-2`, `Week-3`, `Week-4`) under the target month.
-- Obtain the week page ID (e.g. `3b43ba44-9377-81dd-bfe6-c8a2e8af546e`).
+> [!IMPORTANT]
+> **Mandatory First Step**: ALWAYS create the local report file before attempting synchronization to any external service or MCP.
 
-### Step 2: Create Daily Page
-Call Notion MCP tool `API-post-page`:
-- `parent`: `{"type": "page_id", "page_id": "<WEEK_PAGE_ID>"}`
-- `properties`: `{"title": {"title": [{"text": {"content": "YYYY-MM-DD (DayOfWeek)"}}]}}`
+### Target File Path
+- **Default path pattern**: `docs/progress-reports/YYYY/MM/YYYY-MM-DD.md`
+- **Configurable path**: If the Captain specifies a custom location (e.g., an Obsidian vault directory or project documentation folder), write to that path instead.
 
-### Step 3: Populate Markdown Content
-Call Notion MCP tool `API-update-page-markdown`:
-- `page_id`: `<NEW_PAGE_ID>`
-- `type`: `"replace_content"`
-- `replace_content`:
-  - `allow_deleting_content`: `true`
-  - `new_str`: Full Markdown content formatted according to the template below.
-
----
-
-## 4. Markdown Report Template
+### Report Template (Obsidian-Ready)
 
 ```markdown
+---
+date: YYYY-MM-DD
+day: DayOfWeek
+workspace: <Project Name>
+tags: [daily-report, progress]
+status: completed
+---
+
 # Daily Progress Report — YYYY-MM-DD (DayOfWeek)
 
 **Date**: Month DD, YYYY  
@@ -129,4 +129,61 @@ Call Notion MCP tool `API-update-page-markdown`:
 - <Bullet point 3>
 - <Bullet point 4>
 - <Bullet point 5>
+```
+
+---
+
+## 5. Phase 3: Opportunistic & Flexible MCP Synchronization
+
+Once the local Markdown file is successfully written, dynamically detect and execute synchronization based on available MCP tools or user configuration:
+
+### Option A: Notion MCP Sync (When Notion MCP is available)
+If Notion MCP tools (`API-post-search`, `API-post-page`, `API-update-page-markdown`) are detected:
+1. **Locate Target Parent Page**:
+   - Search Notion for root page `PROGRESS REPORT`, year subpage (`YYYY`), uppercase month subpage (e.g. `AUGUST`), and target week subpage (`Week-1`, `Week-2`, `Week-3`, `Week-4`).
+   - Call Notion MCP tool `API-post-search` with query `"PROGRESS REPORT"` or `"2026"`.
+   - Obtain the parent page ID for `YYYY` (e.g. `3b43ba44-9377-80df-86e4-cf303ce04881`).
+   - Locate or create the uppercase month subpage (`AUGUST`, `SEPTEMBER`, `OCTOBER`, `NOVEMBER`, `DECEMBER`).
+   - Locate or create the target week subpage (`Week-1`, `Week-2`, `Week-3`, `Week-4`) under the target month.
+   - Obtain the week page ID (e.g. `3b43ba44-9377-81dd-bfe6-c8a2e8af546e`).
+2. **Create Daily Page**:
+   - Call Notion MCP tool `API-post-page`:
+     - `parent`: `{"type": "page_id", "page_id": "<WEEK_PAGE_ID>"}`
+     - `properties`: `{"title": {"title": [{"text": {"content": "YYYY-MM-DD (DayOfWeek)"}}]}}`
+3. **Populate Markdown Content**:
+   - Call Notion MCP tool `API-update-page-markdown`:
+     - `page_id`: `<NEW_PAGE_ID>`
+     - `type`: `"replace_content"`
+     - `replace_content`:
+       - `allow_deleting_content`: `true`
+       - `new_str`: Full Markdown content from the local report file.
+
+### Option B: Obsidian MCP / Vault Sync (When Obsidian is configured)
+If an Obsidian MCP server is active or a local Obsidian vault path is configured:
+1. **MCP Dispatch**: If Obsidian MCP tools are available, invoke them to create or update the daily note in the target vault directory (e.g. `Daily Notes/` or `Reports/`).
+2. **Direct Vault Mirroring**: If a local Obsidian vault path is provided (e.g., `OBSIDIAN_VAULT_PATH` or explicitly requested by the Captain), write or copy the Markdown file directly into the vault structure.
+
+### Option C: Pure Local Mode (Default / Offline Fallback)
+If no external MCP servers (Notion, Obsidian, etc.) are available or configured:
+- Conclude successfully without errors or warnings.
+- Report the saved local Markdown file path to the Captain.
+- Present the high-level executive summary and Trello card summary in the chat response.
+- Guarantee 100% resilience: zero MCP failures block completion.
+
+---
+
+## 6. Execution Flow Summary
+
+```mermaid
+flowchart TD
+    Start["Trigger: Progress Report Request"] --> P1["Phase 1: Information Gathering<br/>(Git log + Transcript - Exclusions)"]
+    P1 --> P2["Phase 2: Local Markdown File<br/>(docs/progress-reports/YYYY/MM/YYYY-MM-DD.md)"]
+    Detect{"Detect Active Sync Target"}
+    P2 --> Detect
+    Detect -->|"Notion MCP available"| Notion["Phase 3A: Notion MCP Sync<br/>(Find week page -> Create daily page)"]
+    Detect -->|"Obsidian MCP / Vault path"| Obsidian["Phase 3B: Obsidian Sync<br/>(Vault copy / MCP note write)"]
+    Detect -->|"No external MCP active"| Local["Phase 3C: Local-Only Completed<br/>(Report file path & Executive Summary)"]
+    Notion --> Done["Shipshape Report Complete"]
+    Obsidian --> Done
+    Local --> Done
 ```

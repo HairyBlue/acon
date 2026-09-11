@@ -21,13 +21,9 @@ This skill serves as the primary router and master guide for all core software e
 | **`codebase-design`** | Discipline and vocabulary for designing deep modules with narrow interfaces and clean seams. | [`codebase-design/SKILL.md`](codebase-design/SKILL.md) |
 | **`diagnosing-bugs`** | Systematic bug diagnosis loop: red-test creation $\rightarrow$ minimize $\rightarrow$ hypothesize $\rightarrow$ instrument $\rightarrow$ fix $\rightarrow$ regression-test. | [`diagnosing-bugs/SKILL.md`](diagnosing-bugs/SKILL.md) |
 | **`domain-modeling`** | Ubiquitous language definition, scenario stress-testing, and ADR documentation. | [`domain-modeling/SKILL.md`](domain-modeling/SKILL.md) |
-| **`grill-with-docs`** | Grilling session that simultaneously sharpens domain terms, builds models, and updates ADRs inline. | [`grill-with-docs/SKILL.md`](grill-with-docs/SKILL.md) |
-| **`implement`** | Spec-driven implementation loop driving TDD at agreed seams and ending in code review. | [`implement/SKILL.md`](implement/SKILL.md) |
 | **`improve-codebase-architecture`** | Scans codebase for deepening opportunities and presents an actionable improvement report. | [`improve-codebase-architecture/SKILL.md`](improve-codebase-architecture/SKILL.md) |
 | **`prototype`** | Rapid throwaway HTML/UI prototypes to validate state and interaction design before production code. | [`prototype/SKILL.md`](prototype/SKILL.md) |
 | **`refactoring`** | Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, guard clauses, extract method, polymorphism, and strangler fig. | [`refactoring/SKILL.md`](refactoring/SKILL.md) |
-| **`research`** | Primary-source technical investigations captured as cited Markdown documents. | [`research/SKILL.md`](research/SKILL.md) |
-| **`resolving-merge-conflicts`** | Hunk-by-hunk conflict resolution tracing original commit intent. | [`resolving-merge-conflicts/SKILL.md`](resolving-merge-conflicts/SKILL.md) |
 | **`setup-ts-deep-modules`** | Enforces deep module boundaries in TypeScript with `dependency-cruiser`. | [`setup-ts-deep-modules/SKILL.md`](setup-ts-deep-modules/SKILL.md) |
 | **`tdd`** | Strict test-driven development red-green-refactor loop. | [`tdd/SKILL.md`](tdd/SKILL.md) |
 | **`to-spec`** | Synthesizes active architectural conversations into an actionable specification. | [`to-spec/SKILL.md`](to-spec/SKILL.md) |
@@ -40,11 +36,11 @@ This skill serves as the primary router and master guide for all core software e
 ## Workflow Guide
 
 ```
-Plan / Ideate ──> [grill-with-docs] / [domain-modeling] / [api-design]
+Plan / Ideate ──> [domain-modeling] / [api-design]
         │
         ├──> [to-spec] ──> [to-tickets]
         │
-        └──> [implement] ──> [tdd] ──> [refactoring] ──> [code-review]
-                                 │
-                                 └──> [zero-downtime-migrations]
+        └──> [tdd] ──> [refactoring] ──> [code-review]
+                 │
+                 └──> [zero-downtime-migrations]
 ```

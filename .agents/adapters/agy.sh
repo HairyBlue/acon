@@ -89,10 +89,19 @@ else
   RESOLVED_EFFORT="${EFFORT}"
 fi
 
+# Map acon.yaml model slugs to agy CLI model identifiers
+AGY_MODEL="${MODEL}"
+if [[ "${AGY_MODEL}" == "claude-opus-4-6" ]]; then
+  AGY_MODEL="claude-opus-4-6-thinking"
+fi
+
 EFFORT_ARGS=()
-if [[ -n "${RESOLVED_EFFORT}" && "${RESOLVED_EFFORT}" != "standard" && "${RESOLVED_EFFORT}" != "none" ]]; then
-  EFFORT_ARGS+=(--effort "${RESOLVED_EFFORT}")
+# Claude models in agy have thinking built-in and reject the --effort CLI flag
+if [[ ! "${AGY_MODEL}" =~ ^claude- ]]; then
+  if [[ -n "${RESOLVED_EFFORT}" && "${RESOLVED_EFFORT}" != "standard" && "${RESOLVED_EFFORT}" != "none" ]]; then
+    EFFORT_ARGS+=(--effort "${RESOLVED_EFFORT}")
+  fi
 fi
 
 # Execute agy CLI in print mode with JSON output
-exec agy -p "$(cat "${PROMPT_FILE}")" --model "${MODEL}" "${EFFORT_ARGS[@]}" --output-format json
+exec agy -p "$(cat "${PROMPT_FILE}")" --model "${AGY_MODEL}" "${EFFORT_ARGS[@]}" --print-timeout "${PRINT_TIMEOUT:-10m0s}" --output-format json

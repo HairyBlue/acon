@@ -170,7 +170,7 @@ Before transferring any files, the target repository is inspected:
   rsync -avL "${ACON_SOURCE}/.cursor/" "${TARGET}/.cursor/"
   rsync -avL "${ACON_SOURCE}/.claude/" "${TARGET}/.claude/"
   ```
-- This populates `.cursor/skills/` and `.claude/skills/` with concrete physical files for all 114 skills across the 6 domains (`agent-control-plane/`, `design/`, `engineering/`, `frameworks/`, `productivity/`, `security-devops/`).
+- This populates `.cursor/skills/` and `.claude/skills/` with concrete physical files for all 109 skills across the 5 domains (`design/`, `engineering/`, `frameworks/`, `productivity/`, `security-devops/`).
 
 ### Phase 5: Verification Gate (Fail-Closed)
 The adoption process runs an automated two-step verification gate:
