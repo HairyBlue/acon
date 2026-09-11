@@ -16,6 +16,7 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 3. **Governance & Model Exclusion:** `acon.yaml` acts as the single declarative source of truth, enforcing security rules, model disallow-lists, and intent-based routing.
 4. **The Ephemeral Bridge Pattern:** Tasks are written as immutable markdown briefs into `.agents/bridge/task_<uuid>.md`, executed by the selected adapter, and captured into `.agents/bridge/result_<uuid>.json`. Upon completion, ephemeral bridge files are automatically purged unless `--keep-bridge` is specified.
 5. **Main-First Escalation Invariant:** Even when the cross-harness bridge is enabled (`bridge.enabled: true`), tasks that can be executed reliably on the main model MUST default to the main model configured in `acon.yaml`. External bridge models are engaged strictly by exception for high-complexity architecture, deep reasoning, or specialized domain requirements.
+6. **The Bridge Activation Gate:** Even when `bridge.enabled: true`, the default delegation tool is **ALWAYS native `invoke_subagent`** on the main engine. The Control Plane is strictly **FORBIDDEN** from invoking the external bridge (`dispatch.sh`) for everyday tasks (routine coding, standard tests, file inspections, general news/web lookups, git operations). The external bridge is engaged **STRICTLY BY EXCEPTION** only when at least one of three conditions is met: (1) explicit Captain command, (2) extreme architectural complexity requiring deep reasoning, or (3) cross-model comparative reviews.
 
 ```
 +-------------------------------------------------------------------------+
@@ -97,6 +98,14 @@ ACON decouples agent tasks from specific model names by operating on abstract ca
   - Even when `bridge.enabled: true` and `prefer_main_first: true`, tasks that can be executed reliably by the main engine MUST default to the main model.
   - Routine coding, straightforward tests, simple scripts, and normal scans execute on the main engine, reserving heavy external models strictly for tasks that genuinely require deep reasoning, complex system architecture, or specialized domain capability.
 
+- **The Bridge Activation Gate (`activation_gate: explicit_or_heavy_only`):**
+  - Even when `bridge.enabled: true`, the default delegation tool is **ALWAYS native `invoke_subagent`** (running on the main model).
+  - The Control Plane is strictly **FORBIDDEN** from invoking the external bridge (`dispatch.sh`) for everyday tasks (routine coding, standard tests, file inspections, general news/web lookups, git operations).
+  - The external bridge (`dispatch.sh`) is engaged **STRICTLY BY EXCEPTION** only when at least one of these three conditions is met:
+    1. *Explicit Captain Command:* The Captain explicitly asks to use an external model or the bridge (e.g., "use Claude", "run through Opus", "test on GPT", "use the bridge").
+    2. *Extreme Architectural Complexity (Deep Reasoning Tier):* The objective involves foundational system rewrites, complex distributed schema migrations, or intractable concurrency bugs requiring deep reasoning effort that exceeds the main model.
+    3. *Cross-Model Comparative Review:* The Captain asks for a second opinion or cross-model benchmark comparison.
+
 ### 3.2 Adapter Matrix
 
 | Category | Adapter | Description | Use Case |
@@ -119,7 +128,7 @@ Test intent routing and verify policy enforcement without executing CLI harnesse
 
 ```bash
 # Test research & scout intent routing
-./.agents/adapters/dispatch.sh --dry-run --task "scout database models"
+./.agents/adapters/dispatch.sh --dry-run --task "deep-research database models"
 ```
 **Expected Output:**
 ```text
@@ -127,7 +136,7 @@ Test intent routing and verify policy enforcement without executing CLI harnesse
 ACON Task Dispatch Plan (Dry Run)
 ================================================================================
 Matched Rule   : research-scout
-Pattern Match  : scout|research|audit|spike
+Pattern Match  : deep-research|external-benchmark|oss-analysis
 Target Harness : agy
 Target Model   : <target_model>
 Fallback Model : <main_fallback_model>
@@ -138,7 +147,7 @@ Bridge Task    : .../.agents/bridge/task_<uuid>.md
 Bridge Result  : .../.agents/bridge/result_<uuid>.json
 --------------------------------------------------------------------------------
 Task Content Preview:
-scout database models
+deep-research database models
 ================================================================================
 [INFO] Dry run complete. Execution halted before invoking adapter.
 ```

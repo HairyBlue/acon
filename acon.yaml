@@ -9,6 +9,7 @@ version: "1.0"
 bridge:
   enabled: true # true: dispatch via adapter bridge (dispatch.sh) | false: native invoke_subagent
   prefer_main_first: true # Prefer main model by default; only escalate to specialized models when task complexity demands it
+  activation_gate: "explicit_or_heavy_only" # "always" | "explicit_or_heavy_only"
   # Main-First Escalation Invariant: Routine coding, straightforward tests, simple scripts,
   # and normal scans should execute on the main engine (main_model), reserving heavy external
   # models for tasks that genuinely require deep reasoning or specialized capability.
@@ -39,7 +40,7 @@ dispatch:
   rules:
     - name: "research-scout"
       description: "Read-only exploration, codebase archaeology, feasibility spikes, and diagnostic investigations"
-      match: "scout|research|audit|spike"
+      match: "deep-research|external-benchmark|oss-analysis"
       harness: "agy"
       model: "gpt-oss-120b"
       fallback: "gemini-3.8-flash"

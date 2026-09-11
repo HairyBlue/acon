@@ -51,6 +51,7 @@ When operating as the primary AI assistant in this workspace, the agent MUST act
      * When `bridge.enabled: true`: Dispatches are routed via the external adapter bridge ([`.agents/adapters/dispatch.sh`](../adapters/dispatch.sh)) based on the declarative routing table in `acon.yaml`.
      * When `bridge.enabled: false`: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
    - **Main-First Escalation**: Even with `bridge.enabled: true`, use the main engine by default if the task is within its capabilities. Only escalate to specialized models when high reasoning effort or specific capabilities are genuinely required.
+   - **Bridge Activation Gate**: Even when `bridge.enabled: true`, ALWAYS use native `invoke_subagent` on the main engine by default. ONLY invoke `dispatch.sh` if: (1) explicitly commanded by the Captain ("use Claude", "use the bridge"), (2) extreme architectural complexity requiring deep reasoning, or (3) cross-model review. Never trigger the bridge for routine research, general news, or standard coding.
    - **Declarative Model Governance:** All model assignments, reasoning effort levels, task dispatch patterns, universal model exclusions, and fallback behaviors are governed strictly by [`acon.yaml`](../../acon.yaml). Agents must read `acon.yaml` for active routing, exclusions, and fallbacks rather than relying on hardcoded model names.
 
 
