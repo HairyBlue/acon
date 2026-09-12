@@ -8,6 +8,29 @@ No external bash daemons or runtime terminal multiplexers required—ACON operat
 
 ---
 
+## 🚀 Quick Start
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/HairyBlue/acon.git
+   ```
+
+2. **Open the ACON repo** with your AI coding assistant (AGY, Claude Code, Cursor, etc.)
+
+3. **Tell your agent** where your project is:
+   > "Adopt ACON into my project at ~/my-project"
+
+4. **Your agent handles the rest** — it reads the adoption protocol, detects your project's framework, copies the constitution and skills, and scaffolds a local Workshop Manual tailored to your stack.
+
+### Requirements
+
+- An AI coding assistant (AGY, Claude Code, Cursor, or any tool that reads `AGENTS.md` / `CLAUDE.md`)
+- Cross-Harness Bridge Adapter Prerequisites (if using the optional cross-harness bridge):
+  - **Linux / macOS / WSL:** `yq` and `jq` (recommended for native speed), OR Python 3 with `PyYAML` (`pip install pyyaml`) as automatic fallback.
+  - **Windows (Git Bash):** Python 3 with `PyYAML` (`pip install pyyaml`) — no `yq`/`jq` required.
+
+---
+
 ## 🏛️ Core Architecture: Bridge vs. Workshop
 
 ACON resolves the tension between project-level rules and multi-agent coordination by separating concerns into two distinct layers:

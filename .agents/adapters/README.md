@@ -63,6 +63,18 @@ The master configuration file lives at the repository root ([`acon.yaml`](../../
 
 All model identifiers, reasoning efforts, exclusions, and dispatch patterns are declared strictly in [`acon.yaml`](../../acon.yaml), which serves as the single source of truth.
 
+### 2.1 Prerequisites & Dual Config Reader Engine
+
+The dispatch adapter features an automated dual config reader engine ensuring out-of-the-box compatibility across Unix, macOS, WSL, and Windows Git Bash:
+
+- **Dual Config Reader Engine:**
+  - **Native Engine (Unix / macOS / WSL):** Uses fast native `yq` and `jq` binaries when present for high-speed YAML parsing and JSON query evaluation.
+  - **Automatic Python Fallback (`config-reader.py`):** If `yq` or `jq` are missing, the dispatcher automatically falls back to [`config-reader.py`](config-reader.py), providing equivalent YAML parsing and JSON query evaluation.
+- **Windows (Git Bash) Compatibility:**
+  - Works out of the box on Windows Git Bash with Python 3 and PyYAML (`pip install pyyaml`) — no `yq` or `jq` binaries required.
+- **Explicit Python Reader Override (`ACON_FORCE_PYTHON_READER=1`):**
+  - Set the environment variable `ACON_FORCE_PYTHON_READER=1` to explicitly force Python parsing on any platform (useful for CI consistency, deterministic testing, or debugging).
+
 ---
 
 ## 3. Supported Adapter Types & CLI Environment

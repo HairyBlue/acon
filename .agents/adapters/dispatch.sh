@@ -7,20 +7,70 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# Pre-flight: verify required tools
-for cmd in yq jq; do
-    if ! command -v "$cmd" &>/dev/null; then
-        echo "ERROR: '${cmd}' is required but not installed." >&2
-        echo "  Install: https://github.com/mikefarah/yq (yq) or https://jqlang.github.io/jq/ (jq)" >&2
-        exit 1
-    fi
-done
-
 # ------------------------------------------------------------------------------
 # Directory & Path Resolution
 # ------------------------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ACON_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+CONFIG_READER="${SCRIPT_DIR}/config-reader.py"
+
+# ------------------------------------------------------------------------------
+# Platform Detection & Config Engine Resolution
+# ------------------------------------------------------------------------------
+case "$(uname -s)" in
+    Linux|Darwin)
+        PLATFORM="unix"
+        ;;
+    MINGW*|MSYS*|CYGWIN*)
+        PLATFORM="windows"
+        ;;
+    *)
+        PLATFORM="other"
+        ;;
+esac
+
+USE_PYTHON_READER=0
+PYTHON_BIN=""
+
+if [[ "${ACON_FORCE_PYTHON_READER:-0}" == "1" ]]; then
+    if command -v python3 &>/dev/null; then
+        PYTHON_BIN="python3"
+        USE_PYTHON_READER=1
+    elif command -v python &>/dev/null; then
+        PYTHON_BIN="python"
+        USE_PYTHON_READER=1
+    else
+        echo "ERROR: Python 3 is required when ACON_FORCE_PYTHON_READER=1." >&2
+        exit 1
+    fi
+elif [[ "${PLATFORM}" == "unix" ]] && command -v yq &>/dev/null && command -v jq &>/dev/null; then
+    USE_PYTHON_READER=0
+else
+    if command -v python3 &>/dev/null; then
+        PYTHON_BIN="python3"
+        USE_PYTHON_READER=1
+    elif command -v python &>/dev/null; then
+        PYTHON_BIN="python"
+        USE_PYTHON_READER=1
+    elif command -v yq &>/dev/null && command -v jq &>/dev/null; then
+        USE_PYTHON_READER=0
+    else
+        echo "ERROR: 'yq'/'jq' or 'python3' is required but not installed." >&2
+        echo "  Install: https://github.com/mikefarah/yq (yq) or https://jqlang.github.io/jq/ (jq), or install Python 3." >&2
+        exit 1
+    fi
+fi
+
+# Compatibility wrapper for jq queries
+if [[ "${USE_PYTHON_READER}" -eq 0 ]]; then
+    acon_jq() {
+        jq "$@"
+    }
+else
+    acon_jq() {
+        "${PYTHON_BIN}" "${CONFIG_READER}" --json-eval "$@"
+    }
+fi
 
 # Configuration & Bridge Resolution (Repository Mode vs Global Hub Mode)
 if [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
@@ -188,21 +238,25 @@ fi
 # ------------------------------------------------------------------------------
 # Resolve Rules & Enforce Governance Policy
 # ------------------------------------------------------------------------------
-# 1. Parse configuration with yq and jq
-# Convert YAML to JSON once for fast, standard jq querying
-CONFIG_JSON="$(yq -o=json '.' "${CONFIG_FILE}")"
-BRIDGE_JSON="$(echo "${CONFIG_JSON}" | jq -c '.bridge // .control_plane // {}')"
-DEFAULT_HARNESS="$(echo "${BRIDGE_JSON}" | jq -r '.default_harness // "agy"')"
-DEFAULT_EFFORT="$(echo "${BRIDGE_JSON}" | jq -r '.default_effort // "auto"')"
-MAIN_MODEL="$(echo "${BRIDGE_JSON}" | jq -r '.main_model // ""')"
+# 1. Parse configuration (using native yq or Python fallback reader)
+# Convert YAML to JSON once for fast, standard querying
+if [[ "${USE_PYTHON_READER}" -eq 0 ]]; then
+  CONFIG_JSON="$(yq -o=json '.' "${CONFIG_FILE}")"
+else
+  CONFIG_JSON="$("${PYTHON_BIN}" "${CONFIG_READER}" "${CONFIG_FILE}")"
+fi
+BRIDGE_JSON="$(echo "${CONFIG_JSON}" | acon_jq -c '.bridge // .control_plane // {}')"
+DEFAULT_HARNESS="$(echo "${BRIDGE_JSON}" | acon_jq -r '.default_harness // "agy"')"
+DEFAULT_EFFORT="$(echo "${BRIDGE_JSON}" | acon_jq -r '.default_effort // "auto"')"
+MAIN_MODEL="$(echo "${BRIDGE_JSON}" | acon_jq -r '.main_model // ""')"
 
-EXCLUDE_JSON="$(echo "${CONFIG_JSON}" | jq -c '.models.exclude // []')"
+EXCLUDE_JSON="$(echo "${CONFIG_JSON}" | acon_jq -c '.models.exclude // []')"
 
 is_excluded() {
   local m="$1"
   [[ -z "${m}" ]] && return 1
   local match
-  match="$(echo "${EXCLUDE_JSON}" | jq -r --arg m "${m}" 'map(ascii_downcase) | index(($m | ascii_downcase)) // empty')"
+  match="$(echo "${EXCLUDE_JSON}" | acon_jq -r --arg m "${m}" 'map(ascii_downcase) | index(($m | ascii_downcase)) // empty')"
   [[ -n "${match}" ]] && return 0
   return 1
 }
@@ -221,7 +275,7 @@ if [[ -z "${TASK_TEXT}" ]]; then
 fi
 
 # 4. Match against dispatch rules
-RULES_JSON="$(echo "${CONFIG_JSON}" | jq -c 'if .dispatch | type == "array" then .dispatch elif .dispatch | type == "object" then (.dispatch.rules // []) else [] end')"
+RULES_JSON="$(echo "${CONFIG_JSON}" | acon_jq -c 'if .dispatch | type == "array" then .dispatch elif .dispatch | type == "object" then (.dispatch.rules // []) else [] end')"
 
 RULE_NAME="default"
 MATCH_PATTERN="none"
@@ -230,17 +284,17 @@ RESOLVED_MODEL=""
 FALLBACK_MODEL=""
 EFFORT_LEVEL=""
 
-NUM_RULES="$(echo "${RULES_JSON}" | jq 'length')"
+NUM_RULES="$(echo "${RULES_JSON}" | acon_jq 'length')"
 for (( i=0; i<NUM_RULES; i++ )); do
-  RULE="$(echo "${RULES_JSON}" | jq -c ".[$i]")"
-  PATTERN="$(echo "${RULE}" | jq -r '.match // ""')"
+  RULE="$(echo "${RULES_JSON}" | acon_jq -c ".[$i]")"
+  PATTERN="$(echo "${RULE}" | acon_jq -r '.match // ""')"
   if [[ -n "${PATTERN}" ]] && echo "${TASK_TEXT}" | grep -qiE "${PATTERN}"; then
-    RULE_NAME="$(echo "${RULE}" | jq -r '.name // "default"')"
+    RULE_NAME="$(echo "${RULE}" | acon_jq -r '.name // "default"')"
     MATCH_PATTERN="${PATTERN}"
-    RESOLVED_HARNESS="$(echo "${RULE}" | jq -r '.harness // empty')"
-    RESOLVED_MODEL="$(echo "${RULE}" | jq -r '.model // empty')"
-    FALLBACK_MODEL="$(echo "${RULE}" | jq -r '.fallback // empty')"
-    EFFORT_LEVEL="$(echo "${RULE}" | jq -r '.effort // empty')"
+    RESOLVED_HARNESS="$(echo "${RULE}" | acon_jq -r '.harness // empty')"
+    RESOLVED_MODEL="$(echo "${RULE}" | acon_jq -r '.model // empty')"
+    FALLBACK_MODEL="$(echo "${RULE}" | acon_jq -r '.fallback // empty')"
+    EFFORT_LEVEL="$(echo "${RULE}" | acon_jq -r '.effort // empty')"
     break
   fi
 done
@@ -379,20 +433,26 @@ if [[ ${EXIT_CODE} -ne 0 ]]; then
 fi
 
 # Structure output into JSON result file
-if jq empty "${RAW_OUTPUT_TMP}" 2>/dev/null; then
-    # Valid JSON — inject metadata
-    if [[ "$(jq -r type "${RAW_OUTPUT_TMP}")" == "object" ]]; then
-        jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
-            '. * {task_id: (.task_id // $tid), harness: (.harness // $h), model: (.model // $m)}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+if [[ "${USE_PYTHON_READER}" -eq 0 ]]; then
+    if jq empty "${RAW_OUTPUT_TMP}" 2>/dev/null; then
+        # Valid JSON — inject metadata
+        if [[ "$(jq -r type "${RAW_OUTPUT_TMP}")" == "object" ]]; then
+            jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+                '. * {task_id: (.task_id // $tid), harness: (.harness // $h), model: (.model // $m)}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+        else
+            jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+                '{task_id: $tid, harness: $h, model: $m, result: .}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+        fi
     else
-        jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
-            '{task_id: $tid, harness: $h, model: $m, result: .}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+        # Raw text — wrap in JSON
+        jq -n --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+            --rawfile out "${RAW_OUTPUT_TMP}" \
+            '{task_id: $tid, harness: $h, model: $m, output: $out}' > "${BRIDGE_RESULT_FILE}"
     fi
 else
-    # Raw text — wrap in JSON
-    jq -n --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
-        --rawfile out "${RAW_OUTPUT_TMP}" \
-        '{task_id: $tid, harness: $h, model: $m, output: $out}' > "${BRIDGE_RESULT_FILE}"
+    "${PYTHON_BIN}" "${CONFIG_READER}" --wrap-result \
+        --task-id "$TASK_UUID" --harness "$RESOLVED_HARNESS" --model "$ACTUAL_MODEL" \
+        --raw-file "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
 fi
 
 rm -f "${RAW_OUTPUT_TMP}"
