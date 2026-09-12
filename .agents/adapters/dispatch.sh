@@ -189,12 +189,14 @@ fi
 # Resolve Rules & Enforce Governance Policy
 # ------------------------------------------------------------------------------
 # 1. Parse configuration with yq and jq
-BRIDGE_JSON="$(yq -o=json '.bridge // .control_plane // {}' "${CONFIG_FILE}")"
+# Convert YAML to JSON once for fast, standard jq querying
+CONFIG_JSON="$(yq -o=json '.' "${CONFIG_FILE}")"
+BRIDGE_JSON="$(echo "${CONFIG_JSON}" | jq -c '.bridge // .control_plane // {}')"
 DEFAULT_HARNESS="$(echo "${BRIDGE_JSON}" | jq -r '.default_harness // "agy"')"
 DEFAULT_EFFORT="$(echo "${BRIDGE_JSON}" | jq -r '.default_effort // "auto"')"
 MAIN_MODEL="$(echo "${BRIDGE_JSON}" | jq -r '.main_model // ""')"
 
-EXCLUDE_JSON="$(yq -o=json '.models.exclude // []' "${CONFIG_FILE}")"
+EXCLUDE_JSON="$(echo "${CONFIG_JSON}" | jq -c '.models.exclude // []')"
 
 is_excluded() {
   local m="$1"
@@ -219,7 +221,7 @@ if [[ -z "${TASK_TEXT}" ]]; then
 fi
 
 # 4. Match against dispatch rules
-RULES_JSON="$(yq -o=json 'if .dispatch | type == "array" then .dispatch elif .dispatch | type == "object" then (.dispatch.rules // []) else [] end' "${CONFIG_FILE}")"
+RULES_JSON="$(echo "${CONFIG_JSON}" | jq -c 'if .dispatch | type == "array" then .dispatch elif .dispatch | type == "object" then (.dispatch.rules // []) else [] end')"
 
 RULE_NAME="default"
 MATCH_PATTERN="none"
