@@ -62,7 +62,7 @@ fi
 if ! command -v claude >/dev/null 2>&1; then
   echo "[ERROR] 'claude' CLI is not installed or not in PATH." >&2
   echo "[INFO]  To use Claude Code, install via: npm install -g @anthropic-ai/claude-code" >&2
-  echo "[INFO]  Alternatively, use api-runner.py fallback with ANTHROPIC_API_KEY." >&2
+
   exit 127
 fi
 

@@ -7,6 +7,15 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# Pre-flight: verify required tools
+for cmd in yq jq; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "ERROR: '${cmd}' is required but not installed." >&2
+        echo "  Install: https://github.com/mikefarah/yq (yq) or https://jqlang.github.io/jq/ (jq)" >&2
+        exit 1
+    fi
+done
+
 # ------------------------------------------------------------------------------
 # Directory & Path Resolution
 # ------------------------------------------------------------------------------
@@ -177,130 +186,87 @@ elif [[ -n "${TASK_ARG}" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# Resolve Rules & Enforce Governance Policy via Python
+# Resolve Rules & Enforce Governance Policy
 # ------------------------------------------------------------------------------
-RESOLVED_JSON="$(python3 - "${CONFIG_FILE}" "${TASK_TEXT}" "${CLI_HARNESS}" "${CLI_MODEL}" "${CLI_EFFORT}" << 'PYEOF'
-import sys, os, re, json
+# 1. Parse configuration with yq and jq
+BRIDGE_JSON="$(yq -o=json '.bridge // .control_plane // {}' "${CONFIG_FILE}")"
+DEFAULT_HARNESS="$(echo "${BRIDGE_JSON}" | jq -r '.default_harness // "agy"')"
+DEFAULT_EFFORT="$(echo "${BRIDGE_JSON}" | jq -r '.default_effort // "auto"')"
+MAIN_MODEL="$(echo "${BRIDGE_JSON}" | jq -r '.main_model // ""')"
 
-config_path = sys.argv[1]
-task_text = sys.argv[2]
-cli_harness = sys.argv[3]
-cli_model = sys.argv[4]
-cli_effort = sys.argv[5] if len(sys.argv) > 5 else ""
+EXCLUDE_JSON="$(yq -o=json '.models.exclude // []' "${CONFIG_FILE}")"
 
-try:
-    import yaml
-    with open(config_path, "r", encoding="utf-8") as f:
-        cfg = yaml.safe_load(f) or {}
-except Exception as e:
-    sys.stderr.write(f"[ERROR] Failed to load configuration YAML: {e}\n")
-    sys.exit(2)
+is_excluded() {
+  local m="$1"
+  [[ -z "${m}" ]] && return 1
+  local match
+  match="$(echo "${EXCLUDE_JSON}" | jq -r --arg m "${m}" 'map(ascii_downcase) | index(($m | ascii_downcase)) // empty')"
+  [[ -n "${match}" ]] && return 0
+  return 1
+}
 
-bridge_cfg = cfg.get("bridge", cfg.get("control_plane", {}))
-default_harness = bridge_cfg.get("default_harness", "agy")
-default_effort = bridge_cfg.get("default_effort", "auto")
-main_model = bridge_cfg.get("main_model", "")
-models_cfg = cfg.get("models", {})
-exclude_raw = models_cfg.get("exclude", [])
-exclude_list = [str(m).strip() for m in exclude_raw]
-
-def is_excluded(m):
-    if not m:
-        return False
-    return any(m.strip().lower() == ex.lower() for ex in exclude_list)
-
-# 1. Immediate policy check on explicit CLI model
-if cli_model and is_excluded(cli_model):
-    print(json.dumps({
-        "status": "excluded",
-        "model": cli_model,
-        "reason": f"Model '{cli_model}' is explicitly excluded by policy in {os.path.basename(config_path)}"
-    }))
-    sys.exit(0)
-
-# 2. Check if task text was provided
-if not task_text:
-    print(json.dumps({
-        "status": "missing_task",
-        "model": cli_model,
-        "exclude_list": exclude_list
-    }))
-    sys.exit(0)
-
-# 3. Match against dispatch rules
-dispatch_section = cfg.get("dispatch", {})
-rules = []
-if isinstance(dispatch_section, list):
-    rules = dispatch_section
-elif isinstance(dispatch_section, dict):
-    rules = dispatch_section.get("rules", [])
-
-matched_rule = None
-for r in rules:
-    pattern = r.get("match", "")
-    if pattern and re.search(pattern, task_text, re.IGNORECASE):
-        matched_rule = r
-        break
-
-resolved_harness = cli_harness or (matched_rule.get("harness") if matched_rule else default_harness)
-resolved_model = cli_model or (matched_rule.get("model") if matched_rule else main_model)
-fallback_model = (matched_rule.get("fallback") if matched_rule else None) or main_model
-effort = cli_effort or (matched_rule.get("effort") if matched_rule else None) or default_effort or "auto"
-rule_name = matched_rule.get("name") if matched_rule else "default"
-match_pattern = matched_rule.get("match") if matched_rule else None
-
-# Check if fallback model is excluded
-if fallback_model and is_excluded(fallback_model):
-    fallback_model = None
-
-# 4. Check if resolved model is excluded
-if is_excluded(resolved_model):
-    print(json.dumps({
-        "status": "excluded",
-        "model": resolved_model,
-        "reason": f"Resolved model '{resolved_model}' is excluded by policy in {os.path.basename(config_path)}"
-    }))
-    sys.exit(0)
-
-print(json.dumps({
-    "status": "ok",
-    "rule_name": rule_name,
-    "match_pattern": match_pattern,
-    "harness": resolved_harness,
-    "model": resolved_model,
-    "fallback": fallback_model,
-    "effort": effort
-}))
-PYEOF
-)"
-
-STATUS="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('status', ''))" "${RESOLVED_JSON}")"
-
-if [[ "${STATUS}" == "excluded" ]]; then
-  EXCLUDED_MODEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('model', ''))" "${RESOLVED_JSON}")"
-  EXCLUDED_REASON="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('reason', ''))" "${RESOLVED_JSON}")"
-  echo "[ERROR] Governance Policy Violation: ${EXCLUDED_REASON}" >&2
+# 2. Immediate policy check on explicit CLI model
+if [[ -n "${CLI_MODEL}" ]] && is_excluded "${CLI_MODEL}"; then
+  echo "[ERROR] Governance Policy Violation: Model '${CLI_MODEL}' is explicitly excluded by policy in $(basename "${CONFIG_FILE}")" >&2
   echo "[ERROR] Execution aborted immediately." >&2
   exit 1
 fi
 
-if [[ "${STATUS}" == "missing_task" ]]; then
+# 3. Check if task text was provided
+if [[ -z "${TASK_TEXT}" ]]; then
   echo "[ERROR] Missing required argument: must provide --task \"<description>\" or --file <brief.md>." >&2
   usage
 fi
 
-RULE_NAME="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('rule_name', 'default'))" "${RESOLVED_JSON}")"
-MATCH_PATTERN="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('match_pattern') or 'none') " "${RESOLVED_JSON}")"
-RESOLVED_HARNESS="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('harness', 'agy'))" "${RESOLVED_JSON}")"
-RESOLVED_MODEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('model', ''))" "${RESOLVED_JSON}")"
-FALLBACK_MODEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('fallback') or 'none')" "${RESOLVED_JSON}")"
-EFFORT_LEVEL="$(python3 -c "import sys, json; print(json.loads(sys.argv[1]).get('effort') or 'auto')" "${RESOLVED_JSON}")"
+# 4. Match against dispatch rules
+RULES_JSON="$(yq -o=json 'if .dispatch | type == "array" then .dispatch elif .dispatch | type == "object" then (.dispatch.rules // []) else [] end' "${CONFIG_FILE}")"
+
+RULE_NAME="default"
+MATCH_PATTERN="none"
+RESOLVED_HARNESS=""
+RESOLVED_MODEL=""
+FALLBACK_MODEL=""
+EFFORT_LEVEL=""
+
+NUM_RULES="$(echo "${RULES_JSON}" | jq 'length')"
+for (( i=0; i<NUM_RULES; i++ )); do
+  RULE="$(echo "${RULES_JSON}" | jq -c ".[$i]")"
+  PATTERN="$(echo "${RULE}" | jq -r '.match // ""')"
+  if [[ -n "${PATTERN}" ]] && echo "${TASK_TEXT}" | grep -qiE "${PATTERN}"; then
+    RULE_NAME="$(echo "${RULE}" | jq -r '.name // "default"')"
+    MATCH_PATTERN="${PATTERN}"
+    RESOLVED_HARNESS="$(echo "${RULE}" | jq -r '.harness // empty')"
+    RESOLVED_MODEL="$(echo "${RULE}" | jq -r '.model // empty')"
+    FALLBACK_MODEL="$(echo "${RULE}" | jq -r '.fallback // empty')"
+    EFFORT_LEVEL="$(echo "${RULE}" | jq -r '.effort // empty')"
+    break
+  fi
+done
+
+# Resolve missing properties using defaults
+RESOLVED_HARNESS="${CLI_HARNESS:-${RESOLVED_HARNESS:-${DEFAULT_HARNESS}}}"
+RESOLVED_MODEL="${CLI_MODEL:-${RESOLVED_MODEL:-${MAIN_MODEL}}}"
+FALLBACK_MODEL="${FALLBACK_MODEL:-${MAIN_MODEL}}"
+EFFORT_LEVEL="${CLI_EFFORT:-${EFFORT_LEVEL:-${DEFAULT_EFFORT}}}"
+EFFORT_LEVEL="${EFFORT_LEVEL:-auto}"
+
+# Check if fallback model is excluded
+if is_excluded "${FALLBACK_MODEL}"; then
+  FALLBACK_MODEL="none"
+fi
+
+# 5. Check if resolved model is excluded
+if is_excluded "${RESOLVED_MODEL}"; then
+  echo "[ERROR] Governance Policy Violation: Resolved model '${RESOLVED_MODEL}' is excluded by policy in $(basename "${CONFIG_FILE}")" >&2
+  echo "[ERROR] Execution aborted immediately." >&2
+  exit 1
+fi
 
 # ------------------------------------------------------------------------------
 # Ephemeral Bridge File Setup
 # ------------------------------------------------------------------------------
 mkdir -p "${BRIDGE_DIR}"
-TASK_UUID="$(python3 -c 'import uuid; print(uuid.uuid4())' 2>/dev/null || date +%s%N)"
+TASK_UUID="$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid 2>/dev/null || date +%s%N)"
 BRIDGE_TASK_FILE="${BRIDGE_DIR}/task_${TASK_UUID}.md"
 BRIDGE_RESULT_FILE="${BRIDGE_DIR}/result_${TASK_UUID}.json"
 
@@ -317,9 +283,7 @@ case "${RESOLVED_HARNESS}" in
   claude|claude-code)
     ADAPTER_SCRIPT="${SCRIPT_DIR}/claude.sh"
     ;;
-  api)
-    ADAPTER_SCRIPT="${SCRIPT_DIR}/api-runner.py"
-    ;;
+
   *)
     if [[ -f "${SCRIPT_DIR}/${RESOLVED_HARNESS}.sh" ]]; then
       ADAPTER_SCRIPT="${SCRIPT_DIR}/${RESOLVED_HARNESS}.sh"
@@ -413,46 +377,21 @@ if [[ ${EXIT_CODE} -ne 0 ]]; then
 fi
 
 # Structure output into JSON result file
-python3 - "${BRIDGE_RESULT_FILE}" "${TASK_UUID}" "${RESOLVED_HARNESS}" "${ACTUAL_MODEL}" "${RAW_OUTPUT_TMP}" << 'PYEOF'
-import sys, os, json
-
-result_file = sys.argv[1]
-task_uuid = sys.argv[2]
-harness = sys.argv[3]
-model = sys.argv[4]
-raw_file = sys.argv[5]
-
-with open(raw_file, "r", encoding="utf-8", errors="replace") as f:
-    raw_text = f.read()
-
-try:
-    parsed = json.loads(raw_text)
-    if isinstance(parsed, dict):
-        if "task_id" not in parsed:
-            parsed["task_id"] = task_uuid
-        if "harness" not in parsed:
-            parsed["harness"] = harness
-        if "model" not in parsed:
-            parsed["model"] = model
-        with open(result_file, "w", encoding="utf-8") as f:
-            json.dump(parsed, f, indent=2)
-    else:
-        with open(result_file, "w", encoding="utf-8") as f:
-            json.dump({
-                "task_id": task_uuid,
-                "harness": harness,
-                "model": model,
-                "result": parsed
-            }, f, indent=2)
-except Exception:
-    with open(result_file, "w", encoding="utf-8") as f:
-        json.dump({
-            "task_id": task_uuid,
-            "harness": harness,
-            "model": model,
-            "output": raw_text
-        }, f, indent=2)
-PYEOF
+if jq empty "${RAW_OUTPUT_TMP}" 2>/dev/null; then
+    # Valid JSON — inject metadata
+    if [[ "$(jq -r type "${RAW_OUTPUT_TMP}")" == "object" ]]; then
+        jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+            '. * {task_id: (.task_id // $tid), harness: (.harness // $h), model: (.model // $m)}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+    else
+        jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+            '{task_id: $tid, harness: $h, model: $m, result: .}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+    fi
+else
+    # Raw text — wrap in JSON
+    jq -n --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+        --rawfile out "${RAW_OUTPUT_TMP}" \
+        '{task_id: $tid, harness: $h, model: $m, output: $out}' > "${BRIDGE_RESULT_FILE}"
+fi
 
 rm -f "${RAW_OUTPUT_TMP}"
 

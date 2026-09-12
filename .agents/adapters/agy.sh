@@ -70,7 +70,7 @@ fi
 
 if ! command -v agy >/dev/null 2>&1; then
   echo "[ERROR] 'agy' CLI is not installed or not in PATH." >&2
-  echo "[INFO]  To use this adapter, install Antigravity CLI or use api-runner.py fallback." >&2
+  echo "[INFO]  To use this adapter, install Antigravity CLI." >&2
   exit 127
 fi
 
