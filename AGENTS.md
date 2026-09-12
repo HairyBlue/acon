@@ -119,9 +119,19 @@ flowchart TD
      1. Destructive commands (`git reset --hard`, `git clean -fd`, dropping database tables).
      2. Missing external credentials, OAuth tokens, or API secrets.
      3. Unresolvable 5-Element escalations.
-7. **Engineering Governance (Anti-Overengineering Mandate):**  
+7. **Tiered Pre-Dispatch Protocol (Mandatory Calibration Gate):**
+   The Control Plane MUST classify every subagent dispatch into one of three tiers before invoking `invoke_subagent`. Tier selection is based on task complexity and scope, not convenience. Skipping to a lower tier requires explicit justification.
+
+   | Tier | When to Use | Required Steps |
+   |------|-------------|----------------|
+   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers | 9-dimension intent extraction (`prompt-master`), Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
+   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
+   | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | Clear Objective statement, defined scope boundary (what to inspect, what to ignore), expected deliverable format |
+
+   **Minimum Universal Standard:** Every dispatch at any tier MUST include at minimum: (1) a clear Objective, (2) a defined Scope boundary, and (3) an expected Deliverable format.
+8. **Engineering Governance (Anti-Overengineering Mandate):**  
    Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
-8. **Concurrent Execution Isolation (Worktree Invariant):**  
+9. **Concurrent Execution Isolation (Worktree Invariant):**  
    When dispatching two or more concurrent `SHIP` specialists on the same repository, the Control Plane MUST enforce physical workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share a working directory or checkout the same branch. The Control Plane manages worktree lifecycle and verifies `.worktrees/` is ignored.
 
 ### Cross-Harness Execution & Model Governance (`acon.yaml`)
