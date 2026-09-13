@@ -27,6 +27,7 @@ AI coding agents excel at focused execution within well-defined boundaries, but 
    ```
    This disk file is the single source of truth. Task progress is tracked live using markdown checkboxes (`- [ ]` and `- [x]`).
 4. **Separation of Planning and Execution:** Authoring the plan is a discrete phase. Never mix planning iterations with active codebase modifications.
+5. **Anti-Slop Task Eligibility Gate:** Every task defined in the plan must satisfy the Anti-Slop Task Eligibility Standard: closed-loop verifiability, anti-gobble file scoping ($\le 3$ files), and domain criticality categorization (`[HUMAN-CORE / AI-TEST]` vs. `[AUTONOMOUS-SHIP]`).
 
 ---
 
@@ -84,6 +85,20 @@ To prevent execution failures, tasks must be broken down into atomic, right-size
 - **Granularity:** Each task should represent approximately 15 to 30 minutes of subagent execution work.
 - **Single Responsibility:** A task should touch a small, cohesive set of files (ideally 1–2 production files plus their corresponding test file).
 - **Independent Verifiability:** Every individual task must end with a concrete passing test suite before moving to the next task.
+
+### Anti-Slop Task Eligibility Checklist
+Every task drafted in an implementation plan MUST pass the 3-part Anti-Slop Task Eligibility Check before dispatch:
+
+- **Check 1: Is it closed-loop? (Verifiability Mandate)**  
+  An autonomous execution (`SHIP`) task is strictly ineligible for dispatch unless accompanied by an explicit, deterministic automated verification command (unit/feature test runner, compiler, or deterministic CLI check). If a task cannot self-verify in an automated loop, it must be human-driven or shaped as a read-only advisory spike (`SCOUT`).
+- **Check 2: Is it anti-gobble? (Context Scope Invariant)**  
+  Every task must be scoped to $\le 3$ files (typically 1–2 production files plus their companion test file). The agent must never scan or ingest an entire codebase into context. On existing codebases, tasks rely strictly on explicit seam contracts (`Consumes` / `Produces`) and micro-specs that isolate the targeted integration seam.
+- **Check 3: Is it mission-critical? (Domain Boundary Invariant)**  
+  High-stakes core domain logic—including monetary calculations, auth/cryptography, sensitive database migrations, and proprietary core algorithmic IP—is strictly owned and authored by the human engineer (the Captain).  
+  - If **Yes** (mission-critical): Tag as `[HUMAN-CORE / AI-TEST]`. The AI is restricted to authoring test harnesses, edge-case mocks, and conducting reviews, while the Captain authors the core logic.  
+  - If **No** (non-critical domain such as dashboards, tooling, CRUD scaffolding, adapters, and plumbing): Tag as `[AUTONOMOUS-SHIP]` for autonomous subagent implementation.
+- **Reproduction-First Bug Protocol:**  
+  For bug fix tasks, the agent is strictly prohibited from touching production code until a standalone reproduction test case reliably fails in a closed loop.
 
 ### Interface Contracts: Consumes & Produces
 To eliminate integration bugs when tasks are executed by separate subagents, every task specification must declare its interface contracts:
@@ -194,11 +209,16 @@ When authoring a plan in `docs/plans/YYYY-MM-DD-<feature-name>.md`, use the foll
 
 ---
 
-## 3. Engineering Constraints & Ponytail Alignment
-- **YAGNI Check:** [What speculative features or abstractions were deliberately omitted]
-- **Dependencies:** [Explicit confirmation: 0 new dependencies, or Captain-approved exception]
-- **Platform/Stdlib:** [Natives utilized instead of external packages]
-- **Safety Invariants:** [Validation schemas, security measures, test coverage targets]
+## 3. Engineering Constraints & Anti-Slop Alignment
+- **Anti-Slop Eligibility Check:**
+  - [ ] Closed-Loop Verifiable: Explicit deterministic verification command specified for every task.
+  - [ ] Anti-Gobble Scoping: Each task strictly bounded to $\le 3$ files with explicit seam contracts.
+  - [ ] Mission-Critical Partitioning: High-stakes domain logic isolated as `[HUMAN-CORE / AI-TEST]`; non-critical as `[AUTONOMOUS-SHIP]`.
+- **Ponytail 7-Rung Ladder:**
+  - **YAGNI Check:** [What speculative features or abstractions were deliberately omitted]
+  - **Dependencies:** [Explicit confirmation: 0 new dependencies, or Captain-approved exception]
+  - **Platform/Stdlib:** [Natives utilized instead of external packages]
+  - **Safety Invariants:** [Validation schemas, security measures, test coverage targets]
 
 ---
 
@@ -211,7 +231,11 @@ When authoring a plan in `docs/plans/YYYY-MM-DD-<feature-name>.md`, use the foll
 
 ## 5. Implementation Tasks
 
-### - [ ] Task 1: [Short Action-Oriented Title]
+### - [ ] Task 1: [Short Action-Oriented Title] `[AUTONOMOUS-SHIP | HUMAN-CORE / AI-TEST]`
+- **Anti-Slop Eligibility Check:**
+  - [x] Closed-Loop: Yes (automated verification command specified)
+  - [x] Anti-Gobble: Yes ($\le 3$ files: 1 create, 1 modify, 1 test)
+  - [x] Mission-Critical: No (`[AUTONOMOUS-SHIP]`) / Yes (`[HUMAN-CORE / AI-TEST]`)
 - **Goal:** [One-sentence objective of this task]
 - **Files:**
   - `Create:` `src/domain/billing/calculator.ts`
@@ -299,6 +323,11 @@ When the Captain requests a complex feature, follow this operational cadence:
 3. **Draft Implementation Plan:**  
    Write the complete plan using the template above, enforcing the Ponytail ladder, interface contracts, and complete code blocks. Save to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 4. **Self-Audit against Mandates:**  
+   - **Anti-Slop Task Eligibility Check:**
+     - *Is it closed-loop?* (Explicit automated verification command required for every execution task).
+     - *Is it anti-gobble?* (Max 3 files per task; explicit seam contracts; zero whole-codebase scans).
+     - *Is it mission-critical?* (If high-stakes core logic, marked as `[HUMAN-CORE / AI-TEST]` where AI provides test harness and human implements core logic).
+     - *Reproduction-first?* (For bug tasks, failing reproduction test required before production code changes).
    - Are there any "TODO", "TBD", or "appropriate error handling" hand-waving statements? (Fix them).
    - Are all test code blocks and commands complete? (Verify them).
    - Are interfaces between tasks cleanly typed and matching? (Check signatures).

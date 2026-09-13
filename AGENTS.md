@@ -74,6 +74,7 @@ flowchart TD
    - **Task Contracts (`SHIP` vs. `SCOUT`):**
      - **`SHIP`**: Concrete code/test changes with explicit file boundaries and automated test verification.
      - **`SCOUT`**: Strictly read-only investigations or feasibility spikes delivering structured markdown reports.
+   - **Anti-Slop Task Eligibility Gate:** Every task is audited against the Anti-Slop Task Eligibility Standard (Section 8). Autonomous execution (`SHIP`) requires closed-loop automated verifiability, strict anti-gobble file scoping ($\le 3$ files), reproduction-first test harnesses for bugs, and partitioning of mission-critical domain logic into `[HUMAN-CORE / AI-TEST]` tasks.
    - **The Plan-First Gate:** For large architectural refactors, cross-subsystem changes, or tasks modifying $\ge 3$ files: The Control Plane MUST generate an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/YYYY-MM-DD-<feature>.md` and obtain Captain sign-off before dispatching execution workers.
    - **Airtight Briefs:** Prompts are calibrated using `prompt-master` templates (Template H for Ship, Template M for Scout) defining Objective, Boundary Scopes, Tech Contracts, and Definition of Done.
 
@@ -136,12 +137,12 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
      2. Missing external credentials, OAuth tokens, or API secrets.
      3. Unresolvable 5-Element escalations.
 7. **Tiered Pre-Dispatch Protocol (Mandatory Calibration Gate):**
-   The Control Plane MUST classify every subagent dispatch into one of three tiers before invoking `invoke_subagent`. Tier selection is based on task complexity and scope, not convenience. Skipping to a lower tier requires explicit justification.
+   The Control Plane MUST classify every subagent dispatch into one of three tiers before invoking `invoke_subagent`. Tier selection is based on task complexity and scope, not convenience. Skipping to a lower tier requires explicit justification. Every dispatch MUST satisfy the Anti-Slop Task Eligibility Standard (Section 8): closed-loop verifiability, anti-gobble file scoping ($\le 3$ files), mission-critical domain classification, and reproduction-first verification for bugs.
 
    | Tier | When to Use | Required Steps |
    |------|-------------|----------------|
-   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or changes modifying $\ge 3$ files | 9-dimension intent extraction (`prompt-master`), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/`), Captain plan sign-off, Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
-   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
+   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or changes modifying $\ge 3$ files | 9-dimension intent extraction (`prompt-master`), Anti-Slop Eligibility Audit (Section 8), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/`), Captain plan sign-off, Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
+   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Anti-Slop Eligibility Check (Section 8), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
    | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | Clear Objective statement, defined scope boundary (what to inspect, what to ignore), expected deliverable format |
 
    **Minimum Universal Standard:** Every dispatch at any tier MUST include at minimum: (1) a clear Objective, (2) a defined Scope boundary, and (3) an expected Deliverable format.
@@ -244,3 +245,27 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 - **Control Plane as Gatekeeper:** The Control Plane verifies diffs, ensures clean linters and 100% test pass rates, audits for anti-overengineering compliance ([`ponytail`](.agents/skills/productivity/ponytail/SKILL.md)), formats conventional commits according to [`conventional-commits`](.agents/skills/security-devops/conventional-commits/SKILL.md) (Conventional Commits v1.0.0), and presents proposed commit messages and diffs to the Captain for approval.
 - **Worker-Only Git Execution (Zero Message Queuing):** Once the Captain authorizes a commit or push, the Control Plane **NEVER** executes `git commit` or `git push` directly in the main thread. Synchronous tool execution locks the command thread and queues incoming Captain messages. Instead, the Control Plane dispatches a `Git Ops & Release Specialist` via `invoke_subagent` to execute git operations asynchronously in the background while the Control Plane remains instantly responsive to the Captain.
 - **Verification First:** Always run linters and test suites before declaring work complete.
+
+---
+
+## 8. The Anti-Slop Task Eligibility Standard
+
+Autonomous agent execution yields maximum engineering leverage only when tasks are cleanly bounded, deterministically verifiable, and architecturally separated from high-consequence core domain algorithms. To eliminate low-quality code generation ("AI slop"), context bloat, and regression risks, the fleet enforces **The Anti-Slop Task Eligibility Standard**.
+
+Before any task is approved for autonomous execution (`SHIP`), the Control Plane MUST evaluate it against the **7 Properties of High-Leverage Agent Tasks**:
+
+1. **Anti-Gobble Boundary Invariant:**  
+   Tasks must be scoped to $\le 3$ files (typically 1–2 production files plus their corresponding test file). The agent must never scan or ingest an entire codebase into context. Ingesting full codebases triggers context degradation, hallucinated dependencies, and speculative refactoring. On existing codebases, tasks rely strictly on explicit seam contracts (`Consumes` / `Produces` interfaces) and micro-specs that isolate the targeted integration seam.
+2. **Closed-Loop Verification Mandate:**  
+   An autonomous execution (`SHIP`) task is **strictly ineligible for dispatch** unless an automated test suite, compiler, or deterministic CLI check can verify it. The specialist subagent must be able to run the verification command, detect failure, adjust code, and confirm green status without human intervention. If a task cannot self-verify in an automated loop, it must be human-driven or dispatched as an advisory read-only investigation (`SCOUT`).
+3. **Mission-Critical Domain Boundary:**  
+   High-stakes core domain logic—including monetary calculations, payment processing, billing settlement, authentication, authorization, cryptographic operations, sensitive database schema migrations, and core algorithmic intellectual property—is owned, designed, and authored exclusively by the human engineer (the Captain). For mission-critical tasks, the AI is restricted to authoring test harnesses, edge-case mocks, and acting as an adversarial reviewer (`[HUMAN-CORE / AI-TEST]`). Autonomous AI code generation is reserved for non-mission-critical domains (internal dashboards, debug tools, integration adapters, CRUD scaffolding, API plumbing, and glue code).
+4. **Fleet Friction Prioritization:**  
+   The fleet actively prioritizes delegating mechanical, repetitive, and time-consuming engineering tasks that consume high human cognitive friction without requiring novel architectural design. High-yield candidates include test fixtures, mock factories, boilerplate API endpoints, data transformation adapters, serialization schemas, format migrations, and repetitive plumbing.
+5. **Reproduction-First Bug Protocol:**  
+   For any bug ticket or defect report, the agent is **strictly prohibited from touching production code** until a standalone reproduction test case reliably fails in a closed loop. The workflow is strictly: (1) author failing reproduction test, (2) verify test failure, (3) implement minimal fix, (4) verify test passes, and (5) run regression suite.
+6. **Rubber-Duck Sparring Mode:**  
+   The Control Plane serves as an interactive architectural sparring partner to interrogate trade-offs, probe edge cases, and challenge assumptions *before* code is written. Utilizing front-loaded alignment (`prompt-master`, `grill-me`), the Control Plane deconstructs complex requirements into concrete architectural decisions without prematurely generating unvetted code.
+7. **Human-as-Editor Finalization Gate:**  
+   The Captain is the editor-in-chief of the codebase. The AI proposes structured diffs, test evidence, and concise rationale; the human reviews diffs, prunes overengineering, and holds exclusive commit, push, and deployment authority.
+
