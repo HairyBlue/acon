@@ -17,8 +17,10 @@ Welcome to **ACON** (Agentic Conventions & Orchestration Network). All AI agents
   The Control Plane NEVER performs code editing, test running, compilation, git operations, or multi-step file/directory archaeology directly in the primary command thread. Executing synchronous tool chains locks the main command thread and forces incoming Captain messages into a blocking FIFO queue. All execution—including single-file edits, bug fixes, test runs, authorized git commits/pushes, AND multi-step file inspections—MUST be delegated to specialist subagents via `invoke_subagent`. The Control Plane remains permanently unblocked and reactive to receive Captain steering.
 - **The Single-Turn Dispatch Invariant:**  
   When an objective requires codebase archaeology, multi-file inspection, cross-repository diffing, or schema discovery, the Control Plane MUST NOT execute exploratory tool loops on the bridge. It MUST dispatch a `Codebase Scout` subagent via `invoke_subagent` in its very first turn and yield immediately.
-- **The Foreign Boundary Trigger:**  
-  Any command targeting an external directory path, secondary repository, or foreign workspace automatically triggers an immediate `invoke_subagent` delegation. The Control Plane never opens or inspects external workspaces directly on the bridge.
+- **The Foreign Workspace Session Trigger (The Firstmate Cross-Project Invariant):**  
+  When operating from the `acon` directory and targeting an external directory path, secondary repository, or foreign workspace (e.g. any path outside `acon`), the Control Plane MUST NOT handle it via local native subagents. It MUST dispatch an on-demand session targeting that foreign workspace via:
+  `./.agents/adapters/session-runner.sh start --dir "<target-path>" --prompt "<task>"`
+  and assign a Liaison subagent to monitor progress, bridge communication, and report the synthesized outcome back to the bridge. The Control Plane never opens, executes, or inspects external workspaces directly on the bridge.
 
 ---
 
@@ -155,10 +157,9 @@ flowchart TD
 
 1. **Zero-Terminal Bridge Mode (The Firstmate Cross-Project Pattern)**:  
    When the Captain operates from the `acon` directory targeting an external project or foreign repo, the Control Plane can orchestrate work on that external project directly using `session-runner.sh` without requiring the Captain to open a new terminal or manual agent session.
-2. **Strictly Optional & User-Directed**:  
-   Native subagent delegation (`invoke_subagent`) remains the permanent default. External sessions via `session-runner.sh` are invoked strictly by exception when:  
-   a) Operating on an external/foreign project from the `acon` root, OR  
-   b) The Captain explicitly requests an external session or specific CLI (e.g. *"use session"*, *"run in Claude"*, *"use opencode"*).
+2. **Trigger Conditions (Native Subagent vs. Foreign Session)**:  
+   - For objectives targeting `acon` itself: Native subagent delegation (`invoke_subagent`) is the default.
+   - For objectives targeting an external directory path, foreign repository, or when explicitly requested (*"use session"*, *"run in Claude"*, *"use opencode"*): The Control Plane automatically launches a session via `session-runner.sh`.
 3. **Multi-Multiplexer Support**:  
    Autodetects `herdr` (sidebar grouped, `--no-focus`), `tmux` (background window), or `native daemon` (nohup background process with PID tracking). Zero screen clutter, zero focus theft.
 4. **Portable Handoff Invariant**:  
