@@ -42,12 +42,15 @@ flowchart TD
     
     subgraph Shaping ["Phase II: Task Shaping & Briefing"]
         Captain -.->|"Answers trade-offs"| Briefing["Task Decomposition"]
-        Briefing -->|"Calibrates airtight briefs (Template H / M)"| PM2["prompt-master Specialist Briefs"]
+        Briefing -->|"If >=3 files or refactor"| Plan["writing-plans (docs/plans/)"]
+        Plan -->|"Captain signs off plan"| Captain
+        Captain -.->|"Sign-off / reset via handoff"| PM2["prompt-master Specialist Briefs"]
+        Briefing -->|"Calibrates airtight briefs (Template H / M)"| PM2
         PM2 -->|"Partitions non-overlapping files (Ship vs Scout)"| Contracts["Task Contracts & Bounds"]
     end
     
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
-        Contracts -->|"invoke_subagent"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
+        Contracts -->|"invoke_subagent (Context-Sliced Task N)"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
         Crew -->|"TDD, lint, compile, self-verify"| Crew
         FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
     end
@@ -71,6 +74,7 @@ flowchart TD
    - **Task Contracts (`SHIP` vs. `SCOUT`):**
      - **`SHIP`**: Concrete code/test changes with explicit file boundaries and automated test verification.
      - **`SCOUT`**: Strictly read-only investigations or feasibility spikes delivering structured markdown reports.
+   - **The Plan-First Gate:** For large architectural refactors, cross-subsystem changes, or tasks modifying $\ge 3$ files: The Control Plane MUST generate an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/YYYY-MM-DD-<feature>.md` and obtain Captain sign-off before dispatching execution workers.
    - **Airtight Briefs:** Prompts are calibrated using `prompt-master` templates (Template H for Ship, Template M for Scout) defining Objective, Boundary Scopes, Tech Contracts, and Definition of Done.
 
 3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew)**
@@ -83,6 +87,14 @@ flowchart TD
    - **Integration & Anti-Slop Verification:** Verifies compilation, linters, tests, and craft quality.
    - **Fleet Bearings Digest:** Renders the canonical 4-section Bearings status digest (*Captain's Call, Recently Landed, Underway, Charted Next*).
    - **Human-in-the-Loop Authority Gate:** The Captain is engaged strictly by exception (destructive commands, credentials, git staging/commit approval).
+
+### Context Hygiene & The Handoff Invariant
+
+To eliminate LLM context degradation, instruction drift, and runaway token costs during complex multi-step missions, the fleet strictly adheres to three context isolation mechanisms:
+
+1. **Externalized Disk State (`docs/plans/`):** Implementation plans authored via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) live directly on disk at `docs/plans/YYYY-MM-DD-<feature>.md`. Task progress is tracked live using markdown checkboxes (`- [ ]` and `- [x]`). The filesystem is the single persistent source of truth across session restarts and agent boundaries.
+2. **Session Resets via `handoff`:** When planning completes and the Captain signs off, or when a major milestone is reached, the Control Plane triggers [`handoff`](.agents/skills/productivity/handoff/SKILL.md) to generate a high-density, low-token summary (<3k tokens) referencing the plan file path. The session is reset (e.g., via `/clear` or starting a fresh command thread), allowing execution workers to run in a clean-slate context with zero token bloat.
+3. **Subagent Context Slicing:** When dispatching specialist workers via `invoke_subagent`, the Control Plane MUST NEVER pass the entire multi-turn conversation or full multi-task plan into the worker's prompt. It MUST slice ONLY the specific Task N scope into the subagent brief: exact file boundaries (`Create`, `Modify`, `Test`), `Consumes` and `Produces` interface contracts, bite-sized TDD steps, verification commands, and [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) constraints. This keeps worker prompts ultra-lean (<2k tokens), prevents boundary violations, and guarantees zero cross-task pollution.
 
 ---
 
@@ -128,7 +140,7 @@ flowchart TD
 
    | Tier | When to Use | Required Steps |
    |------|-------------|----------------|
-   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers | 9-dimension intent extraction (`prompt-master`), Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
+   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or changes modifying $\ge 3$ files | 9-dimension intent extraction (`prompt-master`), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/`), Captain plan sign-off, Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
    | **Tier 2 — Standard Brief** | Single-agent Ship tasks, complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
    | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | Clear Objective statement, defined scope boundary (what to inspect, what to ignore), expected deliverable format |
 
@@ -137,6 +149,11 @@ flowchart TD
    Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
 9. **Concurrent Execution Isolation (Worktree Invariant):**  
    When dispatching two or more concurrent `SHIP` specialists on the same repository, the Control Plane MUST enforce physical workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share a working directory or checkout the same branch. The Control Plane manages worktree lifecycle and verifies `.worktrees/` is ignored.
+10. **Plan-First Gate & Context Hygiene Protocol:**  
+    For any objective touching $\ge 3$ files, cross-subsystem migrations, or architectural refactors, the Control Plane MUST NOT dispatch execution subagents immediately. It MUST first draft an implementation plan using [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/YYYY-MM-DD-<feature>.md` with zero placeholders, explicit interface contracts (`Consumes` / `Produces`), and complete 5-step TDD blocks, and secure Captain sign-off. Context hygiene is enforced across the entire mission lifecycle:
+    - **Externalized Disk State:** The plan markdown file on disk is the authoritative state tracker using `- [ ]` and `- [x]`.
+    - **Session Resets via `handoff`:** After plan approval or major milestones, generate a compact [`handoff`](.agents/skills/productivity/handoff/SKILL.md) artifact (<3k tokens) to enable clean-slate execution sessions with zero token bloat.
+    - **Subagent Context Slicing:** When invoking workers, the Control Plane slices ONLY the specific Task N specification into the subagent brief, never passing bloated transcripts or unrelated tasks.
 
 ### Cross-Harness Execution & Model Governance (`acon.yaml`)
 

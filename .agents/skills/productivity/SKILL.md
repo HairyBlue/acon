@@ -1,6 +1,6 @@
 ---
 name: productivity
-description: "Master productivity and communication suite covering plan interrogation, conversation handoff, interactive teaching, questionnaires, technical writing, daily work reporting, prompt calibration, repository adoption (adopt-acon), and anti-overengineering (ponytail)."
+description: "Master productivity and communication suite covering plan interrogation, conversation handoff, interactive teaching, questionnaires, technical writing, implementation planning (writing-plans), daily work reporting, prompt calibration, repository adoption (adopt-acon), and anti-overengineering (ponytail)."
 license: MIT
 metadata:
   author: acon
@@ -23,6 +23,7 @@ This skill serves as the primary router and master guide for communication, alig
 | **`prompt-master`** | 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefing. | [`prompt-master/SKILL.md`](prompt-master/SKILL.md) |
 | **`to-questionnaire`** | Converts complex design decisions into fillable Markdown questionnaires for async team alignment. | [`to-questionnaire/SKILL.md`](to-questionnaire/SKILL.md) |
 | **`writing-for-agents`** | Guidelines and mechanics for authoring effective skills, rules, and memory files. | [`writing-for-agents/SKILL.md`](writing-for-agents/SKILL.md) |
+| **`writing-plans`** | Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code. | [`writing-plans/SKILL.md`](writing-plans/SKILL.md) |
 | **`technical-writing-for-engineers`** | Structured templates for engineering RFCs, post-mortems, and architectural decision records. | [`technical-writing-for-engineers/SKILL.md`](technical-writing-for-engineers/SKILL.md) |
 | **`daily-progress-report`** | Automated Git & conversation digest generator with Notion MCP publishing. | [`daily-progress-report/SKILL.md`](daily-progress-report/SKILL.md) |
 | **`developer-story`** | Authentic builder journeys, personal dispatches, and portfolio case studies using narrative arcs and the CASI framework. | [`developer-story/SKILL.md`](developer-story/SKILL.md) |

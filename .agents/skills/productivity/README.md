@@ -10,6 +10,7 @@ Communication, alignment, coaching, and documentation workflows:
 - **[prompt-master](prompt-master/SKILL.md)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
 - **[to-questionnaire](to-questionnaire/SKILL.md)**: Async decision-making questionnaires.
 - **[writing-for-agents](writing-for-agents/SKILL.md)**: Authoring skills and AGENTS.md instructions.
+- **[writing-plans](writing-plans/SKILL.md)**: Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code.
 - **[technical-writing-for-engineers](technical-writing-for-engineers/SKILL.md)**: Technical RFCs and post-mortems.
 - **[daily-progress-report](daily-progress-report/SKILL.md)**: Git work summaries and Notion publisher.
 - **[developer-story](developer-story/SKILL.md)**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
