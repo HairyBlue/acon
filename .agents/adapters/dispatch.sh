@@ -85,10 +85,12 @@ else
   CONFIG_FILE="${ACON_ROOT}/acon.yaml"
 fi
 
-if [[ -d "${ACON_ROOT}/.agents" ]]; then
-  BRIDGE_DIR="${ACON_ROOT}/.agents/bridge"
+if [[ -n "${ACON_BRIDGE_DIR:-}" ]]; then
+  BRIDGE_DIR="${ACON_BRIDGE_DIR}"
+elif [[ -d "${ACON_ROOT}/.agents" ]]; then
+  BRIDGE_DIR="${ACON_ROOT}/.agents/sessions/bridge"
 else
-  BRIDGE_DIR="${ACON_ROOT}/bridge"
+  BRIDGE_DIR="${ACON_ROOT}/sessions/bridge"
 fi
 
 # CLI Options & Defaults
@@ -97,6 +99,10 @@ FILE_ARG=""
 CLI_HARNESS=""
 CLI_MODEL=""
 CLI_EFFORT=""
+CLI_DIR=""
+CLI_LABEL=""
+CLI_BACKEND=""
+RUN_SESSION=0
 DRY_RUN=0
 KEEP_BRIDGE=0
 
@@ -114,11 +120,15 @@ Usage: dispatch.sh [OPTIONS]
 Options:
   -t, --task "<desc>"     Task objective or prompt description
   -f, --file <brief.md>   Path to existing task brief markdown file
-  -H, --harness <name>    Explicitly override target execution harness (e.g. agy, claude, api)
+  -H, --harness <name>    Explicitly override target execution harness (e.g. agy, claude, opencode, aider, pi)
   -m, --model <model>     Explicitly override target model (e.g. model slug from acon.yaml)
   -e, --effort <level>    Explicitly override reasoning effort level (e.g. auto, low, medium, high)
+  -d, --dir <path>        Target working directory (triggers session mode if foreign repo)
+  -s, --session           Launch as background session via session-runner.sh
+  -l, --label <text>      Multiplexer tab label for session mode
+  -b, --backend <name>    Force multiplexer backend: herdr, tmux, native
   -n, --dry-run           Preview routing, rule matching, and policy checks without executing
-  -k, --keep-bridge       Retain ephemeral task and result files in .agents/bridge/
+  -k, --keep-bridge       Retain ephemeral task and result files in .agents/sessions/bridge/
   -c, --config <path>     Path to custom acon.yaml configuration file
   -h, --help              Show this help message and exit
 
@@ -129,10 +139,13 @@ Examples:
   # Execute implementation task with explicit model
   ./dispatch.sh --task "implement user authentication" --model custom-model
 
+  # Launch a background session in external repository
+  ./dispatch.sh --session --dir /home/user/portfolio --task "Audit navigation"
+
   # Execute task brief from file
-  ./dispatch.sh --file .agents/bridge/brief.md --harness agy
+  ./dispatch.sh --file .agents/sessions/bridge/brief.md --harness agy
 USAGE_EOF
-  exit 1
+  exit 0
 }
 
 # ------------------------------------------------------------------------------
@@ -191,6 +204,22 @@ while [[ $# -gt 0 ]]; do
       CLI_EFFORT="${2:-}"
       shift 2
       ;;
+    -d|--dir)
+      CLI_DIR="${2:-}"
+      shift 2
+      ;;
+    -s|--session)
+      RUN_SESSION=1
+      shift
+      ;;
+    -l|--label)
+      CLI_LABEL="${2:-}"
+      shift 2
+      ;;
+    -b|--backend)
+      CLI_BACKEND="${2:-}"
+      shift 2
+      ;;
     -n|--dry-run)
       DRY_RUN=1
       shift
@@ -212,6 +241,19 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# Resolve Target Working Directory & Foreign Boundary Trigger
+TARGET_DIR="${CLI_DIR:-$(pwd)}"
+if [[ ! -d "${TARGET_DIR}" ]]; then
+  echo "[ERROR] Target directory not found: ${TARGET_DIR}" >&2
+  exit 1
+fi
+TARGET_DIR="$(cd "${TARGET_DIR}" && pwd -P)"
+
+# Foreign Boundary Invariant: Targeting an external directory automatically activates session runner
+if [[ "${TARGET_DIR}" != "${ACON_ROOT}" && ! "${TARGET_DIR}" =~ ^"${ACON_ROOT}"/ ]]; then
+  RUN_SESSION=1
+fi
 
 # ------------------------------------------------------------------------------
 # Validate Configuration File
@@ -249,6 +291,14 @@ BRIDGE_JSON="$(echo "${CONFIG_JSON}" | acon_jq -c '.bridge // .control_plane // 
 DEFAULT_HARNESS="$(echo "${BRIDGE_JSON}" | acon_jq -r '.default_harness // "agy"')"
 DEFAULT_EFFORT="$(echo "${BRIDGE_JSON}" | acon_jq -r '.default_effort // "auto"')"
 MAIN_MODEL="$(echo "${BRIDGE_JSON}" | acon_jq -r '.main_model // ""')"
+CONFIG_BRIDGE_DIR="$(echo "${BRIDGE_JSON}" | acon_jq -r '.bridge_dir // empty')"
+if [[ -n "${CONFIG_BRIDGE_DIR}" ]]; then
+  if [[ "${CONFIG_BRIDGE_DIR}" = /* ]]; then
+    BRIDGE_DIR="${CONFIG_BRIDGE_DIR}"
+  else
+    BRIDGE_DIR="${ACON_ROOT}/${CONFIG_BRIDGE_DIR}"
+  fi
+fi
 
 EXCLUDE_JSON="$(echo "${CONFIG_JSON}" | acon_jq -c '.models.exclude // []')"
 
@@ -322,44 +372,37 @@ fi
 # Ephemeral Bridge File Setup
 # ------------------------------------------------------------------------------
 mkdir -p "${BRIDGE_DIR}"
-TASK_UUID="$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid 2>/dev/null || date +%s%N)"
-BRIDGE_TASK_FILE="${BRIDGE_DIR}/task_${TASK_UUID}.md"
-BRIDGE_RESULT_FILE="${BRIDGE_DIR}/result_${TASK_UUID}.json"
+RAW_UUID="$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid 2>/dev/null || date +%s%N | cut -c1-8)"
+BRIDGE_ID="bridge_$(date +%Y%m%d_%H%M%S)_${RAW_UUID}"
+TASK_UUID="${BRIDGE_ID}"
+BRIDGE_TASK_FILE="${BRIDGE_DIR}/task_${BRIDGE_ID}.md"
+BRIDGE_RESULT_FILE="${BRIDGE_DIR}/result_${BRIDGE_ID}.json"
 
 printf '%s\n' "${TASK_TEXT}" > "${BRIDGE_TASK_FILE}"
 
 # ------------------------------------------------------------------------------
-# Resolve Adapter Script
+# Resolve Unified Session Runner Adapter
 # ------------------------------------------------------------------------------
-ADAPTER_SCRIPT=""
-case "${RESOLVED_HARNESS}" in
-  agy)
-    ADAPTER_SCRIPT="${SCRIPT_DIR}/agy.sh"
-    ;;
-  claude|claude-code)
-    ADAPTER_SCRIPT="${SCRIPT_DIR}/claude.sh"
-    ;;
-
-  *)
-    if [[ -f "${SCRIPT_DIR}/${RESOLVED_HARNESS}.sh" ]]; then
-      ADAPTER_SCRIPT="${SCRIPT_DIR}/${RESOLVED_HARNESS}.sh"
-    elif [[ -f "${SCRIPT_DIR}/${RESOLVED_HARNESS}" ]]; then
-      ADAPTER_SCRIPT="${SCRIPT_DIR}/${RESOLVED_HARNESS}"
-    else
-      echo "[ERROR] Unsupported execution harness: '${RESOLVED_HARNESS}'. No adapter found in ${SCRIPT_DIR}." >&2
-      exit 1
-    fi
-    ;;
-esac
+SESSION_RUNNER="${SCRIPT_DIR}/session-runner.sh"
+if [[ ! -x "${SESSION_RUNNER}" ]]; then
+  chmod +x "${SESSION_RUNNER}" || true
+fi
+ADAPTER_SCRIPT="${SESSION_RUNNER}"
 
 # ------------------------------------------------------------------------------
 # Dry-Run Mode
 # ------------------------------------------------------------------------------
 if [[ "${DRY_RUN}" -eq 1 ]]; then
+  local_dispatch_mode="Synchronous Execution (${ADAPTER_SCRIPT} exec)"
+  if [[ "${RUN_SESSION}" -eq 1 ]]; then
+    local_dispatch_mode="Background Session (${SESSION_RUNNER} start)"
+  fi
+
   cat <<REPORT_EOF
 ================================================================================
 ACON Task Dispatch Plan (Dry Run)
 ================================================================================
+Bridge ID      : ${BRIDGE_ID}
 Matched Rule   : ${RULE_NAME}
 Pattern Match  : ${MATCH_PATTERN}
 Target Harness : ${RESOLVED_HARNESS}
@@ -367,6 +410,8 @@ Target Model   : ${RESOLVED_MODEL}
 Fallback Model : ${FALLBACK_MODEL}
 Effort Level   : ${EFFORT_LEVEL}
 Policy Check   : PASSED (Model '${RESOLVED_MODEL}' is permitted)
+Dispatch Mode  : ${local_dispatch_mode}
+Target Dir     : ${TARGET_DIR}
 Adapter Script : ${ADAPTER_SCRIPT}
 Bridge Task    : ${BRIDGE_TASK_FILE}
 Bridge Result  : ${BRIDGE_RESULT_FILE}
@@ -380,31 +425,36 @@ REPORT_EOF
 fi
 
 # ------------------------------------------------------------------------------
-# Adapter Execution & Result Capture
+# Session vs Synchronous Execution Routing
 # ------------------------------------------------------------------------------
-if [[ ! -x "${ADAPTER_SCRIPT}" ]]; then
-  chmod +x "${ADAPTER_SCRIPT}" || true
-fi
-
 TARGET_MODEL="${RESOLVED_MODEL}"
 ACTUAL_MODEL="${TARGET_MODEL}"
 
-echo "[INFO] Dispatching task via adapter: ${ADAPTER_SCRIPT} (harness=${RESOLVED_HARNESS}, model=${TARGET_MODEL}, effort=${EFFORT_LEVEL})" >&2
+if [[ "${RUN_SESSION}" -eq 1 ]]; then
+  echo "[INFO] Delegating to session-runner.sh start (harness=${RESOLVED_HARNESS}, model=${RESOLVED_MODEL}, dir=${TARGET_DIR})" >&2
+  START_ARGS=(start --harness "${RESOLVED_HARNESS}" --dir "${TARGET_DIR}" --task-file "${BRIDGE_TASK_FILE}" --model "${RESOLVED_MODEL}" --effort "${EFFORT_LEVEL}")
+  if [[ -n "${CLI_LABEL}" ]]; then
+    START_ARGS+=(--label "${CLI_LABEL}")
+  fi
+  if [[ -n "${CLI_BACKEND}" ]]; then
+    START_ARGS+=(--backend "${CLI_BACKEND}")
+  fi
+  "${SESSION_RUNNER}" "${START_ARGS[@]}"
+  exit $?
+fi
 
-RAW_OUTPUT_TMP="$(mktemp "${BRIDGE_DIR}/raw_${TASK_UUID}.XXXXXX")"
+echo "[INFO] Dispatching task via unified adapter: ${ADAPTER_SCRIPT} (harness=${RESOLVED_HARNESS}, model=${TARGET_MODEL}, effort=${EFFORT_LEVEL})" >&2
+
+RAW_OUTPUT_TMP="$(mktemp "${BRIDGE_DIR}/raw_${BRIDGE_ID}.XXXXXX")"
 
 # Pass effort level to environment
 export EFFORT="${EFFORT_LEVEL}"
 export ACON_EFFORT="${EFFORT_LEVEL}"
 
-# Helper to execute adapter
+# Helper to execute adapter synchronously
 execute_adapter() {
   local model_to_run="$1"
-  if [[ "${RESOLVED_HARNESS}" == "agy" ]]; then
-    "${ADAPTER_SCRIPT}" "${BRIDGE_TASK_FILE}" "${model_to_run}" "${EFFORT_LEVEL}" > "${RAW_OUTPUT_TMP}"
-  else
-    "${ADAPTER_SCRIPT}" "${BRIDGE_TASK_FILE}" "${model_to_run}" > "${RAW_OUTPUT_TMP}"
-  fi
+  "${SESSION_RUNNER}" exec --harness "${RESOLVED_HARNESS}" --task-file "${BRIDGE_TASK_FILE}" --model "${model_to_run}" --effort "${EFFORT_LEVEL}" --dir "${TARGET_DIR}" > "${RAW_OUTPUT_TMP}"
 }
 
 # Execute primary model
@@ -437,21 +487,21 @@ if [[ "${USE_PYTHON_READER}" -eq 0 ]]; then
     if jq empty "${RAW_OUTPUT_TMP}" 2>/dev/null; then
         # Valid JSON — inject metadata
         if [[ "$(jq -r type "${RAW_OUTPUT_TMP}")" == "object" ]]; then
-            jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
-                '. * {task_id: (.task_id // $tid), harness: (.harness // $h), model: (.model // $m)}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+            jq --arg bid "$BRIDGE_ID" --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+                '. * {bridge_id: $bid, task_id: (.task_id // $tid), harness: (.harness // $h), model: (.model // $m)}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
         else
-            jq --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
-                '{task_id: $tid, harness: $h, model: $m, result: .}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
+            jq --arg bid "$BRIDGE_ID" --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+                '{bridge_id: $bid, task_id: $tid, harness: $h, model: $m, result: .}' "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
         fi
     else
         # Raw text — wrap in JSON
-        jq -n --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
+        jq -n --arg bid "$BRIDGE_ID" --arg tid "$TASK_UUID" --arg h "$RESOLVED_HARNESS" --arg m "$ACTUAL_MODEL" \
             --rawfile out "${RAW_OUTPUT_TMP}" \
-            '{task_id: $tid, harness: $h, model: $m, output: $out}' > "${BRIDGE_RESULT_FILE}"
+            '{bridge_id: $bid, task_id: $tid, harness: $h, model: $m, output: $out}' > "${BRIDGE_RESULT_FILE}"
     fi
 else
     "${PYTHON_BIN}" "${CONFIG_READER}" --wrap-result \
-        --task-id "$TASK_UUID" --harness "$RESOLVED_HARNESS" --model "$ACTUAL_MODEL" \
+        --task-id "$BRIDGE_ID" --harness "$RESOLVED_HARNESS" --model "$ACTUAL_MODEL" \
         --raw-file "${RAW_OUTPUT_TMP}" > "${BRIDGE_RESULT_FILE}"
 fi
 
