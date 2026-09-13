@@ -21,7 +21,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ACON_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CONFIG_READER="${SCRIPT_DIR}/config-reader.py"
 
 # Resolve acon.yaml path
@@ -38,17 +38,22 @@ fi
 # Resolve Sessions Directory (Interactive/Background CLI sessions live under cli/)
 if [[ -n "${ACON_SESSIONS_DIR:-}" ]]; then
   SESSIONS_BASE_DIR="${ACON_SESSIONS_DIR}"
-elif [[ -d "${ACON_ROOT}/.agents" ]]; then
-  SESSIONS_BASE_DIR="${ACON_ROOT}/.agents/sessions/cli"
 else
-  SESSIONS_BASE_DIR="${ACON_ROOT}/sessions/cli"
+  SESSIONS_BASE_DIR="${SCRIPT_DIR}/sessions/cli"
 fi
+DEFAULT_BRIDGE_DIR="${SCRIPT_DIR}/sessions/bridge"
 
 # Resolve Session Directory with backward compatibility
 resolve_session_dir() {
   local s_id="$1"
   if [[ -d "${SESSIONS_BASE_DIR}/${s_id}" ]]; then
     echo "${SESSIONS_BASE_DIR}/${s_id}"
+  elif [[ -d "${SCRIPT_DIR}/sessions/cli/${s_id}" ]]; then
+    echo "${SCRIPT_DIR}/sessions/cli/${s_id}"
+  elif [[ -d "${ACON_ROOT}/adapters/sessions/cli/${s_id}" ]]; then
+    echo "${ACON_ROOT}/adapters/sessions/cli/${s_id}"
+  elif [[ -d "${ACON_ROOT}/.agents/sessions/cli/${s_id}" ]]; then
+    echo "${ACON_ROOT}/.agents/sessions/cli/${s_id}"
   elif [[ -d "${ACON_ROOT}/.agents/sessions/${s_id}" ]]; then
     echo "${ACON_ROOT}/.agents/sessions/${s_id}"
   elif [[ -d "${ACON_ROOT}/sessions/${s_id}" ]]; then
@@ -1582,12 +1587,16 @@ import os, json, glob
 
 base_dir = '${SESSIONS_BASE_DIR}'
 session_files = glob.glob(os.path.join(base_dir, '*', 'session.json'))
-legacy_dir = '${ACON_ROOT}/.agents/sessions'
-if os.path.isdir(legacy_dir):
-    for sf in glob.glob(os.path.join(legacy_dir, '*', 'session.json')):
-        p = os.path.basename(os.path.dirname(sf))
-        if p not in ('cli', 'bridge') and sf not in session_files:
-            session_files.append(sf)
+legacy_dirs = [
+    os.path.join('${ACON_ROOT}', '.agents', 'sessions', 'cli'),
+    os.path.join('${ACON_ROOT}', '.agents', 'sessions')
+]
+for ldir in legacy_dirs:
+    if os.path.isdir(ldir):
+        for sf in glob.glob(os.path.join(ldir, '*', 'session.json')):
+            p = os.path.basename(os.path.dirname(sf))
+            if p not in ('cli', 'bridge') and sf not in session_files:
+                session_files.append(sf)
 
 sessions = []
 for sf in session_files:

@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution, 114-skill catalog, rules, adapters, and configuration into any new or existing repository, or establishing ACON as a machine-wide agent distro across any AI CLI (Antigravity agy, Claude Code claude, Cursor) via install-global.sh and the acon CLI."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), and constitutional rules (.agents/rules/) into any new or existing repository while strictly excluding adapters, sessions, and configuration."
 license: MIT
 metadata:
   author: acon
@@ -9,17 +9,18 @@ metadata:
 # ACON Repository Adoption & Synchronization (`adopt-acon`)
 
 > **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*  
-> **The Universal Physical Copy Invariant:** *"Zero symlinks. 100% self-contained repositories."*
+> **The Universal Physical Copy Invariant:** *"Zero symlinks. 100% self-contained repositories."*  
+> **The Strict Adoption Boundary:** *"Adopt conventions and skills only. Adapters, sessions, and bridge configs stay with the Control Plane."*
 
-`adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Orchestration Network) operational system into any greenfield repository or brownfield legacy project.
+`adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Orchestration Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution, the **114-skill** catalog, declarative model governance (`acon.yaml`), harness adapters (`dispatch.sh`), IDE configurations (`.cursor/`, `.claude/`), and non-negotiable rules into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **114-skill** catalog (`.agents/skills/`), and constitutional rules (`.agents/rules/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
 ## 1. Core Philosophy: Why Adopt ACON?
 
-Modern software engineering with AI agents faces a fundamental dilemma:
+Modern software engineering with AI agents faces three fundamental dilemmas:
 
 1. **The Single-Agent Bottleneck:** A single agent attempts to do everything in one blocking command thread—scouting, coding, testing, git mutations—locking the interface, losing architectural focus, and producing unreviewed code.
 2. **The Fragmentation Trap:** Every project ends up with fragmented, conflicting agent rules (`.cursorrules`, `CLAUDE.md`, `copilot-instructions.md`, custom system prompts) with no unified task contract, no multi-agent delegation protocol, and no standardized status reporting.
@@ -29,7 +30,7 @@ Modern software engineering with AI agents faces a fundamental dilemma:
 
 ---
 
-## 2. The Universal Physical Copy Invariant
+## 2. The Strict Adoption Boundary & Physical Copy Invariants
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -38,26 +39,36 @@ Modern software engineering with AI agents faces a fundamental dilemma:
 │   ❌ NO SYMLINKS IN ADOPTED REPOSITORIES (0 SYMLINKS TOLERATED)        │
 │   ✅ 100% INDEPENDENT, FULLY SELF-CONTAINED PHYSICAL ARTIFACTS         │
 │                                                                        │
-│   • .agents/          --> Real physical directories and files          │
-│   • .cursor/skills/   --> Real physical copies of all 114 skills       │
-│   • .claude/skills/   --> Real physical copies of all 114 skills       │
-│   • AGENTS.md         --> Real physical root markdown file             │
-│   • CLAUDE.md         --> Real physical root markdown file             │
-│   • acon.yaml         --> Real physical configuration file             │
+│   • AGENTS.md         --> Real physical root constitution file         │
+│   • .agents/skills/   --> Real physical copies of all domain skills    │
+│   • .agents/rules/    --> Real physical copies of constitutional rules │
+│                                                                        │
+│   🚫 STRICTLY EXCLUDED FROM TARGET REPOSITORIES:                       │
+│   • adapters/                  (Harness runners belong to Control Plane)│
+│   • adapters/sessions/         (Runtime session logs & mailboxes)       │
+│   • acon.yaml                  (Bridge model governance config)        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### The Invariant Defined
-**Every repository that adopts ACON MUST be 100% self-contained. There shall be zero symlinks in any adopted directory or file (`.agents/`, `.cursor/`, `.claude/`, `AGENTS.md`, `CLAUDE.md`, `acon.yaml`).**
+### The Strict Adoption Boundary Defined
+Adopted repositories are **lightweight consumers** of ACON conventions and domain skills. They do not require cross-harness execution adapters, session runner daemons, or bridge configuration files (`acon.yaml`). All execution harnesses and session managers remain strictly housed in the central ACON Control Plane repository.
+
+When `adopt.sh` runs, it transfers **ONLY**:
+1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
+2. `.agents/skills/` (Domain skills dereferenced into physical directories)
+3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
+
+And explicitly forbids copying:
+- `adapters/`
+- `adapters/sessions/`
+- `acon.yaml`
+- Any ephemeral bridge or runtime artifacts
 
 ### Why Symlinks Are Strictly Forbidden in Target Codebases
 1. **Cross-Platform Portability (Windows & WSL):** Windows filesystems handle symlinks poorly, requiring developer mode or administrative elevation. Git checkouts on Windows often convert symlinks into useless plaintext files containing relative paths.
 2. **Containerization & Cloud Sandboxes:** Docker containers and Kubernetes runner pods mount only the current workspace. Dangling symlinks pointing outside the workspace (or circular relative links) result in silent `ENOENT` (file not found) crashes inside agents.
 3. **Git Worktree Isolation:** When agents spawn isolated worktrees (`git worktree add`), relative symlinks like `../../.agents/skills` break or traverse into parent directories unexpectedly.
 4. **IDE Parsing Independence:** Cursor, Claude Code CLI, Antigravity, and VS Code indexed agents parse physical directories reliably, whereas symlinked trees frequently suffer from missed file watches, duplicate indexing loops, or indexing skips.
-
-### Physical Deployment Mechanism
-All assets are deployed using dereferencing copy protocols (`rsync -avL` or `cp -rL`), expanding every symlink into its concrete, physical source file during transfer.
 
 ---
 
@@ -82,7 +93,7 @@ flowchart TD
         end
         
         subgraph Tier2["TIER 2: Workshop Manual (Target Codebase Rules)"]
-            T2A["Local Framework Guidelines (e.g. Laravel Boost, Rails, Next.js)"]
+            T2A["Local Framework Guidelines (e.g. Laravel, Rails, Next.js)"]
             T2B["Local Testing Suites & Verification Commands (Pest, Pytest, Vitest)"]
             T2C["Local Coding Style, Architecture, & Naming Conventions"]
             T2D["Domain-specific Constraints & Environment Quirks"]
@@ -99,14 +110,13 @@ The Command Bridge contains the complete, uncompromised ACON constitution:
 - **Single-Turn Dispatch Invariant:** Dispatches `Codebase Scout` on turn 1 for codebase exploration.
 - **Foreign Boundary Trigger:** Automatic delegation when inspecting external paths.
 - **Task Contracts (`SHIP` vs. `SCOUT`):** Rigid boundary enforcement and verifiable test passes.
-- **Bridge Activation Gate & Main-First Invariant:** Native delegation by default; external bridge engaged strictly by exception.
 - **4-Section Bearings Digest:** Standardized status reporting.
 - **Exclusive Captain Authority:** Destructive actions and git commits require human authorization.
 
 ### Tier 2: The Workshop Manual (Bottom)
 The Workshop Manual preserves the target repository's existing documentation verbatim under Section 3 and the document footer:
 - Existing `AGENTS.md`, `CLAUDE.md`, or `.cursorrules` are extracted and placed under `## Local Workshop Manual: <Project Name>`.
-- Existing framework guidelines (e.g. Laravel Boost `.ai/rules`, Django conventions, React patterns) remain 100% intact.
+- Existing framework guidelines remain 100% intact.
 - Specialist subagents read Tier 2 to execute domain tasks according to local conventions, while the Control Plane operates under Tier 1.
 
 ---
@@ -126,19 +136,19 @@ sequenceDiagram
 
     Note over Op,Target: Phase 2: Two-Tier AGENTS.md Synthesis
     Op->>Target: Merge ACON Constitution (Tier 1) + Existing Guidelines (Tier 2)
-    Op->>Target: Physically mirror to CLAUDE.md
+    Op->>Target: Install physical AGENTS.md
 
     Note over Op,Target: Phase 3: Pure Physical Copy Deployment
-    Op->>Target: rsync -avL acon.yaml
-    Op->>Target: rsync -avL .agents/ (dereferencing all symlinks)
+    Op->>Target: rsync -avL .agents/skills/ (dereferencing all symlinks)
+    Op->>Target: rsync -avL .agents/rules/ (dereferencing all symlinks)
+    Note over Op,Target: Excludes adapters/, sessions/, acon.yaml
 
-    Note over Op,Target: Phase 4: IDE Folder Setup
-    Op->>Target: rsync -avL .cursor/ (full physical skills & rules)
-    Op->>Target: rsync -avL .claude/ (full physical skills & rules)
+    Note over Op,Target: Phase 4: Optional IDE Folder Setup
+    Op->>Target: (Skipped by default to preserve lightweight footprint)
 
     Note over Op,Target: Phase 5: Verification Gate
-    Op->>Target: Check symlinks: find -type l (must equal 0 outside package managers)
-    Op->>Target: Dry-run dispatch test: dispatch.sh --dry-run --task verify
+    Op->>Target: Audit symlinks: find -type l (must equal 0 in adopted assets)
+    Op->>Target: Audit boundary: ensure adapters/ and sessions/ do not exist
     Target-->>Op: 100% Verification Passed
 ```
 
@@ -146,7 +156,6 @@ sequenceDiagram
 Before transferring any files, the target repository is inspected:
 - Detect existing rule files: `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/`, `.claude/`.
 - Detect technology stacks: `composer.json`, `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`.
-- Detect existing MCP configurations or AI assistant settings (e.g., Laravel Boost).
 - Verify git status is clean or recorded.
 
 ### Phase 2: Two-Tier `AGENTS.md` Synthesis
@@ -157,47 +166,42 @@ Before transferring any files, the target repository is inspected:
   - Add explicit cross-reference in Section 3 linking to the Local Workshop Manual.
 - If target repository has no `AGENTS.md`:
   - Copy ACON's `AGENTS.md` directly.
-- Create physical `CLAUDE.md` containing the identical content (or synchronized copy).
 
 ### Phase 3: Pure Physical Copy Deployment
-- Copy `acon.yaml` physically to the target root.
-- Copy `.agents/` physically using `rsync -avL --exclude='bridge/task_*' --exclude='bridge/result_*'`.
-- Ensure all bash scripts in `.agents/adapters/` are executable (`chmod +x`).
+- Copy `.agents/skills/` physically using `rsync -avL`.
+- Copy `.agents/rules/` physically using `rsync -avL`.
+- **Strict Boundary Guard:** Explicitly exclude `adapters/`, `adapters/sessions/`, and `acon.yaml`.
 
-### Phase 4: IDE Folder Setup
-- Deploy `.cursor/` and `.claude/` directories with physical dereferencing:
-  ```bash
-  rsync -avL "${ACON_SOURCE}/.cursor/" "${TARGET}/.cursor/"
-  rsync -avL "${ACON_SOURCE}/.claude/" "${TARGET}/.claude/"
-  ```
-- This populates `.cursor/skills/` and `.claude/skills/` with concrete physical files for all 109 skills across the 5 domains (`design/`, `engineering/`, `frameworks/`, `productivity/`, `security-devops/`).
+### Phase 4: Optional IDE Folder Setup
+- Skipped by default to keep target repositories clean and lightweight.
+- If `--ide` is explicitly specified, deploys `.cursor/` and `.claude/` with dereferenced physical copies.
 
 ### Phase 5: Verification Gate (Fail-Closed)
-The adoption process runs an automated two-step verification gate:
+The adoption process runs an automated verification gate:
 1. **Zero-Symlink Audit:**
    ```bash
-   # Check adopted folders specifically:
-   find "$TARGET/.agents" "$TARGET/.cursor" "$TARGET/.claude" -type l
-   
-   # Check whole project (excluding internal package manager & git caches):
-   find "$TARGET" -name .git -prune -o -name node_modules -prune -o -name vendor -prune -o -name .venv -prune -o -type l -print
+   find "$TARGET/.agents" -type l
    ```
-   If ANY symlink is detected in the adopted assets or project files, adoption FAILS immediately.
-2. **Harness Dispatch Dry-Run:**
+   If ANY symlink is detected in adopted assets, adoption FAILS immediately.
+2. **Boundary Enforcement Audit:**
    ```bash
-   "$TARGET/.agents/adapters/dispatch.sh" --dry-run --task "verify"
+   test ! -e "$TARGET/adapters"
+   test ! -e "$TARGET/adapters/sessions"
+   test ! -e "$TARGET/acon.yaml"
    ```
-   Verifies that `acon.yaml` parses correctly, rules resolve, and the dispatch runner is operational.
+   Ensures harness adapters, bridge configurations, and runtime session directories were not leaked.
+3. **Skill Catalog Integrity Check:**
+   Counts installed skills to verify complete deployment.
 
 ---
 
 ## 5. Automated Tooling: `adopt.sh` CLI Reference
 
-The automated adoption script is located at `.agents/adapters/adopt.sh`.
+The automated adoption script is located at `adapters/adopt.sh`.
 
 ### Syntax
 ```bash
-./.agents/adapters/adopt.sh [OPTIONS] <TARGET_DIRECTORY>
+./adapters/adopt.sh [OPTIONS] <TARGET_DIRECTORY>
 ```
 
 ### Options & Flags
@@ -205,119 +209,33 @@ The automated adoption script is located at `.agents/adapters/adopt.sh`.
 | :--- | :--- |
 | `<TARGET_DIRECTORY>` | Absolute or relative path to the target repository to adopt ACON into. |
 | `-n, --dry-run` | Preview files to be created/updated without modifying the target. |
-| `-f, --force` | Overwrite existing `acon.yaml` or re-synthesize `AGENTS.md` without confirmation. |
-| `-s, --skip-ide` | Deploy `.agents/` only, skipping `.cursor/` and `.claude/` IDE folders. |
+| `-f, --force` | Overwrite existing files or re-synthesize `AGENTS.md` without confirmation. |
+| `--ide` | Also deploy `.cursor/` and `.claude/` IDE folders (optional, default: off). |
 | `-h, --help` | Display command usage and examples. |
 
 ### Example Invocations
 ```bash
-# Adopt ACON into a coworker's Laravel project:
-./.agents/adapters/adopt.sh /home/mewho/pm-simulation
+# Adopt ACON into a target project:
+./adapters/adopt.sh /home/user/my-project
 
-# Adopt ACON into a new TypeScript microservice:
-./.agents/adapters/adopt.sh ../billing-service
+# Preview adoption in dry-run mode:
+./adapters/adopt.sh --dry-run /home/user/my-project
 
-# Test adoption plan in dry-run mode:
-./.agents/adapters/adopt.sh --dry-run /path/to/target
+# Force update an already adopted project:
+./adapters/adopt.sh --force /home/user/my-project
 ```
 
 ---
 
-## 6. Machine-Wide Global Distro Mode (`install-global.sh` & `acon` CLI)
+## 6. Adoption Checklist & Quality Invariants
 
-In addition to per-repository adoption, ACON can be installed as a machine-wide agent distribution across **any** AI CLI or editor installed on the host machine.
-
-### The Hub-and-Spoke Distro Model
-While repository adoption enforces the **Universal Physical Copy Invariant** for git portability and CI/CD isolation, the **Machine-Wide Global Distro** uses a **Hub-and-Spoke Architecture**:
-
-```
-                 +--------------------------+
-                 | Master Hub (~/.acon)     |
-                 | - Master acon.yaml       |
-                 | - 114 Skills Library     |
-                 | - Constitutional Rules   |
-                 | - Cross-Harness Adapters |
-                 +------------+-------------+
-                              |
-      +-----------------------+-----------------------+
-      |                       |                       |
-      v                       v                       v
-+---------------+       +---------------+       +---------------+
-| Antigravity   |       |  Claude Code  |       |  Cursor IDE   |
-| Spoke         |       |  Spoke        |       |  Spoke        |
-| ~/.gemini/    |       |  ~/.claude/   |       |  ~/.cursor/   |
-| config/       |       |               |       |               |
-+---------------+       +---------------+       +---------------+
-                              |
-                              v
-                 +--------------------------+
-                 | Universal Executable     |
-                 | ~/.local/bin/acon        |
-                 +--------------------------+
-```
-
-1. **Master Hub (`~/.acon/`):**
-   - Stores the master dereferenced copies of `acon.yaml`, `skills/` (114 skills), `rules/`, `adapters/`, and `AGENTS.md`.
-   - Records the source repository in `.source_repo` for automated background updates.
-2. **Multi-CLI Auto-Detection & Spoke Provisioning:**
-   - **Antigravity CLI (`agy`):** Provisions `~/.gemini/config/skills/` with ACON category packages (safely preserving existing cloud provider skills), links/copies rules, configuration, and adapters.
-   - **Claude Code CLI (`claude`):** Provisions `~/.claude/skills/`, `~/.claude/rules/`, and links `CLAUDE.md`.
-   - **Cursor IDE (`cursor`):** Provisions `~/.cursor/skills/` and `~/.cursor/rules/`.
-   - **Custom:** User-specified directory via `--target custom --target-dir <path>`.
-3. **Universal Executable (`~/.local/bin/acon`):**
-   - Provides machine-wide commands:
-     * `acon status`: Inspect distro health across all CLIs.
-     * `acon sync`: Refresh Master Hub and spokes from upstream repo.
-     * `acon dispatch`: Run cross-harness task dispatcher globally.
-     * `acon adopt`: Adopt ACON into any project.
-
-### Global Installer Reference (`install-global.sh`)
-Located at `.agents/adapters/install-global.sh`:
-
-```bash
-# Preview provisioning plan across all supported CLIs (Zero Risk)
-./.agents/adapters/install-global.sh --dry-run --all
-
-# Auto-detect installed CLIs and provision machine-wide
-./.agents/adapters/install-global.sh --detect
-
-# Provision specific CLIs
-./.agents/adapters/install-global.sh --target agy --target claude
-
-# Provision using physical copies instead of symlinks
-./.agents/adapters/install-global.sh --mode copy --all
-```
-
-### Two Topologies Compared
-
-| Feature | Per-Repository Adoption (`adopt.sh`) | Machine-Wide Global Distro (`install-global.sh`) |
-| :--- | :--- | :--- |
-| **Target Scope** | Individual project repository | Host user account (`~/.acon`) |
-| **Symlink Rule** | **Strict 0 Symlinks** (Universal Physical Copy Invariant) | Hub-and-Spoke symlinks (or copies via `--mode copy`) |
-| **Portability** | 100% portable for Git, Docker, CI/CD, and team members | Machine-wide baseline for all CLI sessions |
-| **Entry Point** | Target repo's `AGENTS.md` and `.agents/` | `~/.local/bin/acon` command-line executable |
-| **Spokes Supported**| Target repo (`.agents/`, `.cursor/`, `.claude/`) | Antigravity (`~/.gemini/config`), Claude (`~/.claude`), Cursor (`~/.cursor`) |
-
----
-
-## 7. Adoption Checklist & Quality Invariants
-
-When verifying an adopted repository or global installation, complete this checklist:
+When verifying an adopted repository, complete this checklist:
 
 ### Repository Adoption Checklist
-- [ ] **Physical Copy Invariant:** No symlinks in `$TARGET/.agents`, `$TARGET/.cursor`, or `$TARGET/.claude`.
+- [ ] **Physical Copy Invariant:** No symlinks in `$TARGET/.agents` or `$TARGET/AGENTS.md`.
+- [ ] **Strict Boundary Enforced:** `$TARGET/adapters` does NOT exist.
+- [ ] **Session Isolation:** `$TARGET/adapters/sessions` does NOT exist.
+- [ ] **Configuration Isolation:** `$TARGET/acon.yaml` is NOT deployed (remains exclusive to the ACON Command Bridge).
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.
-- [ ] **CLAUDE.md Parity:** `$TARGET/CLAUDE.md` is present as a real physical file matching `AGENTS.md`.
-- [ ] **Model Governance:** `$TARGET/acon.yaml` is present with `bridge.enabled: false` (or `true` if external harness configured) and Main-First invariant preserved.
-- [ ] **Adapter Permissions:** `$TARGET/.agents/adapters/*.sh` files have execute permissions (`chmod +x`).
-- [ ] **Dispatch Dry-Run:** `$TARGET/.agents/adapters/dispatch.sh --dry-run --task "verify"` exits with code 0.
-- [ ] **Catalog Integrity:** All 114 skills exist physically under `$TARGET/.agents/skills/`.
+- [ ] **Catalog Integrity:** All active skills exist physically under `$TARGET/.agents/skills/`.
 - [ ] **Zero Execution on Bridge:** Primary agent in target repository acts strictly as Control Plane, delegating all code edits and multi-file archaeology to subagents.
-
-### Global Distro Checklist
-- [ ] **Master Hub Established:** `~/.acon/acon.yaml`, `~/.acon/skills/`, `~/.acon/rules/`, and `~/.acon/adapters/` present.
-- [ ] **Universal Binary Active:** `~/.local/bin/acon` is executable and passes `acon status`.
-- [ ] **Multi-CLI Auto-Detection:** Detected CLIs provisioned without clobbering existing user skills.
-- [ ] **Zero Broken Symlinks:** All provisioned spoke symlinks resolve to existing Master Hub targets.
-- [ ] **Global Dispatch Verified:** `acon dispatch --dry-run --task "verify"` exits with code 0.
-

@@ -168,11 +168,14 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 
 ## 🌉 Cross-Harness Bridge & Model Governance (`acon.yaml`)
 
+> [!WARNING]
+> **Experimental Feature**: The `adapters/` layer (cross-harness bridge & session runner) is experimental. Use it at your own risk. The core, stable heart of ACON is `AGENTS.md` and `.agents/skills/`.
+
 ACON provides an optional cross-harness execution layer that decouples the Control Plane from local CLI tools and external APIs:
 
 - **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the First Mate liaison and supervisor.
 - **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
-  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`.agents/adapters/dispatch.sh`](.agents/adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
+  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`adapters/dispatch.sh`](adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
   * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
 - **The Main-First Escalation Invariant**:
   Even when `bridge.enabled: true`, tasks that can be executed reliably by the main engine MUST default to the main model. External bridge models are invoked strictly by exception when task difficulty, architectural complexity, or specific domain requirements warrant them.
@@ -194,6 +197,12 @@ acon/
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
 ├── CLAUDE.md                                     # Symlink -> AGENTS.md
 ├── README.md                                     # Human-facing guide and operational instructions
+├── adapters/                                     # Cross-harness execution adapters (experimental)
+│   ├── adopt.sh                                  # Repository adoption script
+│   ├── config-reader.py                          # Portable YAML reader
+│   ├── dispatch.sh                               # Cross-harness task dispatcher
+│   ├── session-runner.sh                         # Unified background session runner
+│   └── sessions/                                 # Runtime session storage (gitignored)
 ├── .claude/                                      # Claude Code IDE integration
 │   ├── INDEX.md -> ../.agents/INDEX.md
 │   ├── README.md -> ../.agents/README.md
@@ -204,16 +213,15 @@ acon/
 │   ├── README.md -> ../.agents/README.md
 │   ├── rules -> ../.agents/rules
 │   └── skills/                                   # Domain symlinks -> ../../.agents/skills/*
-└── .agents/                                      # Central Physical Source of Truth
+└── .agents/                                      # Central Physical Source of Truth (Pure Conventions)
     ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
     ├── README.md                                 # Internal catalog
-    ├── adapters/                                 # Cross-harness execution adapters (dispatch.sh, agy, claude)
     ├── rules/                                    # Non-Negotiable Agent Rules
     │   ├── agent-control-plane.md                # Delegation, Bearings, and task contracts
     │   ├── security-secrets-guard.md             # Zero-leakage policy for credentials and secrets
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
-    └── skills/                                   # 109 Curated Modular Agent Skills
+    └── skills/                                   # Curated Modular Agent Skills
         ├── design/                               # 2 Skills + 67 style presets (interface-design & 67 style presets)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── frameworks/                           # 8 Skills (laravel-best-practices, inertia-vue, wayfinder...)

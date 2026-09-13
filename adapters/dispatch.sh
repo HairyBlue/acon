@@ -11,7 +11,7 @@ IFS=$'\n\t'
 # Directory & Path Resolution
 # ------------------------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ACON_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CONFIG_READER="${SCRIPT_DIR}/config-reader.py"
 
 # ------------------------------------------------------------------------------
@@ -75,9 +75,8 @@ fi
 # Configuration & Bridge Resolution (Repository Mode vs Global Hub Mode)
 if [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
   CONFIG_FILE="${ACON_ROOT}/acon.yaml"
-elif [[ -f "${SCRIPT_DIR}/../acon.yaml" ]]; then
-  ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+elif [[ -f "${SCRIPT_DIR}/acon.yaml" ]]; then
+  CONFIG_FILE="${SCRIPT_DIR}/acon.yaml"
 elif [[ -n "${ACON_CONFIG:-}" && -f "${ACON_CONFIG}" ]]; then
   CONFIG_FILE="${ACON_CONFIG}"
   ACON_ROOT="$(cd "$(dirname "${CONFIG_FILE}")" && pwd)"
@@ -87,10 +86,8 @@ fi
 
 if [[ -n "${ACON_BRIDGE_DIR:-}" ]]; then
   BRIDGE_DIR="${ACON_BRIDGE_DIR}"
-elif [[ -d "${ACON_ROOT}/.agents" ]]; then
-  BRIDGE_DIR="${ACON_ROOT}/.agents/sessions/bridge"
 else
-  BRIDGE_DIR="${ACON_ROOT}/sessions/bridge"
+  BRIDGE_DIR="${SCRIPT_DIR}/sessions/bridge"
 fi
 
 # CLI Options & Defaults
@@ -128,7 +125,7 @@ Options:
   -l, --label <text>      Multiplexer tab label for session mode
   -b, --backend <name>    Force multiplexer backend: herdr, tmux, native
   -n, --dry-run           Preview routing, rule matching, and policy checks without executing
-  -k, --keep-bridge       Retain ephemeral task and result files in .agents/sessions/bridge/
+  -k, --keep-bridge       Retain ephemeral task and result files in adapters/sessions/bridge/
   -c, --config <path>     Path to custom acon.yaml configuration file
   -h, --help              Show this help message and exit
 
@@ -143,7 +140,7 @@ Examples:
   ./dispatch.sh --session --dir /home/user/portfolio --task "Audit navigation"
 
   # Execute task brief from file
-  ./dispatch.sh --file .agents/sessions/bridge/brief.md --harness agy
+  ./dispatch.sh --file adapters/sessions/bridge/brief.md --harness agy
 USAGE_EOF
   exit 0
 }

@@ -2,6 +2,9 @@
 
 > *"Talk to one agent. Ship with a crew."*
 
+> [!WARNING]
+> **Experimental Feature**: The `adapters/` layer (cross-harness bridge & session runner) is experimental. Use it at your own risk. The core, stable heart of ACON is `AGENTS.md` and `.agents/skills/`.
+
 The **ACON Adapter Layer** provides a decoupled, modular execution bridge that isolates the **Agent Control Plane** (the central orchestrator and liaison to the user) from specific local CLI tools, direct API endpoints, and remote agent harnesses.
 
 ---
@@ -12,9 +15,9 @@ In traditional setups, agent assistants either lock themselves into a single ven
 
 ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Control Plane:
 1. **Control Plane Decoupling:** The primary assistant (First Mate) never executes code, tests, or multi-step discovery directly on the command bridge.
-2. **Pluggable Execution Harnesses:** All concrete execution is routed to specialist execution harnesses (e.g., Antigravity CLI `agy`, Claude Code `claude`, or direct model APIs `api-runner.py`).
+2. **Pluggable Execution Harnesses:** All concrete execution is routed to specialist execution harnesses (e.g., Antigravity CLI `agy`, Claude Code `claude`, OpenCode `opencode`, Aider `aider`, or Pi `pi`).
 3. **Governance & Model Exclusion:** `acon.yaml` acts as the single declarative source of truth, enforcing security rules, model disallow-lists, and intent-based routing.
-4. **The Ephemeral Bridge Pattern:** Tasks are written as immutable markdown briefs into `.agents/sessions/bridge/task_<bridge_id>.md`, executed by the selected adapter, and captured into `.agents/sessions/bridge/result_<bridge_id>.json`. Every execution is tagged with an explicit Bridge ID (`bridge_<timestamp>_<uuid>`). Upon completion, ephemeral bridge files are automatically purged unless `--keep-bridge` is specified.
+4. **The Ephemeral Bridge Pattern:** Tasks are written as immutable markdown briefs into `adapters/sessions/bridge/task_<bridge_id>.md`, executed by the selected adapter, and captured into `adapters/sessions/bridge/result_<bridge_id>.json`. Every execution is tagged with an explicit Bridge ID (`bridge_<timestamp>_<uuid>`). Upon completion, ephemeral bridge files are automatically purged unless `--keep-bridge` is specified.
 5. **Main-First Escalation Invariant:** Even when the cross-harness bridge is enabled (`bridge.enabled: true`), tasks that can be executed reliably on the main model MUST default to the main model configured in `acon.yaml`. External bridge models are engaged strictly by exception for high-complexity architecture, deep reasoning, or specialized domain requirements.
 6. **The Bridge Activation Gate:** Even when `bridge.enabled: true`, the default delegation tool is **ALWAYS native `invoke_subagent`** on the main engine. The Control Plane is strictly **FORBIDDEN** from invoking the external bridge (`dispatch.sh`) for everyday tasks (routine coding, standard tests, file inspections, general news/web lookups, git operations). The external bridge is engaged **STRICTLY BY EXCEPTION** only when at least one of three conditions is met: (1) explicit Captain command, (2) extreme architectural complexity requiring deep reasoning, or (3) cross-model comparative reviews.
 
@@ -37,23 +40,21 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 |   1. Parses acon.yaml                                                   |
 |   2. Matches intent keyword patterns                                    |
 |   3. Enforces models.exclude governance policy                          |
-|   4. Allocates ephemeral bridge files (.agents/sessions/bridge/)        |
+|   4. Allocates ephemeral bridge files (adapters/sessions/bridge/)       |
 +----+---------------------------------------------------+----------------+
      |                                                   |
      v                                                   v
 +------------------------------------+          +----------------+
-|         session-runner.sh          |          |   api-runner   |
-| - Synchronous: exec / run          |          |    (Direct)    |
-| - Multi-Backend: herdr/tmux/native |          +--------+-------+
-| - Harnesses: agy, claude, opencode,|                   |
-|              aider, pi             |                   |
-+-----------------+------------------+                   |
-                  |                                      |
-                  +-------------------+------------------+
-                                      |
-                                      v
-+-------------------------------------+-----------------------------------+
-|               Unified Runtime Directory (.agents/sessions/)              |
+|         session-runner.sh          |          |   config-reader|
+| - Synchronous: exec / run          |          |   (Fallback    |
+| - Multi-Backend: herdr/tmux/native |          |    YAML engine)|
+| - Harnesses: agy, claude, opencode,|          +----------------+
+|              aider, pi             |
++-----------------+------------------+
+                  |
+                  v
++-------------------------------------------------------------------------+
+|            Unified Runtime Directory (adapters/sessions/)               |
 |  - bridge/ : result_<id>.json, task_<id>.md (Ephemeral bridge mailboxes)|
 |  - cli/    : <session_id>/ (Interactive sessions, tracked logs & pipes) |
 +-------------------------------------------------------------------------+
@@ -63,9 +64,9 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 
 ## 2. Configuration Specification (`acon.yaml`)
 
-The master configuration file lives at the repository root ([`acon.yaml`](../../acon.yaml)). It defines the cross-harness bridge settings, disallowed models, and dispatch routing rules. Note that the Control Plane is the permanent constitution of ACON and is never enabled/disabled; `bridge.enabled` strictly controls whether external cross-model adapters are used.
+The master configuration file lives at the repository root ([`acon.yaml`](../acon.yaml)). It defines the cross-harness bridge settings, disallowed models, and dispatch routing rules. Note that the Control Plane is the permanent constitution of ACON and is never enabled/disabled; `bridge.enabled` strictly controls whether external cross-model adapters are used.
 
-All model identifiers, reasoning efforts, exclusions, and dispatch patterns are declared strictly in [`acon.yaml`](../../acon.yaml), which serves as the single source of truth.
+All model identifiers, reasoning efforts, exclusions, and dispatch patterns are declared strictly in [`acon.yaml`](../acon.yaml), which serves as the single source of truth.
 
 ### 2.1 Prerequisites & Dual Config Reader Engine
 
@@ -85,7 +86,7 @@ The dispatch adapter features an automated dual config reader engine ensuring ou
 
 ### 3.1 Capability Archetypes & Model Governance
 
-ACON decouples agent tasks from specific model names by operating on abstract capability archetypes, while [`acon.yaml`](../../acon.yaml) serves as the single declarative source of truth binding them to concrete model slugs:
+ACON decouples agent tasks from specific model names by operating on abstract capability archetypes, while [`acon.yaml`](../acon.yaml) serves as the single declarative source of truth binding them to concrete model slugs:
 
 - **Capability Archetypes:**
   - **Main Session / Control Plane:** Main Engine for unblocked command bridge operations, quick scans, triage, and universal fallback.
@@ -128,16 +129,14 @@ ACON decouples agent tasks from specific model names by operating on abstract ca
 |---|---|---|---|
 | **Unified Execution & Sessions** | `session-runner.sh` | Unified harness runner and multi-backend session manager (`herdr`, `tmux`, `native`) | Production coding, background agent execution, foreign project delegation, TDD |
 | **Master Dispatcher** | `dispatch.sh` | Master intent router and governance policy gatekeeper reading `acon.yaml` | Declarative intent-based task dispatching & session activation |
-| **Target Adoption** | `adopt.sh` | Portable one-command installer to adopt ACON into foreign repositories | Onboard foreign git repositories into ACON conventions |
-| **Direct API** | `api-runner.py` | Zero-dependency Python runner targeting Anthropic / OpenAI | Fallback when CLI binaries are unavailable in container/CI |
-| **IDE / Desktop** | Extensible | Headless bindings or IPC connections to IDE agents | Editor-integrated task execution (e.g. Cursor, VS Code) |
-| **Sandboxes** | Extensible | Containerized execution runners (Docker, Podman, gVisor) | High-blast-radius execution or untrusted scripts |
+| **Target Adoption** | `adopt.sh` | Portable one-command installer to adopt ACON conventions & skills into foreign repositories | Onboard foreign git repositories into ACON conventions |
+| **Config Engine** | `config-reader.py` | Python YAML parser & query evaluator fallback for cross-platform compatibility | Standalone JSON evaluation when yq/jq are unavailable |
 
 ---
 
 ## 4. How to Test Right Now
 
-All adapter commands should be run from the repository root or `.agents/adapters/`.
+All adapter commands should be run from the repository root or `adapters/`.
 
 ### 1. Zero-Token Dry-Run Verification (`--dry-run`)
 
@@ -145,7 +144,7 @@ Test intent routing and verify policy enforcement without executing CLI harnesse
 
 ```bash
 # Test research & scout intent routing
-./.agents/adapters/dispatch.sh --dry-run --task "deep-research database models"
+./adapters/dispatch.sh --dry-run --task "deep-research database models"
 ```
 **Expected Output:**
 ```text
@@ -160,11 +159,11 @@ Target Model   : <target_model>
 Fallback Model : <main_fallback_model>
 Effort Level   : auto
 Policy Check   : PASSED (Model is permitted by acon.yaml)
-Dispatch Mode  : Synchronous Execution (.../.agents/adapters/session-runner.sh exec)
+Dispatch Mode  : Synchronous Execution (.../adapters/session-runner.sh exec)
 Target Dir     : /path/to/project
-Adapter Script : .../.agents/adapters/session-runner.sh
-Bridge Task    : .../.agents/sessions/bridge/task_bridge_20260913_120500_a1b2c3d4.md
-Bridge Result  : .../.agents/sessions/bridge/result_bridge_20260913_120500_a1b2c3d4.json
+Adapter Script : .../adapters/session-runner.sh
+Bridge Task    : .../adapters/sessions/bridge/task_bridge_20260913_120500_a1b2c3d4.md
+Bridge Result  : .../adapters/sessions/bridge/result_bridge_20260913_120500_a1b2c3d4.json
 --------------------------------------------------------------------------------
 Task Content Preview:
 deep-research database models
@@ -177,7 +176,7 @@ deep-research database models
 Verify that requesting an excluded model triggers an immediate non-zero abort:
 
 ```bash
-./.agents/adapters/dispatch.sh --dry-run --model <disallowed_model>
+./adapters/dispatch.sh --dry-run --model <disallowed_model>
 ```
 **Expected Output:**
 ```text
@@ -191,21 +190,18 @@ Execute a prompt directly using the resolved or overridden model:
 
 ```bash
 # Dispatch an explanation task to an explicitly specified model
-./.agents/adapters/dispatch.sh --task "Explain Python generators" --model <model_name>
+./adapters/dispatch.sh --task "Explain Python generators" --model <model_name>
 
 # Dispatch from an existing markdown brief file
-./.agents/adapters/dispatch.sh --file /path/to/brief.md
-
-# Override target harness to direct API runner
-./.agents/adapters/dispatch.sh --task "Summarize API security" --harness api --model <model_name>
+./adapters/dispatch.sh --file /path/to/brief.md
 ```
 
 ### 4. Preserving Ephemeral Bridge Artifacts (`--keep-bridge`)
 
-By default, bridge files (`task_bridge_<id>.md` and `result_bridge_<id>.json`) in `.agents/sessions/bridge/` are automatically removed when the command finishes, leaving the bridge mailbox clean. To retain them for inspection, pass `--keep-bridge`:
+By default, bridge files (`task_bridge_<id>.md` and `result_bridge_<id>.json`) in `adapters/sessions/bridge/` are automatically removed when the command finishes, leaving the bridge mailbox clean. To retain them for inspection, pass `--keep-bridge`:
 
 ```bash
-./.agents/adapters/dispatch.sh --task "audit authentication flow" --keep-bridge
+./adapters/dispatch.sh --task "audit authentication flow" --keep-bridge
 ```
 
 ---
@@ -216,13 +212,13 @@ Adding support for a new CLI tool (e.g. `cursor`, `opencode`, `aider`) takes les
 
 ### Step 1: Create the Adapter Script
 
-Create `.agents/adapters/<harness_name>.sh` adhering to ACON shell standards:
+Create `adapters/<harness_name>.sh` adhering to ACON shell standards:
 - Shebang `#!/usr/bin/env bash`
 - Strict mode `set -euo pipefail` and `IFS=$'\n\t'`
 - Accept `<prompt_file>` as `$1` (or `--file`) and `<model>` as `$2` (or `--model`)
 - Direct diagnostics to `stderr` (`>&2`) and output to `stdout`
 
-**Example: `.agents/adapters/opencode.sh`**
+**Example: `adapters/opencode.sh`**
 ```bash
 #!/usr/bin/env bash
 # ==============================================================================
@@ -249,7 +245,7 @@ exec opencode --print --model "${MODEL}" --file "${PROMPT_FILE}"
 ```
 Make the script executable:
 ```bash
-chmod +x .agents/adapters/opencode.sh
+chmod +x adapters/opencode.sh
 ```
 
 ### Step 2: Register Dispatch Rule in `acon.yaml`
@@ -272,10 +268,10 @@ dispatch:
 Test that intent matching and harness resolution correctly resolve your new adapter:
 
 ```bash
-./.agents/adapters/dispatch.sh --dry-run --task "run deepseek code audit"
+./adapters/dispatch.sh --dry-run --task "run deepseek code audit"
 ```
 
-The dispatcher automatically checks permissions, checks exclusions in `acon.yaml`, and maps the harness name to `.agents/adapters/opencode.sh`.
+The dispatcher automatically checks permissions, checks exclusions in `acon.yaml`, and maps the harness name to `adapters/opencode.sh`.
 
 ---
 
@@ -291,109 +287,15 @@ The Control Plane invokes adapters asynchronously using subagent delegation:
 
 ---
 
-## 7. Universal Machine-Wide Distro & Global Installation (`install-global.sh`)
-
-ACON establishes a machine-wide agent distro across **any** AI CLI or editor environment on your system via a clean **Hub-and-Spoke Distro Architecture**.
-
-```
-                           +------------------------+
-                           |   Master Hub (~/.acon) |
-                           |  acon.yaml | skills/   |
-                           |  rules/    | adapters/ |
-                           +-----------+------------+
-                                       |
-        +------------------------------+------------------------------+
-        |                              |                              |
-        v                              v                              v
-+------------------+          +------------------+          +------------------+
-| Antigravity CLI  |          | Claude Code CLI  |          |    Cursor IDE    |
-| ~/.gemini/config |          |     ~/.claude    |          |     ~/.cursor    |
-| skills, rules,   |          | skills, rules,   |          |  skills, rules   |
-| config, adapters |          |    CLAUDE.md     |          |                  |
-+------------------+          +------------------+          +------------------+
-                                       |
-                                       v
-                           +------------------------+
-                           | Universal CLI (~/.local/bin/acon)        |
-                           | acon status | acon sync | acon dispatch  |
-                           +------------------------------------------+
-```
-
-### 7.1 Architecture: Hub-and-Spoke Distro
-
-1. **Master Hub (`~/.acon/`):**
-   - The single canonical source of truth on the user's host machine.
-   - Contains dereferenced physical copies of `acon.yaml`, the full 114-skill catalog (`skills/`), constitutional rules (`rules/`), cross-harness runners (`adapters/`), and `AGENTS.md`.
-   - Records the source repository in `~/.acon/.source_repo` for seamless background refreshes.
-
-2. **Multi-CLI Spokes (Auto-Detection & Provisioning):**
-   - The installer inspects the host and automatically provisions active agent environments:
-     * **Antigravity CLI (`agy`):** Targets `~/.gemini/config/`. Provisions domain skill packages into `skills/` (preserving any pre-existing user or cloud provider skills), links/copies `rules/`, `acon.yaml`, and `adapters/`.
-     * **Claude Code CLI (`claude`):** Targets `~/.claude/`. Provisions `skills/`, `rules/`, and mirrors `AGENTS.md` to `CLAUDE.md`.
-     * **Cursor IDE (`cursor`):** Targets `~/.cursor/`. Provisions `skills/` and `rules/`.
-     * **Custom Targets:** User-defined directories via `--target custom --target-dir <path>`.
-
-3. **Universal Executable (`~/.local/bin/acon`):**
-   - A lightweight command-line binary available globally in your PATH:
-     * `acon status`: Displays a comprehensive machine-wide health dashboard showing hub status, active spokes, skill/rule counts, and symlink integrity.
-     * `acon sync [REPO]`: Synchronizes Master Hub and all spokes against the latest upstream repository with a single command.
-     * `acon dispatch [ARGS...]`: Invokes the cross-harness task dispatcher (`dispatch.sh`) globally from any directory.
-     * `acon adopt [REPO]`: Deploys ACON into a target repository using `adopt.sh`.
-
-### 7.2 Installer Options & CLI Flags
-
-The global installer is located at `.agents/adapters/install-global.sh`:
-
-```bash
-./.agents/adapters/install-global.sh [OPTIONS]
-```
-
-| Flag | Description |
-| :--- | :--- |
-| `-d, --detect` | Auto-detect active AI CLIs on this host (default behavior). |
-| `-a, --all` | Provision all supported CLIs (`agy`, `claude`, `cursor`). |
-| `-t, --target <name>` | Provision specific CLI target: `agy`, `claude`, `cursor`, `custom` (repeatable). |
-| `--target-dir <dir>` | Destination directory when using `--target custom`. |
-| `-m, --mode <mode>` | Provisioning mode: `link` (default, spoke symlinks to hub) or `copy` (physical copies). |
-| `-n, --dry-run` | Preview hub setup and spoke provisioning without altering filesystem. |
-| `-f, --force` | Overwrite existing configurations or links without confirmation. |
-| `--hub-dir <dir>` | Custom master hub path (default: `~/.acon`). |
-| `--bin-dir <dir>` | Custom executable directory (default: `~/.local/bin`). |
-| `-h, --help` | Show usage documentation and exit. |
-
-### 7.3 Usage Examples
-
-```bash
-# Preview provisioning plan for all supported CLIs (Zero Risk)
-./.agents/adapters/install-global.sh --dry-run --all
-
-# Auto-detect and provision host CLIs (creates ~/.acon and ~/.local/bin/acon)
-./.agents/adapters/install-global.sh --detect
-
-# Provision specific targets
-./.agents/adapters/install-global.sh --target agy --target cursor
-
-# Pure physical copy mode (for environments where symlinks are restricted)
-./.agents/adapters/install-global.sh --mode copy --all
-
-# Check machine-wide health via universal CLI
-acon status
-
-# Refresh global skills from upstream repository
-acon sync /path/to/acon-repo
-```
-
----
-
-## 8. Unified Session & Multiplexer Architecture (`session-runner.sh`)
+## 7. Unified Session & Multiplexer Architecture (`session-runner.sh`)
 
 > *"Spawn dedicated specialist workers in the background. Steer interactively. Monitor anytime via Herdr, TMUX, or native logs."*
 
-The **Unified Session Runner** (`.agents/adapters/session-runner.sh`) provides an isolated, asynchronous execution bridge for CLI agent harnesses (`agy`, `claude`, `opencode`, `aider`, `pi`) across multiple multiplexers (`herdr`, `tmux`, `native`).
+The **Unified Session Runner** (`adapters/session-runner.sh`) provides an isolated, asynchronous execution bridge for CLI agent harnesses (`agy`, `claude`, `opencode`, `aider`, `pi`) across multiple multiplexers (`herdr`, `tmux`, `native`).
 
 It enables the **First Mate (Control Plane)** and **Liaison Subagents** to delegate long-running tasks or foreign repository work to background processes without blocking the central command bridge, while ensuring full visibility in **Herdr's sidebar**, **TMUX windows**, or **native process logs**.
 
-### 8.1 The Liaison Subagent Pattern
+### 7.1 The Liaison Subagent Pattern
 
 When an objective targets an external repository, foreign workspace, or long-running implementation task:
 1. **Zero Bridge Execution:** The Control Plane never locks the main command bridge.
@@ -409,12 +311,12 @@ When an objective targets an external repository, foreign workspace, or long-run
 
 ---
 
-### 8.2 Unified Session & Bridge Directory Layout
+### 7.2 Unified Session & Bridge Directory Layout
 
-All runtime artifacts—both interactive/background CLI sessions and ephemeral bridge mailboxes—live strictly under `.agents/sessions/`:
+All runtime artifacts—both interactive/background CLI sessions and ephemeral bridge mailboxes—live strictly under `adapters/sessions/`:
 
 ```text
-.agents/sessions/
+adapters/sessions/
 ├── bridge/                               # Ephemeral one-shot task mailboxes
 │   ├── task_bridge_<id>.md               # Immutable task brief generated by dispatch.sh
 │   └── result_bridge_<id>.json           # Structured JSON result captured from harness
@@ -455,7 +357,7 @@ To prevent deleting sessions while they are still working:
 
 ---
 
-### 8.3 The Portable Handoff Packager
+### 7.3 The Portable Handoff Packager
 
 When targeting a repository that lacks local `AGENTS.md` conventions, `session-runner.sh` automatically packages the prompt into a **Portable Handoff Packet** inside `task.md`.
 
@@ -468,7 +370,7 @@ This packet combines:
 
 ---
 
-### 8.4 Harness Support Matrix
+### 7.4 Harness Support Matrix
 
 | Harness | CLI Execution Command | Notes |
 |---|---|---|
@@ -480,7 +382,7 @@ This packet combines:
 
 ---
 
-### 8.5 Multi-Backend Multiplexer Support
+### 7.5 Multi-Backend Multiplexer Support
 
 `session-runner.sh` automatically detects the optimal execution backend according to strict priority:
 
@@ -498,7 +400,7 @@ This packet combines:
    - Spawns a background `nohup` daemon with robust PID tracking and FIFO pipe steering.
    - Zero dependencies on external terminal multiplexers.
 
-### 8.6 macOS & Cross-Platform POSIX Portability
+### 7.6 macOS & Cross-Platform POSIX Portability
 
 `session-runner.sh` and `dispatch.sh` are engineered to be 100% portable across Linux, macOS, WSL, and minimal Unix environments:
 
@@ -512,42 +414,39 @@ This packet combines:
 
 ---
 
-### 8.7 The Long-Running Liaison Invariant (Session Babysitter Protocol)
+### 7.7 Companion Adoption Tool (`adopt.sh`)
 
-When a specialist subagent launches an external session via `session-runner.sh`, the subagent **MUST NOT exit or terminate prematurely** after kicking off the process:
+While `session-runner.sh` enables zero-terminal bridge operations on foreign repositories from within `acon`, [`adopt.sh`](adopt.sh) remains the companion tool to permanently adopt ACON into foreign repositories.
 
-1. **Active Monitoring**: The subagent remains alive as the liaison/babysitter, actively monitoring the session until completion via `session-runner.sh status` and `session-runner.sh log --clean`.
-2. **Long-Running Safety**: For long-running jobs (deep research spikes, complex builds, heavy multi-file refactors), the liaison remains attached and ensures the process has not wedged or errored.
-3. **Steering Bridge**: If intermediate adjustments are needed, the liaison sends steering inputs via `session-runner.sh send-input`.
-4. **Outcome Synthesis**: Upon process completion (`completed` or `failed`), the liaison extracts the final deliverables, diffs, and verification logs, formats the outcome report, and sends it to the First Mate via `send_message`.
-5. **Termination Gate**: The liaison terminates only after delivering the completed report.
+**Strict Lightweight Adoption Standard:**
+`adopt.sh` transfers **ONLY**:
+- `AGENTS.md` (synthesized Two-Tier constitution)
+- `.agents/skills/` (full domain skill library dereferenced into concrete physical files)
+- `.agents/rules/` (constitutional rules)
 
----
+And strictly excludes `adapters/`, `adapters/sessions/`, and `acon.yaml`. Target repositories remain clean, pure consumers of ACON conventions and skills without runtime adapter bloat.
 
-### 8.7 Companion Adoption Tool (`adopt.sh`)
-
-While `session-runner.sh` enables zero-terminal bridge operations on foreign repositories from within `acon`, [`adopt.sh`](adopt.sh) remains the companion tool to permanently adopt ACON into foreign repositories:
 ```bash
 # Adopt ACON conventions into an external repository
-./.agents/adapters/adopt.sh --target /home/user/portfolio
+./adapters/adopt.sh /home/user/my-project
 ```
 
 ---
 
-### 8.8 CLI Command Reference
+### 7.8 CLI Command Reference
 
 #### 1. `start`
 Launches a new background agent session across Herdr, TMUX, or native daemon.
 ```bash
 # Native daemon execution targeting an external project
-./.agents/adapters/session-runner.sh start \
+./adapters/session-runner.sh start \
   --harness agy \
   --dir /home/hairyblue/my-stuff/portfolio \
   --label "portfolio-nav" \
   --prompt "Refactor mobile navigation menu"
 
 # Force tmux background window
-./.agents/adapters/session-runner.sh start \
+./adapters/session-runner.sh start \
   --backend tmux \
   --harness claude \
   --dir /path/to/project \
@@ -557,9 +456,9 @@ Launches a new background agent session across Herdr, TMUX, or native daemon.
 #### 2. `exec` / `run`
 Synchronously executes the harness CLI directly (used by `dispatch.sh`):
 ```bash
-./.agents/adapters/session-runner.sh exec \
+./adapters/session-runner.sh exec \
   --harness agy \
-  --task-file .agents/sessions/bridge/task.md \
+  --task-file adapters/sessions/bridge/task.md \
   --model gemini-3.8-flash \
   --effort auto
 ```
@@ -567,7 +466,7 @@ Synchronously executes the harness CLI directly (used by `dispatch.sh`):
 #### 3. `send-input`
 Sends asynchronous steering input to the running agent via `input.pipe` and multiplexer IPC:
 ```bash
-./.agents/adapters/session-runner.sh send-input \
+./adapters/session-runner.sh send-input \
   --session-id sess_20260913_120500_4210 \
   --input "Please also include unit tests for edge cases"
 ```
@@ -575,44 +474,43 @@ Sends asynchronous steering input to the running agent via `input.pipe` and mult
 #### 4. `status`
 Displays live status and process telemetry:
 ```bash
-./.agents/adapters/session-runner.sh status --session-id sess_20260913_120500_4210
+./adapters/session-runner.sh status --session-id sess_20260913_120500_4210
 
 # Machine-readable JSON output
-./.agents/adapters/session-runner.sh status --session-id sess_20260913_120500_4210 --json
+./adapters/session-runner.sh status --session-id sess_20260913_120500_4210 --json
 ```
 
 #### 5. `log`
 Inspects raw or ANSI-sanitized log streams:
 ```bash
 # View last 50 lines of clean log (no ANSI escape codes)
-./.agents/adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --clean --tail 50
+./adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --clean --tail 50
 
 # Live tail streaming
-./.agents/adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --follow
+./adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --follow
 ```
 
 #### 6. `stop`
 Gracefully terminates the background agent (`SIGTERM` -> wait -> `SIGKILL`), closes Herdr tab or TMUX window, and automatically cleans up the session directory once confirmed terminated:
 ```bash
-./.agents/adapters/session-runner.sh stop --session-id sess_20260913_120500_4210
+./adapters/session-runner.sh stop --session-id sess_20260913_120500_4210
 
 # Pass --keep to preserve session logs and metadata for debugging
-./.agents/adapters/session-runner.sh stop --session-id sess_20260913_120500_4210 --keep
+./adapters/session-runner.sh stop --session-id sess_20260913_120500_4210 --keep
 ```
 
 #### 7. `clean`
 Safely removes completed or stopped session directories. The Active Process Guard protects active running sessions from accidental deletion:
 ```bash
 # Clean a specific completed session
-./.agents/adapters/session-runner.sh clean --session-id sess_20260913_120500_4210
+./adapters/session-runner.sh clean --session-id sess_20260913_120500_4210
 
 # Clean all completed/stopped sessions
-./.agents/adapters/session-runner.sh clean --all
+./adapters/session-runner.sh clean --all
 ```
 
 #### 8. `list`
 Lists active and historical sessions:
 ```bash
-./.agents/adapters/session-runner.sh list
+./adapters/session-runner.sh list
 ```
-

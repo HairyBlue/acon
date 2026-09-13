@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # ACON Repository Adoption & Synchronization: adopt.sh
-# Description: Installs and updates ACON's Control Plane constitution, 114-skill
-#              catalog, declarative model governance, rules, adapters, and IDE
-#              configurations into any target repository.
+# Description: Installs and updates ACON's Control Plane constitution (AGENTS.md),
+#              114-skill catalog (.agents/skills/), and constitutional rules
+#              (.agents/rules/) into any target repository.
 #
 # Non-Negotiable Invariants:
 # 1. Universal Physical Copy Invariant (zero symlinks across all target assets)
 # 2. Two-Tier AGENTS.md Merge Standard (preserves target repo rules verbatim)
-# 3. Fail-Closed Verification Gate (symlink audit + dispatch dry-run)
+# 3. Strict Lightweight Adoption Boundary (adopts ONLY AGENTS.md, .agents/skills/,
+#    and .agents/rules/; never copies adapters/, sessions/, or acon.yaml)
+# 4. Fail-Closed Verification Gate (symlink audit + boundary enforcement)
 # ==============================================================================
 set -euo pipefail
 IFS=$'\n\t'
@@ -17,13 +19,13 @@ IFS=$'\n\t'
 # Directory & Path Resolution
 # ------------------------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ACON_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # CLI Options & Defaults
 TARGET_ARG=""
 DRY_RUN=0
 FORCE=0
-SKIP_IDE=0
+DEPLOY_IDE=0
 TEMP_DIR=""
 
 # ------------------------------------------------------------------------------
@@ -49,33 +51,44 @@ usage() {
   cat <<'USAGE_EOF' >&2
 Usage: adopt.sh [OPTIONS] <TARGET_DIRECTORY>
 
-Universal adoption, bootstrap, and synchronization suite for transferring
-ACON's Control Plane constitution, 114-skill catalog, rules, adapters, and
-configuration into any new or existing repository.
+Universal lightweight adoption, bootstrap, and synchronization suite for
+transferring ACON's Control Plane constitution, 114-skill catalog, and
+constitutional rules into any new or existing repository.
+
+Strict Adoption Standard:
+  Adopts ONLY:
+    • AGENTS.md          (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
+    • .agents/skills/    (114 domain skills dereferenced into real physical files)
+    • .agents/rules/     (Constitutional rules dereferenced into real physical files)
+  Strictly EXCLUDES:
+    • adapters/          (Harness adapters belong to ACON control plane only)
+    • adapters/sessions/ (Runtime session logs and bridge mailboxes)
+    • acon.yaml          (Model governance belongs to ACON control plane only)
 
 Arguments:
   <TARGET_DIRECTORY>     Path to target repository to adopt ACON into
 
 Options:
   -n, --dry-run          Preview files to be transferred without making changes
-  -f, --force            Overwrite configuration or re-synthesize AGENTS.md
-  -s, --skip-ide         Deploy .agents/ only, skipping .cursor/ and .claude/
+  -f, --force            Overwrite existing files or re-synthesize AGENTS.md
+      --ide              Also deploy .cursor/ and .claude/ IDE folders (optional)
   -h, --help             Show this help message and exit
 
 Invariants Enforced:
   • Universal Physical Copy Invariant: 0 symlinks in target repository
   • Two-Tier AGENTS.md: Tier 1 (Command Bridge) + Tier 2 (Workshop Manual)
-  • Fail-Closed Gate: Automated symlink audit and dispatch dry-run check
+  • Strict Adoption Boundary: Only AGENTS.md, skills, and rules deployed
+  • Fail-Closed Gate: Automated symlink audit and boundary check
 
 Examples:
   # Adopt ACON into a target project
-  ./.agents/adapters/adopt.sh /path/to/my-project
+  ./adapters/adopt.sh /path/to/my-project
 
   # Preview adoption in dry-run mode
-  ./.agents/adapters/adopt.sh --dry-run /path/to/my-project
+  ./adapters/adopt.sh --dry-run /path/to/my-project
 
   # Force update an already adopted project
-  ./.agents/adapters/adopt.sh --force /path/to/my-project
+  ./adapters/adopt.sh --force /path/to/my-project
 USAGE_EOF
   exit "${exit_code}"
 }
@@ -93,8 +106,12 @@ while [[ $# -gt 0 ]]; do
       FORCE=1
       shift
       ;;
+    --ide)
+      DEPLOY_IDE=1
+      shift
+      ;;
     -s|--skip-ide)
-      SKIP_IDE=1
+      DEPLOY_IDE=0
       shift
       ;;
     -h|--help)
@@ -149,7 +166,9 @@ echo "==========================================================================
 echo "Source Repository : ${ACON_ROOT}"
 echo "Target Repository : ${TARGET}"
 echo "Dry Run Mode      : $([[ ${DRY_RUN} -eq 1 ]] && echo "YES (preview only)" || echo "NO (live adoption)")"
-echo "Deploy IDE Folders: $([[ ${SKIP_IDE} -eq 1 ]] && echo "SKIPPED" || echo "YES (.cursor, .claude)")"
+echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/"
+echo "Excluded Assets   : adapters/, sessions/, acon.yaml (Strict Boundary Enforced)"
+echo "Deploy IDE Folders: $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "YES (.cursor, .claude)" || echo "NO (default: clean lightweight)")"
 echo "Force Overwrite   : $([[ ${FORCE} -eq 1 ]] && echo "YES" || echo "NO")"
 echo "--------------------------------------------------------------------------------"
 
@@ -250,55 +269,56 @@ fi
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
   # Remove any pre-existing symlinks first to uphold Physical Copy Invariant
-  rm -f "${TARGET}/AGENTS.md" "${TARGET}/CLAUDE.md"
+  rm -f "${TARGET}/AGENTS.md"
   cp "${SYNTHESIZED_AGENTS}" "${TARGET}/AGENTS.md"
-  cp "${SYNTHESIZED_AGENTS}" "${TARGET}/CLAUDE.md"
-  echo "  ✓ Installed physical AGENTS.md and CLAUDE.md"
+  echo "  ✓ Installed physical AGENTS.md"
+  if [[ ${TARGET_HAS_CLAUDE_MD} -eq 1 || ${DEPLOY_IDE} -eq 1 ]]; then
+    rm -f "${TARGET}/CLAUDE.md"
+    cp "${SYNTHESIZED_AGENTS}" "${TARGET}/CLAUDE.md"
+    echo "  ✓ Installed physical CLAUDE.md"
+  fi
 else
-  echo "  [DRY RUN] Would install physical AGENTS.md and CLAUDE.md (${SYNTHESIZED_AGENTS})"
+  echo "  [DRY RUN] Manifest item: AGENTS.md (${SYNTHESIZED_AGENTS})"
+  if [[ ${TARGET_HAS_CLAUDE_MD} -eq 1 || ${DEPLOY_IDE} -eq 1 ]]; then
+    echo "  [DRY RUN] Manifest item: CLAUDE.md (Mirrored physical file)"
+  fi
 fi
 
 # ------------------------------------------------------------------------------
-# Phase 3: Pure Physical Copy Deployment (acon.yaml & .agents/)
+# Phase 3: Pure Physical Copy Deployment (.agents/skills/ & .agents/rules/)
 # ------------------------------------------------------------------------------
-echo "[PHASE 3] Deploying .agents/ and configuration (dereferencing all symlinks)..."
+echo "[PHASE 3] Deploying .agents/skills/ and .agents/rules/ (dereferencing all symlinks)..."
+echo "  • Boundary Policy: Strictly excluding adapters/, sessions/, and acon.yaml"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
-  # 1. acon.yaml
-  if [[ ${TARGET_HAS_ACON_YAML} -eq 0 || ${FORCE} -eq 1 ]]; then
-    rm -f "${TARGET}/acon.yaml"
-    cp "${ACON_ROOT}/acon.yaml" "${TARGET}/acon.yaml"
-    echo "  ✓ Installed physical acon.yaml"
-  else
-    echo "  ✓ Retained existing acon.yaml (use --force to overwrite)"
-  fi
-
-  # 2. .agents/ directory (rsync -avL dereferences all symlinks into real files)
-  mkdir -p "${TARGET}/.agents"
+  # 1. Deploy .agents/skills/
+  mkdir -p "${TARGET}/.agents/skills"
   rsync -avL --delete \
-    --exclude='bridge/task_*' \
-    --exclude='bridge/result_*' \
-    "${ACON_ROOT}/.agents/" "${TARGET}/.agents/"
-  echo "  ✓ Deployed .agents/ directory with 0 symlinks"
+    "${ACON_ROOT}/.agents/skills/" "${TARGET}/.agents/skills/"
+  echo "  ✓ Deployed .agents/skills/ directory (100% physical, 0 symlinks)"
 
-  # Ensure adapters have execution permissions
-  chmod +x "${TARGET}/.agents/adapters/"*.sh 2>/dev/null || true
-  if [[ -f "${TARGET}/.agents/adapters/api-runner.py" ]]; then
-    chmod +x "${TARGET}/.agents/adapters/api-runner.py"
+  # 2. Deploy .agents/rules/ (if exists)
+  if [[ -d "${ACON_ROOT}/.agents/rules" ]]; then
+    mkdir -p "${TARGET}/.agents/rules"
+    rsync -avL --delete \
+      "${ACON_ROOT}/.agents/rules/" "${TARGET}/.agents/rules/"
+    echo "  ✓ Deployed .agents/rules/ directory (100% physical, 0 symlinks)"
   fi
-  echo "  ✓ Verified adapter executable permissions"
 else
-  echo "  [DRY RUN] Would copy acon.yaml and rsync -avL .agents/"
+  echo "  [DRY RUN] Manifest item: .agents/skills/ (rsync -avL dereferencing all symlinks)"
+  if [[ -d "${ACON_ROOT}/.agents/rules" ]]; then
+    echo "  [DRY RUN] Manifest item: .agents/rules/ (rsync -avL dereferencing all symlinks)"
+  fi
+  echo "  [DRY RUN] Explicitly excluded: adapters/, adapters/sessions/, acon.yaml"
 fi
 
 # ------------------------------------------------------------------------------
-# Phase 4: IDE Folder Setup (.cursor/ & .claude/)
+# Phase 4: Optional IDE Folder Setup (.cursor/ & .claude/)
 # ------------------------------------------------------------------------------
-if [[ ${SKIP_IDE} -eq 0 ]]; then
+if [[ ${DEPLOY_IDE} -eq 1 ]]; then
   echo "[PHASE 4] Deploying IDE skill directories (.cursor/ & .claude/)..."
   if [[ ${DRY_RUN} -eq 0 ]]; then
     mkdir -p "${TARGET}/.cursor" "${TARGET}/.claude"
-    # rsync -avL expands all symlinked skills and rules into concrete physical files
     rsync -avL --delete "${ACON_ROOT}/.cursor/" "${TARGET}/.cursor/"
     rsync -avL --delete "${ACON_ROOT}/.claude/" "${TARGET}/.claude/"
     echo "  ✓ Deployed physical .cursor/ directory"
@@ -307,7 +327,7 @@ if [[ ${SKIP_IDE} -eq 0 ]]; then
     echo "  [DRY RUN] Would deploy physical .cursor/ and .claude/ directories"
   fi
 else
-  echo "[PHASE 4] Skipping IDE folders (.cursor/, .claude/) as requested"
+  echo "[PHASE 4] Skipping IDE folders (.cursor/, .claude/) — keeping target repository lightweight"
 fi
 
 # ------------------------------------------------------------------------------
@@ -319,9 +339,8 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
   # 1. Invariant Check: Universal Physical Copy (Zero Symlinks)
   echo "  • Auditing symlinks in adopted directories..."
 
-  # Check adopted directories specifically
   SYMLINKS_ACON=$(find "${TARGET}/.agents" \
-    $([[ ${SKIP_IDE} -eq 0 ]] && echo "${TARGET}/.cursor ${TARGET}/.claude") \
+    $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "${TARGET}/.cursor ${TARGET}/.claude") \
     -type l 2>/dev/null || true)
 
   if [[ -n "${SYMLINKS_ACON}" ]]; then
@@ -331,44 +350,25 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
     exit 1
   fi
 
-  # Check root ACON files
-  for root_file in AGENTS.md CLAUDE.md acon.yaml; do
-    if [[ -L "${TARGET}/${root_file}" ]]; then
-      echo "[FAIL-CLOSED] ${root_file} is a symlink! Must be a real physical file." >&2
-      exit 1
-    fi
-  done
-
-  # Check repository-wide excluding standard package manager & VCS internal directories
-  SYMLINKS_REPO=$(find "${TARGET}" \
-    -name .git -prune -o \
-    -name node_modules -prune -o \
-    -name vendor -prune -o \
-    -name .venv -prune -o \
-    -name .pnpm-store -prune -o \
-    -type l -print 2>/dev/null || true)
-
-  if [[ -n "${SYMLINKS_REPO}" ]]; then
-    echo "[FAIL-CLOSED] Detected symlinks outside package manager caches in target repository:" >&2
-    echo "${SYMLINKS_REPO}" >&2
+  # Check root AGENTS.md
+  if [[ -L "${TARGET}/AGENTS.md" ]]; then
+    echo "[FAIL-CLOSED] AGENTS.md is a symlink! Must be a real physical file." >&2
     exit 1
   fi
-  echo "  ✓ Invariant Verified: Zero symlinks found across all target assets"
 
-  # 2. Invariant Check: Harness Dispatch Dry-Run
-  echo "  • Verifying harness adapter dispatch runner..."
-  if [[ -x "${TARGET}/.agents/adapters/dispatch.sh" ]]; then
-    DISPATCH_OUTPUT=$("${TARGET}/.agents/adapters/dispatch.sh" --dry-run --task "verify" 2>&1)
-    if [[ $? -ne 0 ]]; then
-      echo "[FAIL-CLOSED] dispatch.sh verification failed:" >&2
-      echo "${DISPATCH_OUTPUT}" >&2
-      exit 1
-    fi
-    echo "  ✓ Dispatch Runner Verified: Dry-run check PASSED"
-  else
-    echo "[FAIL-CLOSED] ${TARGET}/.agents/adapters/dispatch.sh is missing or not executable" >&2
+  echo "  ✓ Invariant Verified: Zero symlinks found in adopted ACON assets"
+
+  # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Adapters/Sessions/Config)
+  echo "  • Verifying adoption boundary enforcement..."
+  if [[ -e "${TARGET}/adapters" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: adapters/ directory found in target repository!" >&2
     exit 1
   fi
+  if [[ -e "${TARGET}/adapters/sessions" || -e "${TARGET}/.agents/sessions" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: sessions directory found in target repository!" >&2
+    exit 1
+  fi
+  echo "  ✓ Boundary Verified: adapters/ and sessions/ strictly excluded"
 
   # 3. Skill Catalog Count Check
   SKILL_COUNT=$(find "${TARGET}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
@@ -380,17 +380,15 @@ fi
 # ------------------------------------------------------------------------------
 # Completion Digest
 # ------------------------------------------------------------------------------
+SKILL_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
 echo "================================================================================"
 echo "⚓ ACON Adoption Complete: Target repository is shipshape!"
 echo "================================================================================"
 echo "Target Root      : ${TARGET}"
 echo "Constitution     : ${TARGET}/AGENTS.md (Two-Tier Architecture)"
-echo "CLAUDE Parity    : ${TARGET}/CLAUDE.md (Physical Copy)"
-echo "Model Governance : ${TARGET}/acon.yaml"
-echo "Catalog Location : ${TARGET}/.agents/skills/ (114 Skills)"
-if [[ ${SKIP_IDE} -eq 0 ]]; then
-  echo "IDE Integration  : ${TARGET}/.cursor/ and ${TARGET}/.claude/ (Physical Copies)"
-fi
+echo "Catalog Location : ${TARGET}/.agents/skills/ (${SKILL_COUNT_DISPLAY} Skills)"
+echo "Rules Location   : ${TARGET}/.agents/rules/"
+echo "Boundary Policy  : Strict Lightweight (adapters/, sessions/, acon.yaml excluded)"
 echo "Symlink Status   : 0 symlinks (Universal Physical Copy Invariant Satisfied)"
 echo "Verification     : PASSED"
 echo "================================================================================"

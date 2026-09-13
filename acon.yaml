@@ -17,7 +17,7 @@ bridge:
   default_harness: "agy"
   default_effort: "auto"
   main_model: "gemini-3.8-flash"
-  bridge_dir: ".agents/sessions/bridge"
+  bridge_dir: "adapters/sessions/bridge"
   timeout_seconds: 600
 
 # Model Governance & Exclusion Policy

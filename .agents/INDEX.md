@@ -9,7 +9,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
 | **Agent Orchestration & Control Plane** | Multi-agent coordination, specialist dispatch, Ship vs. Scout, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
-| **Cross-Harness Model Routing & Governance** | Multi-model routing, model exclusions, adapter dispatch layer, automated fallback | [`acon.yaml`](../acon.yaml), [`.agents/adapters/`](adapters/README.md), [`AGENTS.md`](../AGENTS.md) |
+| **Cross-Harness Model Routing & Governance** | Multi-model routing, model exclusions, adapter dispatch layer, automated fallback | [`acon.yaml`](../acon.yaml), [`adapters/`](../adapters/README.md), [`AGENTS.md`](../AGENTS.md) |
 | **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
 | **Grill plan while generating ADRs & domain docs** | Need to sharpen domain terms while interrogating a design | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md), [`.agents/skills/engineering/domain-modeling/SKILL.md`](skills/engineering/domain-modeling/SKILL.md) |
 | **Turn conversation into a formal spec** | Architecture settled, need an actionable specification | [`.agents/skills/engineering/to-spec/SKILL.md`](skills/engineering/to-spec/SKILL.md) |
