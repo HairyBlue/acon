@@ -14,7 +14,7 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 1. **Control Plane Decoupling:** The primary assistant (First Mate) never executes code, tests, or multi-step discovery directly on the command bridge.
 2. **Pluggable Execution Harnesses:** All concrete execution is routed to specialist execution harnesses (e.g., Antigravity CLI `agy`, Claude Code `claude`, or direct model APIs `api-runner.py`).
 3. **Governance & Model Exclusion:** `acon.yaml` acts as the single declarative source of truth, enforcing security rules, model disallow-lists, and intent-based routing.
-4. **The Ephemeral Bridge Pattern:** Tasks are written as immutable markdown briefs into `.agents/bridge/task_<uuid>.md`, executed by the selected adapter, and captured into `.agents/bridge/result_<uuid>.json`. Upon completion, ephemeral bridge files are automatically purged unless `--keep-bridge` is specified.
+4. **The Ephemeral Bridge Pattern:** Tasks are written as immutable markdown briefs into `.agents/sessions/bridge/task_<bridge_id>.md`, executed by the selected adapter, and captured into `.agents/sessions/bridge/result_<bridge_id>.json`. Every execution is tagged with an explicit Bridge ID (`bridge_<timestamp>_<uuid>`). Upon completion, ephemeral bridge files are automatically purged unless `--keep-bridge` is specified.
 5. **Main-First Escalation Invariant:** Even when the cross-harness bridge is enabled (`bridge.enabled: true`), tasks that can be executed reliably on the main model MUST default to the main model configured in `acon.yaml`. External bridge models are engaged strictly by exception for high-complexity architecture, deep reasoning, or specialized domain requirements.
 6. **The Bridge Activation Gate:** Even when `bridge.enabled: true`, the default delegation tool is **ALWAYS native `invoke_subagent`** on the main engine. The Control Plane is strictly **FORBIDDEN** from invoking the external bridge (`dispatch.sh`) for everyday tasks (routine coding, standard tests, file inspections, general news/web lookups, git operations). The external bridge is engaged **STRICTLY BY EXCEPTION** only when at least one of three conditions is met: (1) explicit Captain command, (2) extreme architectural complexity requiring deep reasoning, or (3) cross-model comparative reviews.
 
@@ -37,21 +37,25 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 |   1. Parses acon.yaml                                                   |
 |   2. Matches intent keyword patterns                                    |
 |   3. Enforces models.exclude governance policy                          |
-|   4. Allocates ephemeral bridge files (.agents/bridge/task_<uuid>.md)   |
-+----+-------------------+-------------------+----------------------------+
-     |                   |                   |
-     v                   v                   v
-+---------+         +---------+          +------------+
-| agy.sh  |         |claude.sh|          |api-runner  |
-| (AGY)   |         | (Claude)|          |  (Direct)  |
-+----+----+         +----+----+          +-----+------+
-     |                   |                     |
-     +-------------------+---------------------+
-                         |
-                         v
-+--------------------------------+----------------------------------------+
-|                  Ephemeral Bridge Output Capture                        |
-|        .agents/bridge/result_<uuid>.json (Auto-cleaned on exit)         |
+|   4. Allocates ephemeral bridge files (.agents/sessions/bridge/)        |
++----+---------------------------------------------------+----------------+
+     |                                                   |
+     v                                                   v
++------------------------------------+          +----------------+
+|         session-runner.sh          |          |   api-runner   |
+| - Synchronous: exec / run          |          |    (Direct)    |
+| - Multi-Backend: herdr/tmux/native |          +--------+-------+
+| - Harnesses: agy, claude, opencode,|                   |
+|              aider, pi             |                   |
++-----------------+------------------+                   |
+                  |                                      |
+                  +-------------------+------------------+
+                                      |
+                                      v
++-------------------------------------+-----------------------------------+
+|               Unified Runtime Directory (.agents/sessions/)              |
+|  - bridge/ : result_<id>.json, task_<id>.md (Ephemeral bridge mailboxes)|
+|  - cli/    : <session_id>/ (Interactive sessions, tracked logs & pipes) |
 +-------------------------------------------------------------------------+
 ```
 
@@ -122,8 +126,9 @@ ACON decouples agent tasks from specific model names by operating on abstract ca
 
 | Category | Adapter | Description | Use Case |
 |---|---|---|---|
-| **CLI Runtimes** | `agy.sh` | Antigravity CLI print-mode runner with structured JSON output & effort levels | Production coding, test suites, architecture, read-only scout spikes |
-| **CLI Runtimes** | `claude.sh` | Claude Code CLI runner in non-interactive print mode | Deep reasoning, large architectural refactors |
+| **Unified Execution & Sessions** | `session-runner.sh` | Unified harness runner and multi-backend session manager (`herdr`, `tmux`, `native`) | Production coding, background agent execution, foreign project delegation, TDD |
+| **Master Dispatcher** | `dispatch.sh` | Master intent router and governance policy gatekeeper reading `acon.yaml` | Declarative intent-based task dispatching & session activation |
+| **Target Adoption** | `adopt.sh` | Portable one-command installer to adopt ACON into foreign repositories | Onboard foreign git repositories into ACON conventions |
 | **Direct API** | `api-runner.py` | Zero-dependency Python runner targeting Anthropic / OpenAI | Fallback when CLI binaries are unavailable in container/CI |
 | **IDE / Desktop** | Extensible | Headless bindings or IPC connections to IDE agents | Editor-integrated task execution (e.g. Cursor, VS Code) |
 | **Sandboxes** | Extensible | Containerized execution runners (Docker, Podman, gVisor) | High-blast-radius execution or untrusted scripts |
@@ -147,6 +152,7 @@ Test intent routing and verify policy enforcement without executing CLI harnesse
 ================================================================================
 ACON Task Dispatch Plan (Dry Run)
 ================================================================================
+Bridge ID      : bridge_20260913_120500_a1b2c3d4
 Matched Rule   : research-scout
 Pattern Match  : deep-research|external-benchmark|oss-analysis
 Target Harness : agy
@@ -154,9 +160,11 @@ Target Model   : <target_model>
 Fallback Model : <main_fallback_model>
 Effort Level   : auto
 Policy Check   : PASSED (Model is permitted by acon.yaml)
-Adapter Script : .../.agents/adapters/agy.sh
-Bridge Task    : .../.agents/bridge/task_<uuid>.md
-Bridge Result  : .../.agents/bridge/result_<uuid>.json
+Dispatch Mode  : Synchronous Execution (.../.agents/adapters/session-runner.sh exec)
+Target Dir     : /path/to/project
+Adapter Script : .../.agents/adapters/session-runner.sh
+Bridge Task    : .../.agents/sessions/bridge/task_bridge_20260913_120500_a1b2c3d4.md
+Bridge Result  : .../.agents/sessions/bridge/result_bridge_20260913_120500_a1b2c3d4.json
 --------------------------------------------------------------------------------
 Task Content Preview:
 deep-research database models
@@ -194,7 +202,7 @@ Execute a prompt directly using the resolved or overridden model:
 
 ### 4. Preserving Ephemeral Bridge Artifacts (`--keep-bridge`)
 
-By default, bridge files (`task_<uuid>.md` and `result_<uuid>.json`) are automatically removed when the command finishes. To retain them for inspection, pass `--keep-bridge`:
+By default, bridge files (`task_bridge_<id>.md` and `result_bridge_<id>.json`) in `.agents/sessions/bridge/` are automatically removed when the command finishes, leaving the bridge mailbox clean. To retain them for inspection, pass `--keep-bridge`:
 
 ```bash
 ./.agents/adapters/dispatch.sh --task "audit authentication flow" --keep-bridge
@@ -373,5 +381,238 @@ acon status
 
 # Refresh global skills from upstream repository
 acon sync /path/to/acon-repo
+```
+
+---
+
+## 8. Unified Session & Multiplexer Architecture (`session-runner.sh`)
+
+> *"Spawn dedicated specialist workers in the background. Steer interactively. Monitor anytime via Herdr, TMUX, or native logs."*
+
+The **Unified Session Runner** (`.agents/adapters/session-runner.sh`) provides an isolated, asynchronous execution bridge for CLI agent harnesses (`agy`, `claude`, `opencode`, `aider`, `pi`) across multiple multiplexers (`herdr`, `tmux`, `native`).
+
+It enables the **First Mate (Control Plane)** and **Liaison Subagents** to delegate long-running tasks or foreign repository work to background processes without blocking the central command bridge, while ensuring full visibility in **Herdr's sidebar**, **TMUX windows**, or **native process logs**.
+
+### 8.1 The Liaison Subagent Pattern
+
+When an objective targets an external repository, foreign workspace, or long-running implementation task:
+1. **Zero Bridge Execution:** The Control Plane never locks the main command bridge.
+2. **Liaison Delegation:** The Control Plane dispatches a Liaison subagent, which invokes `session-runner.sh` (or `dispatch.sh --session`).
+3. **Multiplexer & Sidebar Grouping:** In Herdr, a dedicated tab is spawned without focus (`--no-focus`), preventing pane splits and focus theft, grouped under the target workspace:
+   ```text
+   ▾ AGENTS GROUPED
+     o portfolio · portfolio-auth (agy)
+     o acon · scout-worker (claude)
+   ```
+   In TMUX, a background window is allocated (`tmux new-window -d`). In standalone environments, a native daemon tracks the PID.
+4. **Interactive Steering & Logs:** The caller can monitor logs (`session-runner.sh log --clean`), check status (`session-runner.sh status`), or send steering inputs (`session-runner.sh send-input`). The human Captain can click the tab in Herdr's sidebar at any time to inspect or interact with the running agent directly.
+
+---
+
+### 8.2 Unified Session & Bridge Directory Layout
+
+All runtime artifacts—both interactive/background CLI sessions and ephemeral bridge mailboxes—live strictly under `.agents/sessions/`:
+
+```text
+.agents/sessions/
+├── bridge/                               # Ephemeral one-shot task mailboxes
+│   ├── task_bridge_<id>.md               # Immutable task brief generated by dispatch.sh
+│   └── result_bridge_<id>.json           # Structured JSON result captured from harness
+└── cli/                                  # Headless & interactive CLI sessions
+    └── <session_id>/
+        ├── session.json                  # Metadata: session_id, harness, target_dir, pid, status, start_time
+        ├── task.md                       # Packaged task brief or Portable Handoff Packet
+        ├── cmd.sh                        # Executable command invoked by the runner
+        ├── run.sh                        # Execution wrapper handling PID tracking, FIFO steering, and exit status
+        ├── input.pipe                    # FIFO for sending asynchronous steering input
+        ├── raw.log                       # Raw unbuffered stdout/stderr
+        └── clean.log                     # Sanitized log with ANSI codes stripped
+```
+
+#### The Active Process Guard (Safety Invariant)
+To prevent deleting sessions while they are still working:
+1. **Never delete while working:** If `status == running` or `kill -0 "$PID"` succeeds, the session is protected and deletion is aborted.
+2. **Cleanup on confirmed completion:** Bridge files are removed only after the process has fully exited and output is read into memory. CLI sessions are removed only when the process is confirmed terminated and deliverables are extracted.
+
+#### Metadata Schema (`session.json`)
+```json
+{
+  "session_id": "sess_20260913_120500_4210",
+  "harness": "agy",
+  "target_dir": "/home/hairyblue/my-stuff/portfolio",
+  "status": "running",
+  "start_time": "2026-09-13T04:05:00Z",
+  "backend": "herdr",
+  "herdr_tab_id": "w2:t3",
+  "herdr_pane_id": "w2:pA",
+  "herdr_workspace_id": "w2",
+  "tab_label": "agy-portfolio",
+  "pid": 27850,
+  "exit_code": null,
+  "end_time": null
+}
+```
+
+---
+
+### 8.3 The Portable Handoff Packager
+
+When targeting a repository that lacks local `AGENTS.md` conventions, `session-runner.sh` automatically packages the prompt into a **Portable Handoff Packet** inside `task.md`.
+
+This packet combines:
+- **Context & Objective:** Clear goal extracted from the prompt.
+- **Mandatory Boundary Scopes:** Explicit confinement to the target directory, forbidding traversal into parent or sibling repositories.
+- **Engineering Governance (Ponytail Rules):** Enforcing the 7-Rung Decision Ladder (YAGNI, codebase reuse, standard library preference, zero unvetted dependencies, minimal working diffs).
+- **Verification First Protocol:** Demanding local test execution and clean linting before task conclusion.
+- **Structured Outcome Reporting:** Requiring a summary of changes, file modification inventory, and verification output.
+
+---
+
+### 8.4 Harness Support Matrix
+
+| Harness | CLI Execution Command | Notes |
+|---|---|---|
+| **`agy`** | `agy -p "$(cat task.md)" --output-format json` | Supports `--model`, `--effort`, and extra arguments |
+| **`claude`** | `claude -p "$(cat task.md)" --dangerously-skip-permissions` | Claude Code headless execution |
+| **`opencode`** | `opencode run "$(cat task.md)"` | Community models via OpenCode runner |
+| **`aider`** | `aider --message "$(cat task.md)" --yes --no-auto-commits` | Aider pairing agent with auto-commits disabled |
+| **`pi`** | `pi -p "$(cat task.md)"` | Pi lightweight CLI harness |
+
+---
+
+### 8.5 Multi-Backend Multiplexer Support
+
+`session-runner.sh` automatically detects the optimal execution backend according to strict priority:
+
+1. **`herdr` Backend** (Priority 1):
+   - Triggered when `$HERDR_ENV` is set and Herdr is running.
+   - Uses `herdr tab create --cwd <target_dir> --label <label> --no-focus`.
+   - The session cleanly appears under **"agents grouped"** in the Herdr sidebar (e.g. `o portfolio · portfolio-auth (agy)`).
+   - Zero focus theft, zero pane split clutter.
+2. **`tmux` Backend** (Priority 2):
+   - Triggered when `$TMUX` is set and tmux is running.
+   - Uses `tmux new-window -d -n <label> -c <target_dir>`.
+   - Creates a dedicated background window without stealing active focus.
+3. **`native` Backend** (Priority 3 / Default Fallback):
+   - Active when neither Herdr nor TMUX is present, or when forced via `--backend native` / `--standalone`.
+   - Spawns a background `nohup` daemon with robust PID tracking and FIFO pipe steering.
+   - Zero dependencies on external terminal multiplexers.
+
+### 8.6 macOS & Cross-Platform POSIX Portability
+
+`session-runner.sh` and `dispatch.sh` are engineered to be 100% portable across Linux, macOS, WSL, and minimal Unix environments:
+
+1. **Script Path Resolution:** Uses POSIX `$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)` rather than GNU-specific `readlink -f`.
+2. **Zero GNU `sed -i` Dependencies:** Wrappers are rendered cleanly via direct heredoc expansion without relying on in-place regex substitutions that differ between GNU sed (Linux) and BSD sed (macOS).
+3. **ANSI Code Sanitization:** Uses Python 3 regex filtering for universal cross-platform log sanitization, eliminating BSD sed escape syntax quirks.
+4. **macOS Multiplexer Support:**
+   - **`tmux` on macOS:** Supported out of the box via Homebrew (`brew install tmux`). Detects `$TMUX` automatically.
+   - **`herdr` on macOS:** Supported natively via `$HERDR_ENV`.
+   - **`native` Daemon on macOS:** Fully POSIX compliant (`nohup` + background PID tracking). Works on vanilla macOS without installing any external package or multiplexer.
+
+---
+
+### 8.7 The Long-Running Liaison Invariant (Session Babysitter Protocol)
+
+When a specialist subagent launches an external session via `session-runner.sh`, the subagent **MUST NOT exit or terminate prematurely** after kicking off the process:
+
+1. **Active Monitoring**: The subagent remains alive as the liaison/babysitter, actively monitoring the session until completion via `session-runner.sh status` and `session-runner.sh log --clean`.
+2. **Long-Running Safety**: For long-running jobs (deep research spikes, complex builds, heavy multi-file refactors), the liaison remains attached and ensures the process has not wedged or errored.
+3. **Steering Bridge**: If intermediate adjustments are needed, the liaison sends steering inputs via `session-runner.sh send-input`.
+4. **Outcome Synthesis**: Upon process completion (`completed` or `failed`), the liaison extracts the final deliverables, diffs, and verification logs, formats the outcome report, and sends it to the First Mate via `send_message`.
+5. **Termination Gate**: The liaison terminates only after delivering the completed report.
+
+---
+
+### 8.7 Companion Adoption Tool (`adopt.sh`)
+
+While `session-runner.sh` enables zero-terminal bridge operations on foreign repositories from within `acon`, [`adopt.sh`](adopt.sh) remains the companion tool to permanently adopt ACON into foreign repositories:
+```bash
+# Adopt ACON conventions into an external repository
+./.agents/adapters/adopt.sh --target /home/user/portfolio
+```
+
+---
+
+### 8.8 CLI Command Reference
+
+#### 1. `start`
+Launches a new background agent session across Herdr, TMUX, or native daemon.
+```bash
+# Native daemon execution targeting an external project
+./.agents/adapters/session-runner.sh start \
+  --harness agy \
+  --dir /home/hairyblue/my-stuff/portfolio \
+  --label "portfolio-nav" \
+  --prompt "Refactor mobile navigation menu"
+
+# Force tmux background window
+./.agents/adapters/session-runner.sh start \
+  --backend tmux \
+  --harness claude \
+  --dir /path/to/project \
+  --prompt "Audit authentication middleware"
+```
+
+#### 2. `exec` / `run`
+Synchronously executes the harness CLI directly (used by `dispatch.sh`):
+```bash
+./.agents/adapters/session-runner.sh exec \
+  --harness agy \
+  --task-file .agents/sessions/bridge/task.md \
+  --model gemini-3.8-flash \
+  --effort auto
+```
+
+#### 3. `send-input`
+Sends asynchronous steering input to the running agent via `input.pipe` and multiplexer IPC:
+```bash
+./.agents/adapters/session-runner.sh send-input \
+  --session-id sess_20260913_120500_4210 \
+  --input "Please also include unit tests for edge cases"
+```
+
+#### 4. `status`
+Displays live status and process telemetry:
+```bash
+./.agents/adapters/session-runner.sh status --session-id sess_20260913_120500_4210
+
+# Machine-readable JSON output
+./.agents/adapters/session-runner.sh status --session-id sess_20260913_120500_4210 --json
+```
+
+#### 5. `log`
+Inspects raw or ANSI-sanitized log streams:
+```bash
+# View last 50 lines of clean log (no ANSI escape codes)
+./.agents/adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --clean --tail 50
+
+# Live tail streaming
+./.agents/adapters/session-runner.sh log --session-id sess_20260913_120500_4210 --follow
+```
+
+#### 6. `stop`
+Gracefully terminates the background agent (`SIGTERM` -> wait -> `SIGKILL`), closes Herdr tab or TMUX window, and automatically cleans up the session directory once confirmed terminated:
+```bash
+./.agents/adapters/session-runner.sh stop --session-id sess_20260913_120500_4210
+
+# Pass --keep to preserve session logs and metadata for debugging
+./.agents/adapters/session-runner.sh stop --session-id sess_20260913_120500_4210 --keep
+```
+
+#### 7. `clean`
+Safely removes completed or stopped session directories. The Active Process Guard protects active running sessions from accidental deletion:
+```bash
+# Clean a specific completed session
+./.agents/adapters/session-runner.sh clean --session-id sess_20260913_120500_4210
+
+# Clean all completed/stopped sessions
+./.agents/adapters/session-runner.sh clean --all
+```
+
+#### 8. `list`
+Lists active and historical sessions:
+```bash
+./.agents/adapters/session-runner.sh list
 ```
 

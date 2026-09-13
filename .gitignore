@@ -1,9 +1,8 @@
 # ACON (Agentic Conventions & Orchestration Network) Git Ignore
 
-# Ephemeral bridge files generated during task dispatch
-.agents/bridge/*
-!.agents/bridge/.gitkeep
-!.agents/bridge/.gitignore
+# Ephemeral session runtime files, bridge mailboxes, and worktrees
+.agents/sessions/
+.worktrees/
 
 # Operating System & Editor Artifacts
 .DS_Store

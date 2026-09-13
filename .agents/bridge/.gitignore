@@ -1,4 +1,0 @@
-# Ignore all ephemeral task briefs and execution results in the bridge directory
-*
-!.gitkeep
-!.gitignore
