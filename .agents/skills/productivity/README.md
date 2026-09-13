@@ -12,4 +12,5 @@ Communication, alignment, coaching, and documentation workflows:
 - **[writing-for-agents](writing-for-agents/SKILL.md)**: Authoring skills and AGENTS.md instructions.
 - **[technical-writing-for-engineers](technical-writing-for-engineers/SKILL.md)**: Technical RFCs and post-mortems.
 - **[daily-progress-report](daily-progress-report/SKILL.md)**: Git work summaries and Notion publisher.
+- **[developer-story](developer-story/SKILL.md)**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
 
