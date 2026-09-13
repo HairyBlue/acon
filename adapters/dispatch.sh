@@ -73,15 +73,17 @@ else
 fi
 
 # Configuration & Bridge Resolution (Repository Mode vs Global Hub Mode)
-if [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
-  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+if [[ -n "${ACON_CONFIG:-}" && -f "${ACON_CONFIG}" ]]; then
+  CONFIG_FILE="${ACON_CONFIG}"
+  ACON_ROOT="$(cd "$(dirname "${CONFIG_FILE}")/.." && pwd)"
 elif [[ -f "${SCRIPT_DIR}/acon.yaml" ]]; then
   CONFIG_FILE="${SCRIPT_DIR}/acon.yaml"
-elif [[ -n "${ACON_CONFIG:-}" && -f "${ACON_CONFIG}" ]]; then
-  CONFIG_FILE="${ACON_CONFIG}"
-  ACON_ROOT="$(cd "$(dirname "${CONFIG_FILE}")" && pwd)"
-else
+elif [[ -f "${ACON_ROOT}/adapters/acon.yaml" ]]; then
+  CONFIG_FILE="${ACON_ROOT}/adapters/acon.yaml"
+elif [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
   CONFIG_FILE="${ACON_ROOT}/acon.yaml"
+else
+  CONFIG_FILE="${SCRIPT_DIR}/acon.yaml"
 fi
 
 if [[ -n "${ACON_BRIDGE_DIR:-}" ]]; then
