@@ -64,9 +64,9 @@ ACON enforces a strict **Zero-Execution & Zero-Archaeology Mandate** on the Cont
 
 ## 2. Configuration Specification (`acon.yaml`)
 
-The master configuration file lives at the repository root ([`acon.yaml`](../acon.yaml)). It defines the cross-harness bridge settings, disallowed models, and dispatch routing rules. Note that the Control Plane is the permanent constitution of ACON and is never enabled/disabled; `bridge.enabled` strictly controls whether external cross-model adapters are used.
+The master configuration file lives in the `adapters/` directory alongside the adapter scripts ([`acon.yaml`](acon.yaml)). It defines the cross-harness bridge settings, disallowed models, and dispatch routing rules. Note that the Control Plane is the permanent constitution of ACON and is never enabled/disabled; `bridge.enabled` strictly controls whether external cross-model adapters are used.
 
-All model identifiers, reasoning efforts, exclusions, and dispatch patterns are declared strictly in [`acon.yaml`](../acon.yaml), which serves as the single source of truth.
+All model identifiers, reasoning efforts, exclusions, and dispatch patterns are declared strictly in [`acon.yaml`](acon.yaml), which serves as the single source of truth.
 
 ### 2.1 Prerequisites & Dual Config Reader Engine
 
@@ -86,7 +86,7 @@ The dispatch adapter features an automated dual config reader engine ensuring ou
 
 ### 3.1 Capability Archetypes & Model Governance
 
-ACON decouples agent tasks from specific model names by operating on abstract capability archetypes, while [`acon.yaml`](../acon.yaml) serves as the single declarative source of truth binding them to concrete model slugs:
+ACON decouples agent tasks from specific model names by operating on abstract capability archetypes, while [`acon.yaml`](acon.yaml) serves as the single declarative source of truth binding them to concrete model slugs:
 
 - **Capability Archetypes:**
   - **Main Session / Control Plane:** Main Engine for unblocked command bridge operations, quick scans, triage, and universal fallback.

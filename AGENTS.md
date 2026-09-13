@@ -139,7 +139,7 @@ flowchart TD
 ### Cross-Harness Execution & Model Governance (`acon.yaml`)
 
 - **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the liaison and supervisor.
-- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
+- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](adapters/acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
   * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`adapters/dispatch.sh`](adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
   * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
 - **The Main-First Escalation Invariant**:  
@@ -150,7 +150,7 @@ flowchart TD
   1. *Explicit Captain Command:* The Captain explicitly asks to use an external model or the bridge (e.g., "use Claude", "run through Opus", "test on GPT", "use the bridge").
   2. *Extreme Architectural Complexity (Deep Reasoning Tier):* The objective involves foundational system rewrites, complex distributed schema migrations, or intractable concurrency bugs requiring deep reasoning effort that exceeds the main model.
   3. *Cross-Model Comparative Review:* The Captain asks for a second opinion or cross-model benchmark comparison.
-- **Declarative Model Governance**: All model assignments, reasoning effort levels, task dispatch patterns, universal model exclusions, and fallback behaviors are defined strictly in [`acon.yaml`](acon.yaml) rather than hardcoded in this constitution. The fleet dynamically adheres to `acon.yaml` at runtime.
+- **Declarative Model Governance**: All model assignments, reasoning effort levels, task dispatch patterns, universal model exclusions, and fallback behaviors are defined strictly in [`acon.yaml`](adapters/acon.yaml) rather than hardcoded in this constitution. The fleet dynamically adheres to `acon.yaml` at runtime.
 - **Adapter Layer**: When running external or cross-harness background tasks, workers are executed via [`adapters/dispatch.sh`](adapters/dispatch.sh) and [`adapters/session-runner.sh`](adapters/session-runner.sh).
 
 ### The Foreign Workspace & Cross-Project Session Protocol (Optional / On-Demand)
@@ -167,7 +167,7 @@ flowchart TD
 5. **Local Adoption Companion**:  
    [`adopt.sh`](adapters/adopt.sh) remains the canonical tool if the Captain wants to permanently adopt ACON directly into that target repository.
 6. **Governed by `acon.yaml`**:  
-   All session routing, harness resolution, and model exclusions adhere strictly to [`acon.yaml`](acon.yaml).
+   All session routing, harness resolution, and model exclusions adhere strictly to [`acon.yaml`](adapters/acon.yaml).
 7. **The Long-Running Liaison Invariant (Session Babysitter Protocol)**:  
    When a subagent launches an external session via `session-runner.sh`, the subagent **MUST NOT exit or terminate prematurely** after kicking off the process. The subagent must stay alive as the active liaison/babysitter:
    - **Active Monitoring**: It waits and monitors the session until completion. Especially when an external session takes significant time (complex builds, deep research, heavy refactors), the liaison remains attached to watch the process status and clean log stream (`session-runner.sh status`, `session-runner.sh log --clean`).

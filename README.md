@@ -174,7 +174,7 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 ACON provides an optional cross-harness execution layer that decouples the Control Plane from local CLI tools and external APIs:
 
 - **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the First Mate liaison and supervisor.
-- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
+- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](adapters/acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
   * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`adapters/dispatch.sh`](adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
   * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
 - **The Main-First Escalation Invariant**:
@@ -184,7 +184,7 @@ ACON provides an optional cross-harness execution layer that decouples the Contr
   * **Deep Reasoning & Architecture**: Deep Reasoning Model for complex architecture, system refactoring, and security audits.
   * **Core Coding & TDD**: Core Implementation Model for feature implementation, test-driven development, and mechanical linting.
   * **Web Research & Diagnostics**: Research Spike Model for read-only spikes, codebase archaeology, and documentation research.
-- **Declarative Model Governance**: Universal model exclusions, target model slugs, reasoning effort levels, and dispatch patterns are defined solely in [`acon.yaml`](acon.yaml).
+- **Declarative Model Governance**: Universal model exclusions, target model slugs, reasoning effort levels, and dispatch patterns are defined solely in [`acon.yaml`](adapters/acon.yaml).
 - **Automated Fallback**: If any secondary model or adapter encounters an issue, the dispatch runner automatically catches the failure and cascades back to the main engine configured in `acon.yaml`.
 
 ---
@@ -193,11 +193,11 @@ ACON provides an optional cross-harness execution layer that decouples the Contr
 
 ```
 acon/
-├── acon.yaml                                     # Cross-Harness Bridge configuration & model routing
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
 ├── CLAUDE.md                                     # Symlink -> AGENTS.md
 ├── README.md                                     # Human-facing guide and operational instructions
 ├── adapters/                                     # Cross-harness execution adapters (experimental)
+│   ├── acon.yaml                                 # Cross-Harness Bridge configuration & model routing
 │   ├── adopt.sh                                  # Repository adoption script
 │   ├── config-reader.py                          # Portable YAML reader
 │   ├── dispatch.sh                               # Cross-harness task dispatcher

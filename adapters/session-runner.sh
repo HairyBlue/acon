@@ -24,15 +24,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CONFIG_READER="${SCRIPT_DIR}/config-reader.py"
 
-# Resolve acon.yaml path
+# Resolve acon.yaml path (lives in adapters/ alongside this script)
 if [[ -n "${ACON_CONFIG:-}" && -f "${ACON_CONFIG}" ]]; then
   CONFIG_FILE="${ACON_CONFIG}"
 elif [[ -f "${SCRIPT_DIR}/acon.yaml" ]]; then
   CONFIG_FILE="${SCRIPT_DIR}/acon.yaml"
 elif [[ -f "${ACON_ROOT}/adapters/acon.yaml" ]]; then
   CONFIG_FILE="${ACON_ROOT}/adapters/acon.yaml"
-elif [[ -f "${ACON_ROOT}/acon.yaml" ]]; then
-  CONFIG_FILE="${ACON_ROOT}/acon.yaml"
 else
   CONFIG_FILE="${SCRIPT_DIR}/acon.yaml"
 fi
