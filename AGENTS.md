@@ -42,10 +42,10 @@ flowchart TD
     
     subgraph Shaping ["Phase II: Task Shaping & Briefing"]
         Captain -.->|"Answers trade-offs"| Briefing["Task Decomposition"]
-        Briefing -->|"If >=3 files or refactor"| Plan["writing-plans (docs/plans/)"]
+        Briefing -->|"Architectural impact or Captain plan request"| Plan["writing-plans (docs/plans/)"]
         Plan -->|"Captain signs off plan"| Captain
         Captain -.->|"Sign-off / reset via handoff"| PM2["prompt-master Specialist Briefs"]
-        Briefing -->|"Calibrates airtight briefs (Template H / M)"| PM2
+        Briefing -->|"Plan-exempt / Calibrates briefs (Template H / M)"| PM2
         PM2 -->|"Partitions non-overlapping files (Ship vs Scout)"| Contracts["Task Contracts & Bounds"]
     end
     
@@ -75,7 +75,7 @@ flowchart TD
      - **`SHIP`**: Concrete code/test changes with explicit file boundaries and automated test verification.
      - **`SCOUT`**: Strictly read-only investigations or feasibility spikes delivering structured markdown reports.
    - **Anti-Slop Task Eligibility Gate:** Every task is audited against the Anti-Slop Task Eligibility Standard (Section 8). Autonomous execution (`SHIP`) requires closed-loop automated verifiability, strict anti-gobble file scoping ($\le 3$ files), reproduction-first test harnesses for bugs, and partitioning of mission-critical domain logic into `[HUMAN-CORE / AI-TEST]` tasks.
-   - **The Plan-First Gate:** For large architectural refactors, cross-subsystem changes, or tasks modifying $\ge 3$ files: The Control Plane MUST generate an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/YYYY-MM-DD-<feature>.md` and obtain Captain sign-off before dispatching execution workers.
+   - **The Plan-First Gate (Architectural Impact & Ambiguity Standard):** To eliminate token and context waste from blanket file-count triggers, authoring an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) (saved to `docs/plans/YYYY-MM-DD-<feature>.md`) is triggered **strictly by architectural consequence, non-obvious design, or explicit user command**—never by blanket file counts. Tasks meeting Plan-Required Triggers (from-scratch creation, large refactors, DB/query schema changes, core business logic, high ambiguity, or explicit Captain request) require signed-off plans before execution. Plan-exempt tasks (cosmetic styling tweaks, theme/color updates across multiple views, mechanical refactors, and obvious single-path tasks) bypass `writing-plans` entirely for direct execution.
    - **Airtight Briefs:** Prompts are calibrated using `prompt-master` templates (Template H for Ship, Template M for Scout) defining Objective, Boundary Scopes, Tech Contracts, and Definition of Done.
 
 3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew)**
@@ -141,8 +141,8 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
 
    | Tier | When to Use | Required Steps |
    |------|-------------|----------------|
-   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or changes modifying $\ge 3$ files | 9-dimension intent extraction (`prompt-master`), Anti-Slop Eligibility Audit (Section 8), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/`), Captain plan sign-off, Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
-   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Anti-Slop Eligibility Check (Section 8), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
+   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or tasks triggering the Plan-First Gate (from-scratch, schema/DB, core business logic, or Captain requested) | 9-dimension intent extraction (`prompt-master`), Anti-Slop Eligibility Audit (Section 8), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/`), Captain plan sign-off, Template H brief (Objective, Boundary Scopes, Tech Contracts, Definition of Done), file boundary assignments (zero collisions), `ponytail` engineering constraints |
+   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, plan-exempt multi-file tasks (cosmetic/styling updates, mechanical refactors, obvious CRUD), complex Scout investigations | Core Goal + Constraints extraction (3+ dimensions), Anti-Slop Eligibility Check (Section 8), Template M brief (Objective, Scope, Deliverable Format), file boundary or investigation scope defined |
    | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | Clear Objective statement, defined scope boundary (what to inspect, what to ignore), expected deliverable format |
 
    **Minimum Universal Standard:** Every dispatch at any tier MUST include at minimum: (1) a clear Objective, (2) a defined Scope boundary, and (3) an expected Deliverable format.
@@ -150,8 +150,24 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
    Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
 9. **Concurrent Execution Isolation (Worktree Invariant):**  
    When dispatching two or more concurrent `SHIP` specialists on the same repository, the Control Plane MUST enforce physical workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share a working directory or checkout the same branch. The Control Plane manages worktree lifecycle and verifies `.worktrees/` is ignored.
-10. **Plan-First Gate & Context Hygiene Protocol:**  
-    For any objective touching $\ge 3$ files, cross-subsystem migrations, or architectural refactors, the Control Plane MUST NOT dispatch execution subagents immediately. It MUST first draft an implementation plan using [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) saved to `docs/plans/YYYY-MM-DD-<feature>.md` with zero placeholders, explicit interface contracts (`Consumes` / `Produces`), and complete 5-step TDD blocks, and secure Captain sign-off. Context hygiene is enforced across the entire mission lifecycle:
+10. **Plan-First Gate & Context Hygiene Protocol (The Architectural Impact & Ambiguity Standard):**  
+    To eliminate token and context waste from blanket file-count triggers, authoring an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) (saved to `docs/plans/YYYY-MM-DD-<feature>.md`) is governed strictly by **architectural impact, systemic ambiguity, and explicit Captain direction**, rather than raw file counts.
+
+    - **Plan-Required Triggers (MUST author plan in `docs/plans/` and secure Captain sign-off):**
+      1. *Explicit Captain Command:* When the user explicitly requests or insists on a plan (`"write a plan"`, `"plan this"`, `/plan`, etc.).
+      2. *From-Scratch Creation:* Creating brand new systems, services, modules, or features from a blank slate.
+      3. *Large Architectural Refactors:* Foundational rewrites, cross-subsystem migrations, replacing core abstractions or frameworks.
+      4. *Database & Complex Queries:* Schema changes, table migrations, column alterations, state machine transitions, or complex non-trivial query pipelines.
+      5. *Core Business Logic & Invariants:* Mission-critical calculations, payment/financial flows, authentication/authorization pipelines, sensitive domain logic.
+      6. *High Ambiguity / Multi-Option Decisions:* Any task with multiple viable architectural trade-offs where the path forward is not obvious.
+
+    - **Plan-Exempt Triggers (Bypass `writing-plans` — Direct Execution via Calibrated Briefs):**
+      1. *Design, Styling & Color Changes:* Cosmetic tweaks, theme adjustments, Tailwind class updates, color token changes—**even if affecting dozens of files** (e.g. updating color styling across 15 Blade/CSS templates).
+      2. *Mechanical & Repetitive Refactors:* Symbol renames, mass import updates, obvious boilerplate extensions across multiple files.
+      3. *Obvious & Singular Path Tasks:* Routine bug fixes with established root causes, straightforward CRUD additions following existing codebase patterns, simple configuration changes.
+      4. *Anything Obvious:* Any task where the implementation path is self-evident and requires zero architectural debate.
+
+    When a task triggers the Plan-First Gate, the Control Plane MUST draft the plan with zero placeholders, explicit interface contracts (`Consumes` / `Produces`), and complete 5-step TDD blocks, and secure Captain sign-off before dispatching execution workers. Context hygiene is enforced across the entire mission lifecycle:
     - **Externalized Disk State:** The plan markdown file on disk is the authoritative state tracker using `- [ ]` and `- [x]`.
     - **Session Resets via `handoff`:** After plan approval or major milestones, generate a compact [`handoff`](.agents/skills/productivity/handoff/SKILL.md) artifact (<3k tokens) to enable clean-slate execution sessions with zero token bloat.
     - **Subagent Context Slicing:** When invoking workers, the Control Plane slices ONLY the specific Task N specification into the subagent brief, never passing bloated transcripts or unrelated tasks.

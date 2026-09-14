@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use when you have a spec or requirements for a multi-step task, architectural refactor, or complex feature, before touching code."
+description: "Use when you have an architectural refactor, from-scratch system, schema change, or explicit Captain plan request, before touching code."
 license: MIT
 metadata:
   author: acon
@@ -20,7 +20,19 @@ AI coding agents excel at focused execution within well-defined boundaries, but 
 
 ### Core Tenets
 1. **Zero Context, Questionable Taste Assumption:** Always author plans assuming the downstream worker has zero memory of previous conversations, zero intuition about architectural subtleties, and an inclination toward speculative over-engineering unless strictly constrained.
-2. **The Plan-First Gate:** For any task that modifies $\ge 3$ files, touches cross-subsystem boundaries, or executes architectural refactoring, the Control Plane MUST draft a comprehensive implementation plan and secure Captain sign-off BEFORE any execution worker touches code.
+2. **The Plan-First Gate (The Architectural Impact & Ambiguity Standard):** Implementation plans are triggered **strictly by architectural consequence, non-obvious design, or explicit Captain direction**—never by blanket file counts. Authoring a plan in `docs/plans/` is required for:
+   - **Plan-Required Triggers (MUST author plan in `docs/plans/` and secure Captain sign-off):**
+     1. *Explicit Captain Command:* When the user explicitly requests or insists on a plan (`"write a plan"`, `"plan this"`, `/plan`, etc.).
+     2. *From-Scratch Creation:* Creating brand new systems, services, modules, or features from a blank slate.
+     3. *Large Architectural Refactors:* Foundational rewrites, cross-subsystem migrations, replacing core abstractions or frameworks.
+     4. *Database & Complex Queries:* Schema changes, table migrations, column alterations, state machine transitions, or complex non-trivial query pipelines.
+     5. *Core Business Logic & Invariants:* Mission-critical calculations, payment/financial flows, authentication/authorization pipelines, sensitive domain logic.
+     6. *High Ambiguity / Multi-Option Decisions:* Any task with multiple viable architectural trade-offs where the path forward is not obvious.
+   - **Plan-Exempt Triggers (Bypass `writing-plans` — Direct Execution):**
+     1. *Design, Styling & Color Changes:* Cosmetic tweaks, theme adjustments, Tailwind class updates, color token changes—**even if affecting dozens of files** (e.g. updating color styling across 15 templates).
+     2. *Mechanical & Repetitive Refactors:* Symbol renames, mass import updates, obvious boilerplate extensions across multiple files.
+     3. *Obvious & Singular Path Tasks:* Routine bug fixes with established root causes, straightforward CRUD additions following existing codebase patterns, simple configuration changes.
+     4. *Anything Obvious:* Where the implementation path is self-evident and requires zero architectural debate.
 3. **Externalized Disk State:** The implementation plan is saved directly to disk at:
    ```
    docs/plans/YYYY-MM-DD-<feature-name>.md
@@ -314,7 +326,7 @@ npx tsc --noEmit
 
 ## 7. Authoring Workflow: Step-by-Step
 
-When the Captain requests a complex feature, follow this operational cadence:
+When a task triggers the Plan-First Gate under the Architectural Impact & Ambiguity Standard, follow this operational cadence:
 
 1. **Intake & Intent Extraction:**  
    Run `prompt-master` 9-dimension extraction. If forks or ambiguities exist, trigger `grill-me` for quick alignment.
