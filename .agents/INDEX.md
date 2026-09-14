@@ -42,6 +42,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Tailwind CSS styling & UI components** | Layout structures, responsive design, utility classes | [`.agents/skills/frameworks/tailwindcss-development/SKILL.md`](skills/frameworks/tailwindcss-development/SKILL.md) |
 | **TypeScript route binding (Wayfinder)** | Type-safe Laravel routes in frontend `@/actions/` | [`.agents/skills/frameworks/wayfinder-development/SKILL.md`](skills/frameworks/wayfinder-development/SKILL.md) |
 | **Craft UI/UX design & intent routing** | Stop generic AI slop, enforce hierarchy, select from 67 styles | [`.agents/skills/design/SKILL.md`](skills/design/SKILL.md), [`.agents/skills/design/interface-design/SKILL.md`](skills/design/interface-design/SKILL.md) |
+| **Impeccable Design Director & Engine** | 23 lifecycle commands, craft floor quality floor, mechanical anti-pattern detector CLI | [`.agents/skills/design/impeccable/SKILL.md`](skills/design/impeccable/SKILL.md) |
 | **Clean / Minimalist UI design** | Ample whitespace, 8pt grid, clear contrast, low clutter | [`.agents/skills/design/styles/clean/DESIGN.md`](skills/design/styles/clean/DESIGN.md), [`.agents/skills/design/styles/minimal/DESIGN.md`](skills/design/styles/minimal/DESIGN.md) |
 | **Slick / Modern SaaS UI design** | Linear/Vercel feel, dark elevation, Inter + Mono, subtle borders | [`.agents/skills/design/styles/sleek/DESIGN.md`](skills/design/styles/sleek/DESIGN.md), [`.agents/skills/design/styles/bento/DESIGN.md`](skills/design/styles/bento/DESIGN.md) |
 | **Audit or strip generic AI design slop** | Eliminate unmotivated purple gradients, flat hierarchy, monotone grid | [`.agents/skills/design/interface-design/commands/design-deslop.md`](skills/design/interface-design/commands/design-deslop.md), [`.agents/skills/design/interface-design/commands/design-review.md`](skills/design/interface-design/commands/design-review.md) |
@@ -57,7 +58,9 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 
 | Category / Directory | Count | Main Entry File |
 | :--- | :--- | :--- |
-| **[`skills/design/`](skills/design/)** | 2 Skills + 67 Presets | Master design orchestrator, craft engineering (`interface-design`, anti-slop, hierarchy), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
+| **[`skills/design/`](skills/design/)** | 3 Skills + 67 Presets | Master design orchestrator, craft engineering (`interface-design`), Impeccable Design Director (`impeccable`), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
+
+
 | **[`skills/engineering/`](skills/engineering/)** | 14 Skills | Problem solving, architecture, TDD, debugging, code review, ticket mapping, refactoring, API design, zero-downtime migrations |
 | **[`skills/productivity/`](skills/productivity/)** | 11 Skills | Repository adoption (`adopt-acon`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, developer stories |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |

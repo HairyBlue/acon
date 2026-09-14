@@ -115,13 +115,14 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
 1. **Specialist & Expert Personas:**  
    Decompose objectives and dispatch targeted subagents via `invoke_subagent`:
    - `Backend Specialist`: Domain services, API endpoints, database queries, background jobs.
-   - `Frontend UI Specialist`: Component architecture, client state, styling (Tailwind), craft design & anti-slop hierarchy (`design/`).
+   - `Frontend UI Specialist`: Component architecture, client state, styling (Tailwind), craft design & anti-slop hierarchy (`design/`), and Impeccable design engine director (`.agents/skills/design/impeccable/`).
    - `Test & QA Engineer`: Unit/feature test suites (Pest, PHPUnit, Vitest, Pytest), edge cases, mocks.
    - `Security & DevOps Auditor`: Static code security analysis (OWASP), pre-commit hooks, CI checks.
    - `Git Ops & Release Specialist`: Staging, committing, pushing, branch management, and git worktree isolation upon explicit Captain approval.
    - `Codebase Scout`: Read-only codebase archaeology, external library evaluation, diagnostic spikes.
 2. **Equip with Modular Skills on Demand:**  
-   Provide specialists with relevant domain skills from [`.agents/skills/`](.agents/skills/) (`design/`, `frameworks/`, `engineering/`, `security-devops/`) in their prompt instructions.
+   Provide specialists with relevant domain skills from [`.agents/skills/`](.agents/skills/) (`design/`, `design/impeccable/`, `frameworks/`, `engineering/`, `security-devops/`) in their prompt instructions.
+
 3. **Strict Task Shaping (Ship vs. Scout):**  
    - **`SHIP` Tasks:** Concrete code/test deliverables with explicit file boundaries, compile/test verification, and diff presentation.
    - **`SCOUT` Tasks:** Strictly read-only investigations or feasibility spikes producing structured markdown reports with findings, trade-offs, and decision inventories.

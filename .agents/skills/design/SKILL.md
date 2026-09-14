@@ -11,32 +11,36 @@ This suite provides the foundational craft engineering principles needed to make
 
 ---
 
-## Architecture: The Two Pillars of Design
+## Architecture: The Three Pillars of Design
 
 ```
-                     ┌──────────────────────────────────────────────┐
-                     │         Master Design Suite (design)         │
-                     └──────────────────────┬───────────────────────┘
-                                            │
-               ┌────────────────────────────┴────────────────────────────┐
-               ▼                                                         ▼
-┌──────────────────────────────┐                         ┌──────────────────────────────┐
-│  Pillar 1: Craft Engineering │                         │ Pillar 2: Aesthetic Presets  │
-│      (interface-design)      │                         │           (styles/)          │
-├──────────────────────────────┤                         ├──────────────────────────────┤
-│ • 1 Focal Point Per View     │                         │ • Clean (minimal, airy)      │
-│ • Weight > Size Hierarchy    │                         │ • Sleek (Linear/SaaS dark)   │
-│ • 60/30/10 Color Rule        │                         │ • Bento (modular cards)      │
-│ • Subtle Surface Elevation   │                         │ • Editorial (warm serif)     │
-│ • Anti-Slop Verification     │                         │ • Ant / Enterprise (dense)   │
-│ • Persistent System Memory   │                         │ • 67 Curated Style Presets   │
-└──────────────────────────────┘                         └──────────────────────────────┘
+                     ┌─────────────────────────────────────────────────────────┐
+                     │              Master Design Suite (design)               │
+                     └────────────────────────────┬────────────────────────────┘
+                                                  │
+          ┌───────────────────────────────────────┼───────────────────────────────────────┐
+          ▼                                       ▼                                       ▼
+┌──────────────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────────┐
+│  Pillar 1: Craft Engineering │    │ Pillar 2: Aesthetic Presets  │    │ Pillar 3: Impeccable Engine  │
+│      (interface-design)      │    │           (styles/)          │    │         (impeccable)         │
+├──────────────────────────────┤    ├──────────────────────────────┤    ├──────────────────────────────┤
+│ • 1 Focal Point Per View     │    │ • Clean (minimal, airy)      │    │ • Design Director Lifecycle  │
+│ • Weight > Size Hierarchy    │    │ • Sleek (Linear/SaaS dark)   │    │ • Shape / Init / Critique    │
+│ • 60/30/10 Color Rule        │    │ • Bento (modular cards)      │    │ • Audit / Polish / Harden    │
+│ • Subtle Surface Elevation   │    │ • Editorial (warm serif)     │    │ • Typeset / Colorize / Animate│
+│ • Anti-Slop Verification     │    │ • Ant / Enterprise (dense)   │    │ • Craft Floor Quality Floor  │
+│ • Persistent System Memory   │    │ • 67 Curated Style Presets   │    │ • Mechanical Detector CLI    │
+└──────────────────────────────┘    └──────────────────────────────┘    └──────────────────────────────┘
 ```
 
 1. **Pillar 1: Foundational Craft Engineering ([`interface-design/`](interface-design/SKILL.md))**  
    The non-negotiable rules of visual hierarchy, optical sizing, spatial density, depth layering, interaction states, and anti-slop audits.
 2. **Pillar 2: Aesthetic Style Presets ([`styles/`](styles/))**  
    The visual identities, color tokens, typography pairings, and component rules across 67 curated design systems.
+3. **Pillar 3: The Impeccable Design Director & Engine ([`impeccable/`](impeccable/SKILL.md))**  
+   Award-winning design direction, 23 surgical lifecycle sub-commands, mechanical anti-pattern detection CLI (`impeccable detect`), craft floor enforcement (`craft-floor.md`), and live browser steering.
+
+
 
 ---
 
@@ -100,7 +104,30 @@ When the user or product specification expresses a desired aesthetic, route to t
 
 ---
 
+## 💎 The Impeccable Design Director & Engine (`impeccable`)
+
+For advanced UI/UX execution, full-spectrum product design, and rigorous craft polish, activate the **[`impeccable`](impeccable/SKILL.md)** director suite:
+
+- **23 Surgical Lifecycle Sub-Commands:**
+  - **Build:** `craft` · `shape` · `init` · `document` · `extract`
+  - **Evaluate:** `critique` · `audit` (web & native)
+  - **Refine:** `polish` · `bolder` · `quieter` · `distill` · `harden` · `onboard`
+  - **Enhance:** `animate` · `colorize` · `typeset` · `layout` · `delight` · `overdrive`
+  - **Fix & Iterate:** `clarify` · `adapt` (web & native) · `optimize` · `live`
+- **Craft Floor Quality Floor:** Enforces the absolute quality floor and strict anti-pattern bans before every UI edit ([`reference/craft-floor.md`](impeccable/reference/craft-floor.md)).
+- **Mechanical Detector CLI:**
+  ```bash
+  .agents/skills/design/impeccable/scripts/impeccable detect --json <target-files-or-dirs>
+  ```
+- **Context Bootstrapper:**
+  ```bash
+  .agents/skills/design/impeccable/scripts/impeccable context
+  ```
+
+---
+
 ## 🛠️ Mandatory 3-Phase Execution Workflow
+
 
 Whenever building or refactoring frontend interfaces, follow this 3-phase cycle:
 

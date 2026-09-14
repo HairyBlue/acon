@@ -7,11 +7,13 @@ Master design suite for ACON, combining craft-first interface engineering to era
 ## 🏛️ Suite Structure
 
 - **[`SKILL.md`](SKILL.md)**: Master orchestrator and intent-to-style routing guide.
+- **[`impeccable/`](impeccable/SKILL.md)**: Master Impeccable Design Director suite (23 lifecycle commands, craft floor, mechanical anti-pattern detector).
 - **[`interface-design/`](interface-design/SKILL.md)**: Foundational craft engineering (hierarchy, surface elevation, anti-slop rules, design memory).
   - **[`commands/design-deslop.md`](interface-design/commands/design-deslop.md)**: Surgical checklist to remove AI-generated signatures.
   - **[`commands/design-review.md`](interface-design/commands/design-review.md)**: Strict multi-pass craft and hierarchy auditor.
   - **[`reference/system-template.md`](interface-design/reference/system-template.md)**: Design memory template to lock tokens across sessions.
 - **[`styles/`](styles/)**: 67 curated aesthetic style presets with tokens and design foundations.
+
 
 ---
 
