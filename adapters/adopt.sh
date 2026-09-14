@@ -287,7 +287,7 @@ fi
 # ------------------------------------------------------------------------------
 # Phase 3: Pure Physical Copy Deployment (.agents/skills/ & .agents/rules/)
 # ------------------------------------------------------------------------------
-echo "[PHASE 3] Deploying .agents/skills/ and .agents/rules/ (dereferencing all symlinks)..."
+echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, and catalog indexes (dereferencing all symlinks)..."
 echo "  • Boundary Policy: Strictly excluding adapters/, sessions/, and acon.yaml"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
@@ -304,10 +304,33 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
       "${ACON_ROOT}/.agents/rules/" "${TARGET}/.agents/rules/"
     echo "  ✓ Deployed .agents/rules/ directory (100% physical, 0 symlinks)"
   fi
+
+  # 3. Deploy root documentation in .agents/ (INDEX.md, README.md)
+  for doc_file in INDEX.md README.md; do
+    if [[ -f "${ACON_ROOT}/.agents/${doc_file}" ]]; then
+      rm -f "${TARGET}/.agents/${doc_file}"
+      cp "${ACON_ROOT}/.agents/${doc_file}" "${TARGET}/.agents/${doc_file}"
+      echo "  ✓ Deployed .agents/${doc_file}"
+    fi
+  done
+
+  # 4. Prune legacy .agents/adapters and .agents/bridge if present in target
+  if [[ -d "${TARGET}/.agents/adapters" ]]; then
+    rm -rf "${TARGET}/.agents/adapters"
+    echo "  ✓ Pruned obsolete .agents/adapters directory"
+  fi
+  if [[ -d "${TARGET}/.agents/bridge" ]]; then
+    rm -rf "${TARGET}/.agents/bridge"
+    echo "  ✓ Pruned obsolete .agents/bridge directory"
+  fi
 else
   echo "  [DRY RUN] Manifest item: .agents/skills/ (rsync -avL dereferencing all symlinks)"
   if [[ -d "${ACON_ROOT}/.agents/rules" ]]; then
     echo "  [DRY RUN] Manifest item: .agents/rules/ (rsync -avL dereferencing all symlinks)"
+  fi
+  echo "  [DRY RUN] Manifest items: .agents/INDEX.md, .agents/README.md"
+  if [[ -d "${TARGET}/.agents/adapters" || -d "${TARGET}/.agents/bridge" ]]; then
+    echo "  [DRY RUN] Would prune obsolete legacy directories (.agents/adapters, .agents/bridge)"
   fi
   echo "  [DRY RUN] Explicitly excluded: adapters/, adapters/sessions/, acon.yaml"
 fi
@@ -366,6 +389,10 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
   fi
   if [[ -e "${TARGET}/adapters/sessions" || -e "${TARGET}/.agents/sessions" ]]; then
     echo "[FAIL-CLOSED] Boundary Violation: sessions directory found in target repository!" >&2
+    exit 1
+  fi
+  if [[ -e "${TARGET}/.agents/adapters" || -e "${TARGET}/.agents/bridge" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: legacy .agents/adapters or .agents/bridge found in target repository!" >&2
     exit 1
   fi
   echo "  ✓ Boundary Verified: adapters/ and sessions/ strictly excluded"
