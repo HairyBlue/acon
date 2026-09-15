@@ -291,6 +291,11 @@ echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, and catalog indexes (
 echo "  • Boundary Policy: Strictly excluding adapters/, sessions/, and acon.yaml"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
+  # 0. Clean pre-existing legacy symlinks in target .agents directory
+  if [[ -d "${TARGET}/.agents" ]]; then
+    find "${TARGET}/.agents" -maxdepth 2 -type l -delete 2>/dev/null || true
+  fi
+
   # 1. Deploy .agents/skills/
   mkdir -p "${TARGET}/.agents/skills"
   rsync -avL --delete \
@@ -341,6 +346,13 @@ fi
 if [[ ${DEPLOY_IDE} -eq 1 ]]; then
   echo "[PHASE 4] Deploying IDE skill directories (.cursor/ & .claude/)..."
   if [[ ${DRY_RUN} -eq 0 ]]; then
+    # Clean legacy symlinks in IDE directories
+    if [[ -d "${TARGET}/.cursor" ]]; then
+      find "${TARGET}/.cursor" -maxdepth 2 -type l -delete 2>/dev/null || true
+    fi
+    if [[ -d "${TARGET}/.claude" ]]; then
+      find "${TARGET}/.claude" -maxdepth 2 -type l -delete 2>/dev/null || true
+    fi
     mkdir -p "${TARGET}/.cursor" "${TARGET}/.claude"
     rsync -avL --delete "${ACON_ROOT}/.cursor/" "${TARGET}/.cursor/"
     rsync -avL --delete "${ACON_ROOT}/.claude/" "${TARGET}/.claude/"
