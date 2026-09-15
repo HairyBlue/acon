@@ -25,6 +25,17 @@ Ask: "What's the public interface, and which seams should we test?"
 
 When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with "codebase-design" for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.
 
+## Pragmatic Testing Standard (Business-Logic-First)
+
+In the agentic era, writing automated tests for every change (UI styling, superficial layouts, obvious CRUD scaffolding, config glue) consumes excessive tokens and developer time. Follow the **Pragmatic Testing Standard**:
+- **Test-Required Triggers (MUST write tests test-first):**
+  1. *Business Logic & Calculations:* Financial formulas, quotas, pricing/discounts, metric aggregations, state machine transitions.
+  2. *Mission-Critical & Enterprise Invariants:* Auth/security policies, payment processing, multi-tenant isolation, sensitive mutations.
+  3. *Multi-Team & Shared Boundaries:* Public API contracts, shared service interfaces where regressions cause cross-team breakage.
+  4. *Bug Reproductions:* Standalone failing reproduction tests before fixing reported defects.
+  5. *Explicit Captain Command:* When the user explicitly requests tests, TDD, or test coverage.
+- **Test-Exempt Tasks:** For UI styling/templates, obvious CRUD, and config glue, bypass test-writing and rely on deterministic verification (linters, typecheckers, build compilation). In solo developer mode, focus test suites strictly on business logic and formulas to maximize shipping speed.
+
 ## Anti-patterns
 
 - **Implementation-coupled**: mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.

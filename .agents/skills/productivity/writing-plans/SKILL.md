@@ -63,7 +63,7 @@ While minimizing code diffs, the plan must never compromise on the 5 safety pill
 - **Runtime Validation:** Schema validation at all network/IO boundaries (`zod`, `valibot`, `FormRequest`, `pydantic`).
 - **Error Handling:** Explicit failure modes, status codes, and clear diagnostics (no empty `catch` blocks).
 - **Accessibility:** Semantic HTML elements, ARIA labels, keyboard navigability.
-- **Automated Tests:** 100% test pass rate across unit, integration, and edge cases.
+- **Automated Tests:** 100% test pass rate across existing test suites and newly required business logic tests (governed by the Pragmatic Testing Standard).
 
 ---
 
@@ -84,7 +84,7 @@ Every code task MUST include:
 - **Exact File Paths:** Absolute or workspace-relative paths for all files created, modified, or tested.
 - **Target Lines / Symbols:** Specific classes, functions, or line ranges being targeted in existing files.
 - **Full Implementation Code Blocks:** The exact code to be written, including imports, types, and logic.
-- **Full Test Code Blocks:** Complete, runnable test suites asserting concrete behaviors, inputs, and expected outputs.
+- **Full Test Code Blocks (When Test-Required):** Complete, runnable test suites asserting concrete behaviors, inputs, and expected outputs for business logic, calculations, and invariants. For test-exempt tasks (UI, CRUD, glue), explicitly specify "Test-Exempt (Verified via [compiler/linter/typecheck])".
 - **Exact Shell Commands:** The precise verification commands to execute and their expected outputs.
 
 ---
@@ -95,8 +95,8 @@ To prevent execution failures, tasks must be broken down into atomic, right-size
 
 ### Right-Sizing Guidelines
 - **Granularity:** Each task should represent approximately 15 to 30 minutes of subagent execution work.
-- **Single Responsibility:** A task should touch a small, cohesive set of files (ideally 1–2 production files plus their corresponding test file).
-- **Independent Verifiability:** Every individual task must end with a concrete passing test suite before moving to the next task.
+- **Single Responsibility:** A task should touch a small, cohesive set of files (ideally 1–2 production files plus their corresponding test file when test-required).
+- **Independent Verifiability:** Every individual task must end with a concrete passing verification step (passing test suite for business logic; successful lint/typecheck/compile for test-exempt tasks) before moving to the next task.
 
 ### Anti-Slop Task Eligibility Checklist
 Every task drafted in an implementation plan MUST pass the 3-part Anti-Slop Task Eligibility Check before dispatch:
@@ -136,13 +136,22 @@ To eliminate integration bugs when tasks are executed by separate subagents, eve
   ```
 ```
 
-### The 5-Step Bite-Sized TDD Cycle
-Every code task in the plan must specify the 5 TDD steps:
+### The Verification & TDD Cycle (Pragmatic Testing Standard)
+Every code task in the plan must specify its closed-loop verification steps based on the Pragmatic Testing Standard:
+
+**For Test-Required Tasks (Business Logic, Calculations, Invariants, Public APIs, Bug Reproductions):**
+Specify the 5 TDD steps:
 1. **Step 1: Write Failing Test:** Provide the full test code block targeting the unit or feature.
 2. **Step 2: Verify Test Failure:** State the exact test runner command and the expected failure mode (e.g., `Expected calculateBillingSummary to be defined`).
 3. **Step 3: Write Minimal Implementation:** Provide the exact code fulfilling the test, adhering strictly to Ponytail.
 4. **Step 4: Verify Test Pass:** State the exact test runner command and the expected passing confirmation.
 5. **Step 5: Codebase Verification & Static Checks:** Run linters, type checkers, and formatters (`npm run lint`, `phpstan`, `tsc --noEmit`).
+
+**For Test-Exempt Tasks (UI Templates, Styling, Obvious CRUD, Config Glue):**
+Specify the 3-step verification cycle:
+1. **Step 1: Minimal Implementation:** Provide the exact code/markup, adhering strictly to Ponytail.
+2. **Step 2: Deterministic Verification:** State the exact compiler, typecheck, or linting command (`npm run build`, `tsc --noEmit`, `phpstan`).
+3. **Step 3: Visual / Seam Confirmation:** State the expected render/response or craft checks.
 
 ---
 

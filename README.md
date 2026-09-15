@@ -86,7 +86,7 @@ flowchart TD
     
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
         Contracts -->|"invoke_subagent"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
-        Crew -->|"TDD, lint, compile, self-verify"| Crew
+        Crew -->|"Lint, compile, test (if required), self-verify"| Crew
         FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
     end
     
@@ -100,7 +100,7 @@ flowchart TD
 
 1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to lock architecture.
 2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition (`to-spec` / `to-tickets`), strict `SHIP` vs. `SCOUT` task shaping, non-overlapping file boundaries, and calibrated prompt briefs.
-3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via `invoke_subagent`, zero-token reactive waiting (harness yields), and self-verifying automated test execution.
+3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via `invoke_subagent`, zero-token reactive waiting (harness yields), and closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks).
 4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Central file integration, anti-slop verification, the 4-section Fleet Bearings digest, and explicit Captain approval for git commits and destructive operations.
 
 ---

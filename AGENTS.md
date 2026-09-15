@@ -51,7 +51,7 @@ flowchart TD
     
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
         Contracts -->|"invoke_subagent (Context-Sliced Task N)"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
-        Crew -->|"TDD, lint, compile, self-verify"| Crew
+        Crew -->|"Lint, compile, test (if required), self-verify"| Crew
         FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
     end
     
@@ -72,20 +72,21 @@ flowchart TD
 2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane)**
    - **Task Decomposition:** The Control Plane partitions work into non-overlapping file scopes (zero collisions).
    - **Task Contracts (`SHIP` vs. `SCOUT`):**
-     - **`SHIP`**: Concrete code/test changes with explicit file boundaries and automated test verification.
+     - **`SHIP`**: Concrete code deliverables with explicit file boundaries and closed-loop verification (automated tests for business logic/invariants, or compiler/linter/typecheck verification for test-exempt tasks).
      - **`SCOUT`**: Strictly read-only investigations or feasibility spikes delivering structured markdown reports.
    - **Anti-Slop Task Eligibility Gate:** Every task is audited against the Anti-Slop Task Eligibility Standard (Section 8). Autonomous execution (`SHIP`) requires closed-loop automated verifiability, strict anti-gobble file scoping ($\le 3$ files), reproduction-first test harnesses for bugs, and partitioning of mission-critical domain logic into `[HUMAN-CORE / AI-TEST]` tasks.
+   - **The Pragmatic Testing Standard (Business-Logic-First Testing Gate):** To maximize shipping velocity and eliminate wasteful test bloat in the agentic era, authoring new automated tests is strictly reserved for business logic, calculations, mission-critical invariants, multi-team service boundaries, and bug reproductions. Routine UI styling, obvious CRUD, and glue code are test-exempt and verified via linters, typecheckers, and deterministic build/compilation checks without authoring boilerplate test suites (see Section 8, Property 8).
    - **The Plan-First Gate (Architectural Impact & Ambiguity Standard):** To eliminate token and context waste from blanket file-count triggers, authoring an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) (saved to `docs/plans/YYYY-MM-DD-<feature>.md`) is triggered **strictly by architectural consequence, non-obvious design, or explicit user command**—never by blanket file counts. Tasks meeting Plan-Required Triggers (from-scratch creation, large refactors, DB/query schema changes, core business logic, high ambiguity, or explicit Captain request) require signed-off plans before execution. Plan-exempt tasks (cosmetic styling tweaks, theme/color updates across multiple views, mechanical refactors, and obvious single-path tasks) bypass `writing-plans` entirely for direct execution.
    - **Airtight Briefs:** Prompts are calibrated using `prompt-master` templates (Template H for Ship, Template M for Scout) defining Objective, Boundary Scopes, Tech Contracts, and Definition of Done.
 
 3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew)**
-   - **Specialist Dispatch:** Dispatches targeted specialists via `invoke_subagent` (e.g. *Backend Specialist*, *Frontend UI Specialist*, *Test & QA Engineer*, *Security Auditor*, *Codebase Scout*), equipped with modular domain skills from `.agents/skills/`.
+   - **Specialist Dispatch:** Dispatches targeted specialists via `invoke_subagent` (e.g. *Backend Specialist*, *Frontend UI Specialist*, *Test & QA Engineer* [for test-required logic and enterprise invariants], *Security Auditor*, *Codebase Scout*), equipped with modular domain skills from `.agents/skills/`.
    - **Zero-Token Reactive Waiting:** The Control Plane stops calling tools immediately after launching subagents. The harness runtime automatically wakes the Control Plane upon completion or inbound message.
    - **Stuck-Worker Recovery:** If a subagent loops or wedges, the Control Plane uses `send_message` or `manage_subagents` to inspect, steer, or respawn.
 
 4. **Phase IV: Central Synthesis & Bearings (Control Plane $\rightarrow$ Captain)**
    - **Synthesis of Shared Entry Points:** Subagents never touch shared aggregation files (central routes, service providers, index files). The Control Plane handles all centralized file merges.
-   - **Integration & Anti-Slop Verification:** Verifies compilation, linters, tests, and craft quality.
+   - **Integration & Anti-Slop Verification:** Verifies compilation, linters, test pass rates (100% pass on existing regression suites and required business logic tests), and craft quality.
    - **Fleet Bearings Digest:** Renders the canonical 4-section Bearings status digest (*Captain's Call, Recently Landed, Underway, Charted Next*).
    - **Human-in-the-Loop Authority Gate:** The Captain is engaged strictly by exception (destructive commands, credentials, git staging/commit approval).
 
@@ -95,7 +96,7 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
 
 1. **Externalized Disk State (`docs/plans/`):** Implementation plans authored via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) live directly on disk at `docs/plans/YYYY-MM-DD-<feature>.md`. Task progress is tracked live using markdown checkboxes (`- [ ]` and `- [x]`). The filesystem is the single persistent source of truth across session restarts and agent boundaries.
 2. **Session Resets via `handoff`:** When planning completes and the Captain signs off, or when a major milestone is reached, the Control Plane triggers [`handoff`](.agents/skills/productivity/handoff/SKILL.md) to generate a high-density, low-token summary (<3k tokens) referencing the plan file path. The session is reset (e.g., via `/clear` or starting a fresh command thread), allowing execution workers to run in a clean-slate context with zero token bloat.
-3. **Subagent Context Slicing:** When dispatching specialist workers via `invoke_subagent`, the Control Plane MUST NEVER pass the entire multi-turn conversation or full multi-task plan into the worker's prompt. It MUST slice ONLY the specific Task N scope into the subagent brief: exact file boundaries (`Create`, `Modify`, `Test`), `Consumes` and `Produces` interface contracts, bite-sized TDD steps, verification commands, and [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) constraints. This keeps worker prompts ultra-lean (<2k tokens), prevents boundary violations, and guarantees zero cross-task pollution.
+3. **Subagent Context Slicing:** When dispatching specialist workers via `invoke_subagent`, the Control Plane MUST NEVER pass the entire multi-turn conversation or full multi-task plan into the worker's prompt. It MUST slice ONLY the specific Task N scope into the subagent brief: exact file boundaries (`Create`, `Modify`, `Test` if test-required), `Consumes` and `Produces` interface contracts, bite-sized verification steps (TDD steps for test-required logic; build/typecheck/lint steps for test-exempt tasks), verification commands, and [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) constraints. This keeps worker prompts ultra-lean (<2k tokens), prevents boundary violations, and guarantees zero cross-task pollution.
 
 ---
 
@@ -116,7 +117,7 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
    Decompose objectives and dispatch targeted subagents via `invoke_subagent`:
    - `Backend Specialist`: Domain services, API endpoints, database queries, background jobs.
    - `Frontend UI Specialist`: Component architecture, client state, styling (Tailwind), craft design & anti-slop hierarchy (`design/`), and Impeccable design engine director (`.agents/skills/design/impeccable/`).
-   - `Test & QA Engineer`: Unit/feature test suites (Pest, PHPUnit, Vitest, Pytest), edge cases, mocks.
+   - `Test & QA Engineer`: Unit/feature test suites (Pest, PHPUnit, Vitest, Pytest), edge cases, and mocks for business logic, calculations, enterprise invariants, and multi-team service boundaries.
    - `Security & DevOps Auditor`: Static code security analysis (OWASP), pre-commit hooks, CI checks.
    - `Git Ops & Release Specialist`: Staging, committing, pushing, branch management, and git worktree isolation upon explicit Captain approval.
    - `Codebase Scout`: Read-only codebase archaeology, external library evaluation, diagnostic spikes.
@@ -124,7 +125,7 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
    Provide specialists with relevant domain skills from [`.agents/skills/`](.agents/skills/) (`design/`, `design/impeccable/`, `frameworks/`, `engineering/`, `security-devops/`) in their prompt instructions.
 
 3. **Strict Task Shaping (Ship vs. Scout):**  
-   - **`SHIP` Tasks:** Concrete code/test deliverables with explicit file boundaries, compile/test verification, and diff presentation.
+   - **`SHIP` Tasks:** Concrete code deliverables with explicit file boundaries, compile/lint/test verification (authoring new tests strictly when triggered by the Pragmatic Testing Standard), and diff presentation.
    - **`SCOUT` Tasks:** Strictly read-only investigations or feasibility spikes producing structured markdown reports with findings, trade-offs, and decision inventories.
 4. **Zero-Overlapping File Boundaries (No Collisions):**  
    No two subagents may ever be assigned the same target file. Shared entry points (central routes, service providers, barrel files) are reserved for central synthesis by the Control Plane.
@@ -148,7 +149,7 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
 
    **Minimum Universal Standard:** Every dispatch at any tier MUST include at minimum: (1) a clear Objective, (2) a defined Scope boundary, and (3) an expected Deliverable format.
 8. **Engineering Governance (Anti-Overengineering Mandate):**  
-   Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
+   Every `SHIP` brief MUST incorporate the [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) protocol under Mandatory Engineering Constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the non-negotiable Safety Invariant (zero-trust security, strict runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates across existing regression suites and required business logic tests). Passing existing regression tests is non-negotiable, but authoring *new* test suites is governed strictly by the Pragmatic Testing Standard—never authoring wasteful tests for UI templates, styling, routine CRUD, or glue code. The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
 9. **Concurrent Execution Isolation (Worktree Invariant):**  
    When dispatching two or more concurrent `SHIP` specialists on the same repository, the Control Plane MUST enforce physical workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share a working directory or checkout the same branch. The Control Plane manages worktree lifecycle and verifies `.worktrees/` is ignored.
 10. **Plan-First Gate & Context Hygiene Protocol (The Architectural Impact & Ambiguity Standard):**  
@@ -168,7 +169,7 @@ To eliminate LLM context degradation, instruction drift, and runaway token costs
       3. *Obvious & Singular Path Tasks:* Routine bug fixes with established root causes, straightforward CRUD additions following existing codebase patterns, simple configuration changes.
       4. *Anything Obvious:* Any task where the implementation path is self-evident and requires zero architectural debate.
 
-    When a task triggers the Plan-First Gate, the Control Plane MUST draft the plan with zero placeholders, explicit interface contracts (`Consumes` / `Produces`), and complete 5-step TDD blocks, and secure Captain sign-off before dispatching execution workers. Context hygiene is enforced across the entire mission lifecycle:
+    When a task triggers the Plan-First Gate, the Control Plane MUST draft the plan with zero placeholders, explicit interface contracts (`Consumes` / `Produces`), and complete verification blocks (5-step TDD blocks for test-required business logic; deterministic build/typecheck/lint checks for test-exempt tasks), and secure Captain sign-off before dispatching execution workers. Context hygiene is enforced across the entire mission lifecycle:
     - **Externalized Disk State:** The plan markdown file on disk is the authoritative state tracker using `- [ ]` and `- [x]`.
     - **Session Resets via `handoff`:** After plan approval or major milestones, generate a compact [`handoff`](.agents/skills/productivity/handoff/SKILL.md) artifact (<3k tokens) to enable clean-slate execution sessions with zero token bloat.
     - **Subagent Context Slicing:** When invoking workers, the Control Plane slices ONLY the specific Task N specification into the subagent brief, never passing bloated transcripts or unrelated tasks.
@@ -259,9 +260,9 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 ## 7. Authority & Gatekeeping: Separation of Authority from Execution
 
 - **Exclusive Captain Authority:** The Captain holds exclusive authority over repository mutations. Git commits, pushes, merges, branch deletions, destructive commands (`git reset --hard`, `git clean -fd`, table drops, file deletions), and new dependency installations require explicit Captain authorization.
-- **Control Plane as Gatekeeper:** The Control Plane verifies diffs, ensures clean linters and 100% test pass rates, audits for anti-overengineering compliance ([`ponytail`](.agents/skills/productivity/ponytail/SKILL.md)), formats conventional commits according to [`conventional-commits`](.agents/skills/security-devops/conventional-commits/SKILL.md) (Conventional Commits v1.0.0), and presents proposed commit messages and diffs to the Captain for approval.
+- **Control Plane as Gatekeeper:** The Control Plane verifies diffs, ensures clean linters, builds, and 100% pass rates across existing regression suites and required business tests, audits for anti-overengineering compliance ([`ponytail`](.agents/skills/productivity/ponytail/SKILL.md)), formats conventional commits according to [`conventional-commits`](.agents/skills/security-devops/conventional-commits/SKILL.md) (Conventional Commits v1.0.0), and presents proposed commit messages and diffs to the Captain for approval.
 - **Worker-Only Git Execution (Zero Message Queuing):** Once the Captain authorizes a commit or push, the Control Plane **NEVER** executes `git commit` or `git push` directly in the main thread. Synchronous tool execution locks the command thread and queues incoming Captain messages. Instead, the Control Plane dispatches a `Git Ops & Release Specialist` via `invoke_subagent` to execute git operations asynchronously in the background while the Control Plane remains instantly responsive to the Captain.
-- **Verification First:** Always run linters and test suites before declaring work complete.
+- **Verification First:** Always run linters, typechecks, builds, and applicable test suites before declaring work complete.
 
 ---
 
@@ -269,12 +270,12 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 
 Autonomous agent execution yields maximum engineering leverage only when tasks are cleanly bounded, deterministically verifiable, and architecturally separated from high-consequence core domain algorithms. To eliminate low-quality code generation ("AI slop"), context bloat, and regression risks, the fleet enforces **The Anti-Slop Task Eligibility Standard**.
 
-Before any task is approved for autonomous execution (`SHIP`), the Control Plane MUST evaluate it against the **7 Properties of High-Leverage Agent Tasks**:
+Before any task is approved for autonomous execution (`SHIP`), the Control Plane MUST evaluate it against the **8 Properties of High-Leverage Agent Tasks**:
 
 1. **Anti-Gobble Boundary Invariant:**  
-   Tasks must be scoped to $\le 3$ files (typically 1–2 production files plus their corresponding test file). The agent must never scan or ingest an entire codebase into context. Ingesting full codebases triggers context degradation, hallucinated dependencies, and speculative refactoring. On existing codebases, tasks rely strictly on explicit seam contracts (`Consumes` / `Produces` interfaces) and micro-specs that isolate the targeted integration seam.
+   Tasks must be scoped to $\le 3$ files (typically 1–2 production files plus their corresponding test file when test-required). The agent must never scan or ingest an entire codebase into context. Ingesting full codebases triggers context degradation, hallucinated dependencies, and speculative refactoring. On existing codebases, tasks rely strictly on explicit seam contracts (`Consumes` / `Produces` interfaces) and micro-specs that isolate the targeted integration seam.
 2. **Closed-Loop Verification Mandate:**  
-   An autonomous execution (`SHIP`) task is **strictly ineligible for dispatch** unless an automated test suite, compiler, or deterministic CLI check can verify it. The specialist subagent must be able to run the verification command, detect failure, adjust code, and confirm green status without human intervention. If a task cannot self-verify in an automated loop, it must be human-driven or dispatched as an advisory read-only investigation (`SCOUT`).
+   An autonomous execution (`SHIP`) task is **strictly ineligible for dispatch** unless an automated test suite, compiler, or deterministic CLI check can verify it. The specialist subagent must be able to run the verification command, detect failure, adjust code, and confirm green status without human intervention. For test-required tasks, verification is executed via automated test runners (`pest`, `pytest`, `vitest`). For test-exempt tasks (UI, CRUD, glue code), verification is executed via compiler, linter, or typechecker (`npm run build`, `tsc --noEmit`, `phpstan`, `lint`). If a task cannot self-verify in an automated loop, it must be human-driven or dispatched as an advisory read-only investigation (`SCOUT`).
 3. **Mission-Critical Domain Boundary:**  
    High-stakes core domain logic—including monetary calculations, payment processing, billing settlement, authentication, authorization, cryptographic operations, sensitive database schema migrations, and core algorithmic intellectual property—is owned, designed, and authored exclusively by the human engineer (the Captain). For mission-critical tasks, the AI is restricted to authoring test harnesses, edge-case mocks, and acting as an adversarial reviewer (`[HUMAN-CORE / AI-TEST]`). Autonomous AI code generation is reserved for non-mission-critical domains (internal dashboards, debug tools, integration adapters, CRUD scaffolding, API plumbing, and glue code).
 4. **Fleet Friction Prioritization:**  
@@ -285,4 +286,19 @@ Before any task is approved for autonomous execution (`SHIP`), the Control Plane
    The Control Plane serves as an interactive architectural sparring partner to interrogate trade-offs, probe edge cases, and challenge assumptions *before* code is written. Utilizing front-loaded alignment (`prompt-master`, `grill-me`), the Control Plane deconstructs complex requirements into concrete architectural decisions without prematurely generating unvetted code.
 7. **Human-as-Editor Finalization Gate:**  
    The Captain is the editor-in-chief of the codebase. The AI proposes structured diffs, test evidence, and concise rationale; the human reviews diffs, prunes overengineering, and holds exclusive commit, push, and deployment authority.
+8. **The Pragmatic Testing Standard (Business-Logic-First Testing Gate):**  
+   In the agentic era, writing automated tests for every trivial change (UI layouts, styling tweaks, standard CRUD scaffolding, configuration glue) wastes token context, degrades iteration velocity, and produces brittle test suites that break on cosmetic changes. The fleet strictly focuses automated testing on high-consequence logic, calculations, and multi-team/enterprise stability:
+
+   - **Test-Required Triggers (MUST write automated tests):**
+     1. *Business Logic & Calculations:* Financial calculations, quotas, pricing/discounts, metric aggregations, mathematical formulas, state machine transitions, and billing settlement.
+     2. *Mission-Critical / Enterprise Invariants:* Authentication/authorization policies, cryptographic routines, payment gateway integrations, multi-tenant data isolation boundaries, and sensitive data mutations.
+     3. *Multi-Team & Shared Service Boundaries:* Public API contracts, published SDKs, shared microservice endpoints, or core domain service interfaces consumed by other teams where regressions cause cross-team breakage.
+     4. *Bug Reproductions:* Reproduction-first test harnesses for reported defects to prove the bug and prevent regressions (Property 5).
+     5. *Explicit Captain Command:* Whenever the Captain explicitly requests tests, test-driven development, or test coverage (`"write tests"`, `"TDD this"`, `"test coverage"`).
+
+   - **Test-Exempt Triggers (Bypass test-writing — verify via lint/typecheck/compilation):**
+     1. *UI, Styling & Presentation:* Blade/Vue/React templates, Tailwind classes, CSS layouts, animations, visual assets, theme/color adjustments, and presentational components.
+     2. *Obvious & Repetitive CRUD:* Standard Eloquent/ORM models, boilerplate resource controllers, straightforward resource migrations, and standard getters/setters following established patterns.
+     3. *Glue & Configuration Code:* Service provider bindings, routing tables, environment configs, package registration, and middleware pipeline wiring.
+     4. *Solo Developer Velocity Mode:* In solo-developer workflows, ruthlessly eliminate UI and boilerplate tests; reserve test suites strictly for core business logic, formulas, and critical invariants to maximize shipping speed.
 
