@@ -182,6 +182,11 @@ TARGET_HAS_AGENTS_MD=0
 TARGET_HAS_CLAUDE_MD=0
 TARGET_HAS_ACON_YAML=0
 TARGET_ALREADY_ACON=0
+TARGET_HAS_SCRIPTS_DIR=0
+
+if [[ -d "${TARGET}/scripts" ]]; then
+  TARGET_HAS_SCRIPTS_DIR=1
+fi
 
 if [[ -f "${TARGET}/AGENTS.md" || -L "${TARGET}/AGENTS.md" ]]; then
   TARGET_HAS_AGENTS_MD=1
@@ -201,6 +206,7 @@ fi
 echo "  • Existing AGENTS.md : $([[ ${TARGET_HAS_AGENTS_MD} -eq 1 ]] && echo "Detected" || echo "Not found")"
 echo "  • Existing CLAUDE.md : $([[ ${TARGET_HAS_CLAUDE_MD} -eq 1 ]] && echo "Detected" || echo "Not found")"
 echo "  • Existing acon.yaml : $([[ ${TARGET_HAS_ACON_YAML} -eq 1 ]] && echo "Detected" || echo "Not found")"
+echo "  • Existing scripts/  : $([[ ${TARGET_HAS_SCRIPTS_DIR} -eq 1 ]] && echo "Detected (target-native)" || echo "Not found")"
 echo "  • ACON Constitution  : $([[ ${TARGET_ALREADY_ACON} -eq 1 ]] && echo "Already present (updating)" || echo "Fresh adoption")"
 
 # ------------------------------------------------------------------------------
@@ -396,10 +402,19 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
 
   # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Scripts/Adapters/Sessions/Config)
   echo "  • Verifying adoption boundary enforcement..."
-  if [[ -e "${TARGET}/scripts" ]]; then
-    echo "[FAIL-CLOSED] Boundary Violation: scripts/ directory found in target repository!" >&2
+  if [[ ${TARGET_HAS_SCRIPTS_DIR} -eq 0 && -e "${TARGET}/scripts" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: scripts/ directory leaked into target repository!" >&2
     exit 1
   fi
+  for script_file in "${ACON_ROOT}"/scripts/*; do
+    if [[ -f "${script_file}" ]]; then
+      script_base="$(basename "${script_file}")"
+      if [[ -e "${TARGET}/scripts/${script_base}" ]]; then
+        echo "[FAIL-CLOSED] Boundary Violation: ACON script (${script_base}) leaked into target repository!" >&2
+        exit 1
+      fi
+    fi
+  done
   if [[ -e "${TARGET}/adapters" ]]; then
     echo "[FAIL-CLOSED] Boundary Violation: adapters/ directory found in target repository!" >&2
     exit 1
