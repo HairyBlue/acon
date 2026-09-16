@@ -1,7 +1,6 @@
 # ACON (Agentic Conventions & Orchestration Network) Git Ignore
 
 # Ephemeral session runtime files, bridge mailboxes, and worktrees
-adapters/sessions/
 .agents/sessions/
 .worktrees/
 

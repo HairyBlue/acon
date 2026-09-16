@@ -9,7 +9,6 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
 | **Agent Orchestration & Control Plane** | Multi-agent coordination, specialist dispatch, Ship vs. Scout, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
-| **Cross-Harness Model Routing & Governance** | Multi-model routing, model exclusions, adapter dispatch layer, automated fallback | [`acon.yaml`](../adapters/acon.yaml), [`adapters/`](../adapters/README.md), [`AGENTS.md`](../AGENTS.md) |
 | **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
 | **Grill plan while generating ADRs & domain docs** | Need to sharpen domain terms while interrogating a design | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md), [`.agents/skills/engineering/domain-modeling/SKILL.md`](skills/engineering/domain-modeling/SKILL.md) |
 | **Turn conversation into a formal spec** | Architecture settled, need an actionable specification | [`.agents/skills/engineering/to-spec/SKILL.md`](skills/engineering/to-spec/SKILL.md) |
@@ -32,7 +31,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.agents/skills/productivity/daily-progress-report/SKILL.md`](skills/productivity/daily-progress-report/SKILL.md) |
 | **Developer stories & portfolio case studies** | Anti-slop technical narratives, builder journeys, dispatches, CASI framework | [`.agents/skills/productivity/developer-story/SKILL.md`](skills/productivity/developer-story/SKILL.md) |
 | **Anti-overengineering & YAGNI code razor** | Stop AI bloat, 7-Rung Decision Ladder, helper elimination, debt ledger | [`.agents/skills/productivity/ponytail/SKILL.md`](skills/productivity/ponytail/SKILL.md) |
-| **Adopt ACON into repository / sync** | Bootstrap Control Plane, skills catalog, zero-symlink invariant, Two-Tier AGENTS.md | [`.agents/skills/productivity/adopt-acon/SKILL.md`](skills/productivity/adopt-acon/SKILL.md) |
+| **Adopt ACON into repository / sync** | Bootstrap Control Plane, skills catalog, zero-symlink invariant, Two-Tier AGENTS.md (`scripts/adopt.sh`) | [`.agents/skills/productivity/adopt-acon/SKILL.md`](skills/productivity/adopt-acon/SKILL.md) |
 | **Multi-Agent Orchestration & Control Plane** | 5+ files, specialist subagents, Ship vs. Scout tasks, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
 | **Discovering codebase conventions** | Analyzing patterns, naming conventions, and architecture | [`.agents/skills/frameworks/infer-conventions/SKILL.md`](skills/frameworks/infer-conventions/SKILL.md) |
 | **Laravel Boost MCP & Doc search** | Using `database-query`, `database-schema`, `search-docs`, `.ai/rules` | [`.agents/skills/frameworks/laravel-boost/SKILL.md`](skills/frameworks/laravel-boost/SKILL.md) |
@@ -65,5 +64,5 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **[`skills/productivity/`](skills/productivity/)** | 11 Skills | Repository adoption (`adopt-acon`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, developer stories |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
-| **[`adapters/`](adapters/README.md)** | 5 Harness Adapters | Cross-harness execution layer (`dispatch.sh`), model governance (`acon.yaml`), CLI runners (`agy`, `claude`), API fallback |
+| **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |
 | **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `security-secrets-guard.md`, `git-conventional-commits.md`, `progress-reporting.md`) |

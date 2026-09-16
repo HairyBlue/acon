@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), and constitutional rules (.agents/rules/) into any new or existing repository while strictly excluding adapters, sessions, and configuration."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), and constitutional rules (.agents/rules/) into any new or existing repository while strictly excluding scripts, adapters, sessions, and configuration."
 license: MIT
 metadata:
   author: acon
@@ -10,7 +10,7 @@ metadata:
 
 > **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*  
 > **The Universal Physical Copy Invariant:** *"Zero symlinks. 100% self-contained repositories."*  
-> **The Strict Adoption Boundary:** *"Adopt conventions and skills only. Adapters, sessions, and bridge configs stay with the Control Plane."*
+> **The Strict Adoption Boundary:** *"Adopt conventions and skills only. Scripts, adapters, sessions, and bridge configs stay with the Control Plane."*
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Orchestration Network) operational conventions into any greenfield repository or brownfield legacy project.
 
@@ -44,14 +44,15 @@ Modern software engineering with AI agents faces three fundamental dilemmas:
 │   • .agents/rules/    --> Real physical copies of constitutional rules │
 │                                                                        │
 │   🚫 STRICTLY EXCLUDED FROM TARGET REPOSITORIES:                       │
-│   • adapters/                  (Harness runners belong to Control Plane)│
+│   • scripts/                   (Adoption scripts belong to Control Plane)│
+│   • adapters/                  (Legacy harness adapters excluded)       │
 │   • adapters/sessions/         (Runtime session logs & mailboxes)       │
 │   • acon.yaml                  (Bridge model governance config)        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### The Strict Adoption Boundary Defined
-Adopted repositories are **lightweight consumers** of ACON conventions and domain skills. They do not require cross-harness execution adapters, session runner daemons, or bridge configuration files (`acon.yaml`). All execution harnesses and session managers remain strictly housed in the central ACON Control Plane repository.
+Adopted repositories are **lightweight consumers** of ACON conventions and domain skills. They do not require adoption scripts, cross-harness execution adapters, session runner daemons, or bridge configuration files (`acon.yaml`). All scripts, execution harnesses, and session managers remain strictly housed in the central ACON Control Plane repository.
 
 When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
@@ -59,6 +60,7 @@ When `adopt.sh` runs, it transfers **ONLY**:
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
 
 And explicitly forbids copying:
+- `scripts/`
 - `adapters/`
 - `adapters/sessions/`
 - `acon.yaml`
@@ -141,14 +143,14 @@ sequenceDiagram
     Note over Op,Target: Phase 3: Pure Physical Copy Deployment
     Op->>Target: rsync -avL .agents/skills/ (dereferencing all symlinks)
     Op->>Target: rsync -avL .agents/rules/ (dereferencing all symlinks)
-    Note over Op,Target: Excludes adapters/, sessions/, acon.yaml
+    Note over Op,Target: Excludes scripts/, adapters/, sessions/, acon.yaml
 
     Note over Op,Target: Phase 4: Optional IDE Folder Setup
     Op->>Target: (Skipped by default to preserve lightweight footprint)
 
     Note over Op,Target: Phase 5: Verification Gate
     Op->>Target: Audit symlinks: find -type l (must equal 0 in adopted assets)
-    Op->>Target: Audit boundary: ensure adapters/ and sessions/ do not exist
+    Op->>Target: Audit boundary: ensure scripts/, adapters/, and sessions/ do not exist
     Target-->>Op: 100% Verification Passed
 ```
 
@@ -170,7 +172,7 @@ Before transferring any files, the target repository is inspected:
 ### Phase 3: Pure Physical Copy Deployment
 - Copy `.agents/skills/` physically using `rsync -avL`.
 - Copy `.agents/rules/` physically using `rsync -avL`.
-- **Strict Boundary Guard:** Explicitly exclude `adapters/`, `adapters/sessions/`, and `acon.yaml`.
+- **Strict Boundary Guard:** Explicitly exclude `scripts/`, `adapters/`, `adapters/sessions/`, and `acon.yaml`.
 
 ### Phase 4: Optional IDE Folder Setup
 - Skipped by default to keep target repositories clean and lightweight.
@@ -185,11 +187,12 @@ The adoption process runs an automated verification gate:
    If ANY symlink is detected in adopted assets, adoption FAILS immediately.
 2. **Boundary Enforcement Audit:**
    ```bash
+   test ! -e "$TARGET/scripts"
    test ! -e "$TARGET/adapters"
    test ! -e "$TARGET/adapters/sessions"
    test ! -e "$TARGET/acon.yaml"
    ```
-   Ensures harness adapters, bridge configurations, and runtime session directories were not leaked.
+   Ensures adoption scripts, harness adapters, bridge configurations, and runtime session directories were not leaked.
 3. **Skill Catalog Integrity Check:**
    Counts installed skills to verify complete deployment.
 
@@ -197,11 +200,11 @@ The adoption process runs an automated verification gate:
 
 ## 5. Automated Tooling: `adopt.sh` CLI Reference
 
-The automated adoption script is located at `adapters/adopt.sh`.
+The automated adoption script is located at `scripts/adopt.sh`.
 
 ### Syntax
 ```bash
-./adapters/adopt.sh [OPTIONS] <TARGET_DIRECTORY>
+./scripts/adopt.sh [OPTIONS] <TARGET_DIRECTORY>
 ```
 
 ### Options & Flags
@@ -216,13 +219,13 @@ The automated adoption script is located at `adapters/adopt.sh`.
 ### Example Invocations
 ```bash
 # Adopt ACON into a target project:
-./adapters/adopt.sh /home/user/my-project
+./scripts/adopt.sh /home/user/my-project
 
 # Preview adoption in dry-run mode:
-./adapters/adopt.sh --dry-run /home/user/my-project
+./scripts/adopt.sh --dry-run /home/user/my-project
 
 # Force update an already adopted project:
-./adapters/adopt.sh --force /home/user/my-project
+./scripts/adopt.sh --force /home/user/my-project
 ```
 
 ---
@@ -233,7 +236,7 @@ When verifying an adopted repository, complete this checklist:
 
 ### Repository Adoption Checklist
 - [ ] **Physical Copy Invariant:** No symlinks in `$TARGET/.agents` or `$TARGET/AGENTS.md`.
-- [ ] **Strict Boundary Enforced:** `$TARGET/adapters` does NOT exist.
+- [ ] **Strict Boundary Enforced:** `$TARGET/scripts` and `$TARGET/adapters` do NOT exist.
 - [ ] **Session Isolation:** `$TARGET/adapters/sessions` does NOT exist.
 - [ ] **Configuration Isolation:** `$TARGET/acon.yaml` is NOT deployed (remains exclusive to the ACON Command Bridge).
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.

@@ -9,7 +9,7 @@
 # 1. Universal Physical Copy Invariant (zero symlinks across all target assets)
 # 2. Two-Tier AGENTS.md Merge Standard (preserves target repo rules verbatim)
 # 3. Strict Lightweight Adoption Boundary (adopts ONLY AGENTS.md, .agents/skills/,
-#    and .agents/rules/; never copies adapters/, sessions/, or acon.yaml)
+#    and .agents/rules/; never copies scripts/, adapters/, sessions/, or acon.yaml)
 # 4. Fail-Closed Verification Gate (symlink audit + boundary enforcement)
 # ==============================================================================
 set -euo pipefail
@@ -61,7 +61,8 @@ Strict Adoption Standard:
     • .agents/skills/    (114 domain skills dereferenced into real physical files)
     • .agents/rules/     (Constitutional rules dereferenced into real physical files)
   Strictly EXCLUDES:
-    • adapters/          (Harness adapters belong to ACON control plane only)
+    • scripts/           (Adoption and management scripts belong to ACON control plane only)
+    • adapters/          (Legacy harness adapters excluded)
     • adapters/sessions/ (Runtime session logs and bridge mailboxes)
     • acon.yaml          (Model governance belongs to ACON control plane only)
 
@@ -82,13 +83,13 @@ Invariants Enforced:
 
 Examples:
   # Adopt ACON into a target project
-  ./adapters/adopt.sh /path/to/my-project
+  ./scripts/adopt.sh /path/to/my-project
 
   # Preview adoption in dry-run mode
-  ./adapters/adopt.sh --dry-run /path/to/my-project
+  ./scripts/adopt.sh --dry-run /path/to/my-project
 
   # Force update an already adopted project
-  ./adapters/adopt.sh --force /path/to/my-project
+  ./scripts/adopt.sh --force /path/to/my-project
 USAGE_EOF
   exit "${exit_code}"
 }
@@ -167,7 +168,7 @@ echo "Source Repository : ${ACON_ROOT}"
 echo "Target Repository : ${TARGET}"
 echo "Dry Run Mode      : $([[ ${DRY_RUN} -eq 1 ]] && echo "YES (preview only)" || echo "NO (live adoption)")"
 echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/"
-echo "Excluded Assets   : adapters/, sessions/, acon.yaml (Strict Boundary Enforced)"
+echo "Excluded Assets   : scripts/, adapters/, sessions/, acon.yaml (Strict Boundary Enforced)"
 echo "Deploy IDE Folders: $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "YES (.cursor, .claude)" || echo "NO (default: clean lightweight)")"
 echo "Force Overwrite   : $([[ ${FORCE} -eq 1 ]] && echo "YES" || echo "NO")"
 echo "--------------------------------------------------------------------------------"
@@ -288,7 +289,7 @@ fi
 # Phase 3: Pure Physical Copy Deployment (.agents/skills/ & .agents/rules/)
 # ------------------------------------------------------------------------------
 echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, and catalog indexes (dereferencing all symlinks)..."
-echo "  • Boundary Policy: Strictly excluding adapters/, sessions/, and acon.yaml"
+echo "  • Boundary Policy: Strictly excluding scripts/, adapters/, sessions/, and acon.yaml"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
   # 0. Clean pre-existing legacy symlinks in target .agents directory
@@ -337,7 +338,7 @@ else
   if [[ -d "${TARGET}/.agents/adapters" || -d "${TARGET}/.agents/bridge" ]]; then
     echo "  [DRY RUN] Would prune obsolete legacy directories (.agents/adapters, .agents/bridge)"
   fi
-  echo "  [DRY RUN] Explicitly excluded: adapters/, adapters/sessions/, acon.yaml"
+  echo "  [DRY RUN] Explicitly excluded: scripts/, adapters/, adapters/sessions/, acon.yaml"
 fi
 
 # ------------------------------------------------------------------------------
@@ -393,10 +394,18 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
 
   echo "  ✓ Invariant Verified: Zero symlinks found in adopted ACON assets"
 
-  # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Adapters/Sessions/Config)
+  # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Scripts/Adapters/Sessions/Config)
   echo "  • Verifying adoption boundary enforcement..."
+  if [[ -e "${TARGET}/scripts" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: scripts/ directory found in target repository!" >&2
+    exit 1
+  fi
   if [[ -e "${TARGET}/adapters" ]]; then
     echo "[FAIL-CLOSED] Boundary Violation: adapters/ directory found in target repository!" >&2
+    exit 1
+  fi
+  if [[ -e "${TARGET}/acon.yaml" ]]; then
+    echo "[FAIL-CLOSED] Boundary Violation: acon.yaml found in target repository!" >&2
     exit 1
   fi
   if [[ -e "${TARGET}/adapters/sessions" || -e "${TARGET}/.agents/sessions" ]]; then
@@ -407,7 +416,7 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
     echo "[FAIL-CLOSED] Boundary Violation: legacy .agents/adapters or .agents/bridge found in target repository!" >&2
     exit 1
   fi
-  echo "  ✓ Boundary Verified: adapters/ and sessions/ strictly excluded"
+  echo "  ✓ Boundary Verified: scripts/, adapters/, sessions/, and acon.yaml strictly excluded"
 
   # 3. Skill Catalog Count Check
   SKILL_COUNT=$(find "${TARGET}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
@@ -427,7 +436,7 @@ echo "Target Root      : ${TARGET}"
 echo "Constitution     : ${TARGET}/AGENTS.md (Two-Tier Architecture)"
 echo "Catalog Location : ${TARGET}/.agents/skills/ (${SKILL_COUNT_DISPLAY} Skills)"
 echo "Rules Location   : ${TARGET}/.agents/rules/"
-echo "Boundary Policy  : Strict Lightweight (adapters/, sessions/, acon.yaml excluded)"
+echo "Boundary Policy  : Strict Lightweight (scripts/, adapters/, sessions/, acon.yaml excluded)"
 echo "Symlink Status   : 0 symlinks (Universal Physical Copy Invariant Satisfied)"
 echo "Verification     : PASSED"
 echo "================================================================================"

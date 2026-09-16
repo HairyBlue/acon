@@ -25,9 +25,7 @@ No external bash daemons or runtime terminal multiplexers required—ACON operat
 ### Requirements
 
 - An AI coding assistant (AGY, Claude Code, Cursor, or any tool that reads `AGENTS.md` / `CLAUDE.md`)
-- Cross-Harness Bridge Adapter Prerequisites (if using the optional cross-harness bridge):
-  - **Linux / macOS / WSL:** `yq` and `jq` (recommended for native speed), OR Python 3 with `PyYAML` (`pip install pyyaml`) as automatic fallback.
-  - **Windows (Git Bash):** Python 3 with `PyYAML` (`pip install pyyaml`) — no `yq`/`jq` required.
+- Standard Unix utilities (`bash`, `rsync`) for `./scripts/adopt.sh`
 
 ---
 
@@ -123,9 +121,9 @@ Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
 ---
 
 ### Integrating ACON into Existing Projects
-If your repository already has an `AGENTS.md` or `CLAUDE.md`, you do not need to replace or overwrite it. Simply append ACON's Control Plane constitution to the bottom:
+To adopt ACON into an existing project while preserving all local conventions verbatim, run the adoption script:
 ```bash
-cat path/to/acon/AGENTS.md >> AGENTS.md
+./scripts/adopt.sh /path/to/my-project
 ```
 Alternatively, invoke our built-in [`adopt-acon`](.agents/skills/productivity/adopt-acon/SKILL.md) skill to inspect, onboard, and configure any existing repository automatically.
 
@@ -166,29 +164,6 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 
 ---
 
-## 🌉 Cross-Harness Bridge & Model Governance (`acon.yaml`)
-
-> [!WARNING]
-> **Experimental Feature**: The `adapters/` layer (cross-harness bridge & session runner) is experimental. Use it at your own risk. The core, stable heart of ACON is `AGENTS.md` and `.agents/skills/`.
-
-ACON provides an optional cross-harness execution layer that decouples the Control Plane from local CLI tools and external APIs:
-
-- **Permanent Constitution Invariant**: The Agent Control Plane is the permanent operational constitution of ACON and is **NEVER** enabled or disabled. It remains permanently active as the First Mate liaison and supervisor.
-- **Role of `acon.yaml` (The Cross-Harness Bridge)**: [`acon.yaml`](adapters/acon.yaml) strictly configures the external cross-harness dispatch layer under the `bridge:` section:
-  * **`bridge.enabled: true`**: The Control Plane leverages the external adapter bridge ([`adapters/dispatch.sh`](adapters/dispatch.sh)) for multi-model cross-harness dispatching based on the declarative routing table in `acon.yaml`.
-  * **`bridge.enabled: false`**: The Control Plane operates normally using standard native subagent delegation (`invoke_subagent`).
-- **The Main-First Escalation Invariant**:
-  Even when `bridge.enabled: true`, tasks that can be executed reliably by the main engine MUST default to the main model. External bridge models are invoked strictly by exception when task difficulty, architectural complexity, or specific domain requirements warrant them.
-- **Declarative Capability Archetypes (`acon.yaml`)**:
-  * **Main Session / Control Plane**: Main Engine (fast, unblocked command bridge, triage, and universal fallback).
-  * **Deep Reasoning & Architecture**: Deep Reasoning Model for complex architecture, system refactoring, and security audits.
-  * **Core Coding & TDD**: Core Implementation Model for feature implementation, test-driven development, and mechanical linting.
-  * **Web Research & Diagnostics**: Research Spike Model for read-only spikes, codebase archaeology, and documentation research.
-- **Declarative Model Governance**: Universal model exclusions, target model slugs, reasoning effort levels, and dispatch patterns are defined solely in [`acon.yaml`](adapters/acon.yaml).
-- **Automated Fallback**: If any secondary model or adapter encounters an issue, the dispatch runner automatically catches the failure and cascades back to the main engine configured in `acon.yaml`.
-
----
-
 ## 📁 Repository Structure
 
 ```
@@ -196,13 +171,8 @@ acon/
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
 ├── CLAUDE.md                                     # Symlink -> AGENTS.md
 ├── README.md                                     # Human-facing guide and operational instructions
-├── adapters/                                     # Cross-harness execution adapters (experimental)
-│   ├── acon.yaml                                 # Cross-Harness Bridge configuration & model routing
-│   ├── adopt.sh                                  # Repository adoption script
-│   ├── config-reader.py                          # Portable YAML reader
-│   ├── dispatch.sh                               # Cross-harness task dispatcher
-│   ├── session-runner.sh                         # Unified background session runner
-│   └── sessions/                                 # Runtime session storage (gitignored)
+├── scripts/                                      # Control Plane automation scripts
+│   └── adopt.sh                                  # Repository adoption & synchronization script
 ├── .claude/                                      # Claude Code IDE integration
 │   ├── INDEX.md -> ../.agents/INDEX.md
 │   ├── README.md -> ../.agents/README.md
