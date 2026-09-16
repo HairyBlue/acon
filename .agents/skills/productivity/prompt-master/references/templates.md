@@ -210,9 +210,9 @@ Done When:
 
 ---
 
-## Template H — ReAct + Stop Conditions
+## Template H — ReAct + Stop Conditions (Ship)
 
-*Use for Claude Code, Devin, AutoGPT, and any AI that takes autonomous actions. Runaway loops and scope explosion are the biggest credit killers in agentic workflows — stop conditions are not optional.*
+*Use for Claude Code, Devin, AutoGPT, and any AI that takes autonomous actions (Ship deliverables). Runaway loops and scope explosion are the biggest credit killers in agentic workflows — stop conditions and grammar envelopes are not optional.*
 
 ```
 Objective:
@@ -245,7 +245,12 @@ Pause and ask for human review when:
 
 Checkpoints:
 After each major step, output: ✅ [what was completed]
-At the end, output a full summary of every file changed.
+
+Grammar Envelope (Constrained Sampling):
+Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the ship-diff.yaml schema:
+- Zero Conversational Preamble (forbid "Sure!", "Here is...", pleasantries; start directly with the YAML envelope).
+- Include files_created, files_modified, files_deleted, verification (command, exit_code, summary), and diff_stat.
+- Zero markdown prose or filler outside the envelope.
 ```
 
 ---
@@ -392,9 +397,9 @@ Run these in order. Each output feeds the next.
 ```
 ---
 
-## Template M — Current Claude Task Brief
+## Template M — Current Claude Task Brief (Scout / Agentic)
 
-*Use for complex, multi-step, or agentic tasks on current Claude models—Claude.ai, API, or Claude Code. It front-loads the outcome, context, scope, and action boundaries while avoiding obsolete manual-thinking scaffolding.*
+*Use for complex, multi-step, or agentic tasks (including Scout investigations) on current Claude models—Claude.ai, API, or Claude Code. It front-loads the outcome, context, scope, action boundaries, and machine grammar envelopes while avoiding obsolete manual-thinking scaffolding.*
 
 ```
 ## Objective
@@ -425,6 +430,12 @@ Run these in order. Each output feeds the next.
 
 ## Progress Evidence
 For long-running work, report progress only when it changes or when a checkpoint is reached. Ground every completion claim in a tool result, changed artifact, or verification output.
+
+## Grammar Envelope (Constrained Sampling)
+Enforce grammars-and-constrained-sampling. For Scout investigations or structured findings, deliver output strictly conforming to the scout-report.yaml schema:
+- Zero Conversational Preamble (start directly with the schema envelope).
+- Schema-locked fields: status [SUCCESS, PARTIAL, BLOCKED], objective, files_inspected, inventory, findings, broken_references, risks, next_actions.
+- Zero conversational padding or pleasantries outside the YAML block.
 ```
 
 **Effort** — configure in the API or harness rather than requesting private reasoning in the prompt. Start with the model default, lower it for routine scoped work, and raise it only when task difficulty warrants the cost.

@@ -25,6 +25,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Throwaway prototype for UX/logic** | Validate UI interaction or state before writing production code | [`.agents/skills/engineering/prototype/SKILL.md`](skills/engineering/prototype/SKILL.md) |
 | **Interactive CLI setup wizard for humans** | Guide user through manual cloud/secret/dashboard setup | [`.agents/skills/engineering/wizard/SKILL.md`](skills/engineering/wizard/SKILL.md) |
 | **Session compacting & agent handoff** | Hand off ongoing conversation state to another session | [`.agents/skills/productivity/handoff/SKILL.md`](skills/productivity/handoff/SKILL.md) |
+| **Machine grammars & constrained sampling** | Eliminate conversational token bloat, preamble fluff, YAML/JSON schemas, regex/enum locks | [`.agents/skills/productivity/grammars-and-constrained-sampling/SKILL.md`](skills/productivity/grammars-and-constrained-sampling/SKILL.md) |
 | **Decision questionnaire for teammates** | Turn complex design choices into a fillable questionnaire | [`.agents/skills/productivity/to-questionnaire/SKILL.md`](skills/productivity/to-questionnaire/SKILL.md) |
 | **Authoring skills & guidelines for AI** | Writing effective prompt files, skills, and AGENTS.md | [`.agents/skills/productivity/writing-for-agents/SKILL.md`](skills/productivity/writing-for-agents/SKILL.md) |
 | **Technical writing & post-mortems** | Authoring RFCs, architecture decisions, and post-mortems | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md) |
@@ -61,7 +62,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 
 
 | **[`skills/engineering/`](skills/engineering/)** | 14 Skills | Problem solving, architecture, TDD, debugging, code review, ticket mapping, refactoring, API design, zero-downtime migrations |
-| **[`skills/productivity/`](skills/productivity/)** | 11 Skills | Repository adoption (`adopt-acon`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), anti-overengineering (`ponytail`), handoffs, developer stories |
+| **[`skills/productivity/`](skills/productivity/)** | 12 Skills | Repository adoption (`adopt-acon`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), machine grammars (`grammars-and-constrained-sampling`), anti-overengineering (`ponytail`), handoffs, developer stories |
 | **[`skills/frameworks/`](skills/frameworks/)** | 8 Skills | Laravel 13, Filament 5, Inertia v3, Vue 3, Tailwind CSS, Wayfinder, Pest |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |

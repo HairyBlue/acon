@@ -58,6 +58,7 @@ Master Orchestrator: **[`frameworks/SKILL.md`](frameworks/SKILL.md)** | Full Sui
 Master Orchestrator: **[`productivity/SKILL.md`](productivity/SKILL.md)** | Full Suite Details: **[`productivity/README.md`](productivity/README.md)**
 
 - **[`adopt-acon`](productivity/adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
+- **[`grammars-and-constrained-sampling`](productivity/grammars-and-constrained-sampling/SKILL.md)**: Formal machine grammars (YAML/JSON schemas, enums, regexes) and token-level constrained sampling to eliminate preamble fluff and formatting drift.
 - **[`grill-me`](productivity/grill-me/SKILL.md)**: Relentless design and plan interrogation: design tree interview engine along the decision frontier.
 - **[`handoff`](productivity/handoff/SKILL.md)**: Context compacting and session handoff.
 - **[`ponytail`](productivity/ponytail/SKILL.md)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder, YAGNI reviews, and debt ledger.

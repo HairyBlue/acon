@@ -136,6 +136,12 @@ To eliminate integration bugs when tasks are executed by separate subagents, eve
   ```
 ```
 
+#### Machine Grammar Pairing: `task-contract.yaml`
+Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and can be formally validated against the `task-contract.yaml` schema:
+- **Zero Hand-Waving:** Eliminates conversational ambiguity by requiring explicit schema properties (`task_id`, `eligibility`, `scope`, `consumes`, `produces`, `verification`).
+- **Context-Sliced Subagent Briefs:** Slices the task contract directly into subagent briefs without conversational baggage.
+- **Closed-Loop Verification Contract:** Locks the exact verification command and expected exit code into the machine contract.
+
 ### The Verification & TDD Cycle (Pragmatic Testing Standard)
 Every code task in the plan must specify its closed-loop verification steps based on the Pragmatic Testing Standard:
 

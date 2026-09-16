@@ -4,6 +4,7 @@ Communication, alignment, coaching, and documentation workflows:
 
 - **[SKILL.md](SKILL.md)**: Master productivity suite orchestrator.
 - **[adopt-acon](adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
+- **[grammars-and-constrained-sampling](grammars-and-constrained-sampling/SKILL.md)**: Machine grammars (YAML/JSON schemas, enums, regexes) and constrained token sampling to eliminate preamble fluff and formatting drift.
 - **[grill-me](grill-me/SKILL.md)**: Relentless design and plan interrogation: stress-test thinking in rounds across the decision frontier until the design tree is fully settled.
 - **[handoff](handoff/SKILL.md)**: Context compacting and session handoff.
 - **[ponytail](ponytail/SKILL.md)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder, YAGNI reviews, and debt ledger.

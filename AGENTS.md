@@ -211,6 +211,11 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
   3. *Smallest Compliant Alternative:* The minimal path forward without scope bloat.
   4. *Consequences:* Clear trade-offs of each option.
   5. *Recommendation:* Reasoned recommendation for Captain decision.
+- **The Grammars and Constrained Sampling Invariant (Token & Velocity Discipline):**  
+  To eliminate context bloat, conversational token waste, and formatting drift across the fleet, all communications and subagent dispatches adhere to [`grammars-and-constrained-sampling`](.agents/skills/productivity/grammars-and-constrained-sampling/SKILL.md):
+  1. *Zero Conversational Preamble:* Agents and subagents MUST NEVER emit introductory pleasantries, conversational acknowledgements, apologies, or meta-commentary (e.g. forbid `"Sure!"`, `"Certainly! I can help with that..."`, `"Here is what I found..."`, `"Hope this helps!"`). Communication must open immediately with the load-bearing content or structured schema envelope.
+  2. *Schema-Locked Briefs and Reports:* Dispatched subagents MUST report findings, inventories, and progress inside strict YAML/JSON grammar envelopes (`scout-report.yaml` for `Codebase Scout`, `ship-diff.yaml` for implementation specialists, `handoff-state.yaml` for session compaction).
+  3. *Tool-Bound Delivery for Code Edits:* Code modifications and file mutations MUST be delivered exclusively through verified tool calls (`write_to_file`, `replace_file_content`), never emitted as speculative conversational text blocks in the command thread.
 
 ---
 

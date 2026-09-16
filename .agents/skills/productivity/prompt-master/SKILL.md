@@ -209,7 +209,7 @@ Do not assume one universal Claude default. When unsure, start with **Claude Opu
 - Do not force a separate verifier on Opus 5 for routine work; request concrete tests and tool-backed evidence instead. For long Fable 5 runs, require progress claims to cite actual tool results.
 - Always scope to specific files and directories — never give a global instruction without a path anchor
 - Human review triggers required: "Stop and ask before deleting any file, adding any dependency, or affecting the database schema"
-- For complex tasks, use Template M. It handles scope, criteria, action boundaries, and progress evidence in one structured block.
+- For autonomous Ship execution, use Template H (`ship-diff.yaml` envelope). For complex tasks or Scout investigations, use Template M (`scout-report.yaml` envelope). Both enforce [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) to eliminate conversational preamble and token waste.
 
 ---
 
@@ -463,11 +463,15 @@ When the user's request references prior work, decisions, or session history —
 
 ---
 
-### Agentic Output Warning
+### Agentic Output Warning & Grammar Envelopes
 
-For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline, Bolt, SWE-agent, Manus, or anything that executes commands or edits files — mandatory for Templates G, H, M and any prompt referencing filesystem, terminal, dependency, or database operations), append this notice:
+For prompts targeting agentic tools (Claude Code, Devin, Cursor, Windsurf, Cline, Bolt, SWE-agent, Manus, or subagent dispatch briefs — mandatory for Templates G, H, M and any prompt referencing filesystem, terminal, dependency, or database operations), append this notice:
 
 "This prompt is for an agentic tool with real system access. Review the scope locks, forbidden actions, and stop conditions before pasting. Confirm file paths, directories, and permissions match the actual project."
+
+Additionally, for subagent briefs calibrated under Template H (Ship) or Template M (Scout), prompts MUST incorporate the explicit grammar envelope directive from [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md):
+- **Zero Conversational Preamble:** Forbid greetings, pleasantries, or preamble ("Sure!", "Here is...", "I'm ready"). The output must open directly with the schema envelope.
+- **Schema-Locked Deliverables:** Workers MUST output strictly conforming to the specified YAML schema (`ship-diff.yaml` for Ship tasks, `scout-report.yaml` for Scout investigations).
 
 ---
 
