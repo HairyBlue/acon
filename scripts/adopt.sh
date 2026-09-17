@@ -9,7 +9,7 @@
 # 1. Universal Physical Copy Invariant (zero symlinks across all target assets)
 # 2. Two-Tier AGENTS.md Merge Standard (preserves target repo rules verbatim)
 # 3. Strict Lightweight Adoption Boundary (adopts ONLY AGENTS.md, .agents/skills/,
-#    and .agents/rules/; never copies scripts/, adapters/, sessions/, or acon.yaml)
+#    and .agents/rules/; never copies scripts/)
 # 4. Fail-Closed Verification Gate (symlink audit + boundary enforcement)
 # ==============================================================================
 set -euo pipefail
@@ -62,9 +62,6 @@ Strict Adoption Standard:
     • .agents/rules/     (Constitutional rules dereferenced into real physical files)
   Strictly EXCLUDES:
     • scripts/           (Adoption and management scripts belong to ACON control plane only)
-    • adapters/          (Legacy harness adapters excluded)
-    • adapters/sessions/ (Runtime session logs and bridge mailboxes)
-    • acon.yaml          (Model governance belongs to ACON control plane only)
 
 Arguments:
   <TARGET_DIRECTORY>     Path to target repository to adopt ACON into
@@ -168,7 +165,7 @@ echo "Source Repository : ${ACON_ROOT}"
 echo "Target Repository : ${TARGET}"
 echo "Dry Run Mode      : $([[ ${DRY_RUN} -eq 1 ]] && echo "YES (preview only)" || echo "NO (live adoption)")"
 echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/"
-echo "Excluded Assets   : scripts/, adapters/, sessions/, acon.yaml (Strict Boundary Enforced)"
+echo "Excluded Assets   : scripts/ (Strict Boundary Enforced)"
 echo "Deploy IDE Folders: $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "YES (.cursor, .claude)" || echo "NO (default: clean lightweight)")"
 echo "Force Overwrite   : $([[ ${FORCE} -eq 1 ]] && echo "YES" || echo "NO")"
 echo "--------------------------------------------------------------------------------"
@@ -180,7 +177,6 @@ echo "[PHASE 1] Auditing target repository..."
 
 TARGET_HAS_AGENTS_MD=0
 TARGET_HAS_CLAUDE_MD=0
-TARGET_HAS_ACON_YAML=0
 TARGET_ALREADY_ACON=0
 TARGET_HAS_SCRIPTS_DIR=0
 
@@ -199,13 +195,8 @@ if [[ -f "${TARGET}/CLAUDE.md" || -L "${TARGET}/CLAUDE.md" ]]; then
   TARGET_HAS_CLAUDE_MD=1
 fi
 
-if [[ -f "${TARGET}/acon.yaml" ]]; then
-  TARGET_HAS_ACON_YAML=1
-fi
-
 echo "  • Existing AGENTS.md : $([[ ${TARGET_HAS_AGENTS_MD} -eq 1 ]] && echo "Detected" || echo "Not found")"
 echo "  • Existing CLAUDE.md : $([[ ${TARGET_HAS_CLAUDE_MD} -eq 1 ]] && echo "Detected" || echo "Not found")"
-echo "  • Existing acon.yaml : $([[ ${TARGET_HAS_ACON_YAML} -eq 1 ]] && echo "Detected" || echo "Not found")"
 echo "  • Existing scripts/  : $([[ ${TARGET_HAS_SCRIPTS_DIR} -eq 1 ]] && echo "Detected (target-native)" || echo "Not found")"
 echo "  • ACON Constitution  : $([[ ${TARGET_ALREADY_ACON} -eq 1 ]] && echo "Already present (updating)" || echo "Fresh adoption")"
 
@@ -295,7 +286,7 @@ fi
 # Phase 3: Pure Physical Copy Deployment (.agents/skills/ & .agents/rules/)
 # ------------------------------------------------------------------------------
 echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, and catalog indexes (dereferencing all symlinks)..."
-echo "  • Boundary Policy: Strictly excluding scripts/, adapters/, sessions/, and acon.yaml"
+echo "  • Boundary Policy: Strictly excluding internal control plane scripts (scripts/)"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
   # 0. Clean pre-existing legacy symlinks in target .agents directory
@@ -325,26 +316,13 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
       echo "  ✓ Deployed .agents/${doc_file}"
     fi
   done
-
-  # 4. Prune legacy .agents/adapters and .agents/bridge if present in target
-  if [[ -d "${TARGET}/.agents/adapters" ]]; then
-    rm -rf "${TARGET}/.agents/adapters"
-    echo "  ✓ Pruned obsolete .agents/adapters directory"
-  fi
-  if [[ -d "${TARGET}/.agents/bridge" ]]; then
-    rm -rf "${TARGET}/.agents/bridge"
-    echo "  ✓ Pruned obsolete .agents/bridge directory"
-  fi
 else
   echo "  [DRY RUN] Manifest item: .agents/skills/ (rsync -avL dereferencing all symlinks)"
   if [[ -d "${ACON_ROOT}/.agents/rules" ]]; then
     echo "  [DRY RUN] Manifest item: .agents/rules/ (rsync -avL dereferencing all symlinks)"
   fi
   echo "  [DRY RUN] Manifest items: .agents/INDEX.md, .agents/README.md"
-  if [[ -d "${TARGET}/.agents/adapters" || -d "${TARGET}/.agents/bridge" ]]; then
-    echo "  [DRY RUN] Would prune obsolete legacy directories (.agents/adapters, .agents/bridge)"
-  fi
-  echo "  [DRY RUN] Explicitly excluded: scripts/, adapters/, adapters/sessions/, acon.yaml"
+  echo "  [DRY RUN] Explicitly excluded: scripts/"
 fi
 
 # ------------------------------------------------------------------------------
@@ -400,7 +378,7 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
 
   echo "  ✓ Invariant Verified: Zero symlinks found in adopted ACON assets"
 
-  # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Scripts/Adapters/Sessions/Config)
+  # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Internal Scripts)
   echo "  • Verifying adoption boundary enforcement..."
   if [[ ${TARGET_HAS_SCRIPTS_DIR} -eq 0 && -e "${TARGET}/scripts" ]]; then
     echo "[FAIL-CLOSED] Boundary Violation: scripts/ directory leaked into target repository!" >&2
@@ -415,23 +393,7 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
       fi
     fi
   done
-  if [[ -e "${TARGET}/adapters" ]]; then
-    echo "[FAIL-CLOSED] Boundary Violation: adapters/ directory found in target repository!" >&2
-    exit 1
-  fi
-  if [[ -e "${TARGET}/acon.yaml" ]]; then
-    echo "[FAIL-CLOSED] Boundary Violation: acon.yaml found in target repository!" >&2
-    exit 1
-  fi
-  if [[ -e "${TARGET}/adapters/sessions" || -e "${TARGET}/.agents/sessions" ]]; then
-    echo "[FAIL-CLOSED] Boundary Violation: sessions directory found in target repository!" >&2
-    exit 1
-  fi
-  if [[ -e "${TARGET}/.agents/adapters" || -e "${TARGET}/.agents/bridge" ]]; then
-    echo "[FAIL-CLOSED] Boundary Violation: legacy .agents/adapters or .agents/bridge found in target repository!" >&2
-    exit 1
-  fi
-  echo "  ✓ Boundary Verified: scripts/, adapters/, sessions/, and acon.yaml strictly excluded"
+  echo "  ✓ Boundary Verified: scripts/ strictly excluded"
 
   # 3. Skill Catalog Count Check
   SKILL_COUNT=$(find "${TARGET}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
@@ -451,7 +413,7 @@ echo "Target Root      : ${TARGET}"
 echo "Constitution     : ${TARGET}/AGENTS.md (Two-Tier Architecture)"
 echo "Catalog Location : ${TARGET}/.agents/skills/ (${SKILL_COUNT_DISPLAY} Skills)"
 echo "Rules Location   : ${TARGET}/.agents/rules/"
-echo "Boundary Policy  : Strict Lightweight (scripts/, adapters/, sessions/, acon.yaml excluded)"
+echo "Boundary Policy  : Strict Lightweight (scripts/ excluded)"
 echo "Symlink Status   : 0 symlinks (Universal Physical Copy Invariant Satisfied)"
 echo "Verification     : PASSED"
 echo "================================================================================"

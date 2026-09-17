@@ -108,7 +108,7 @@ Every task drafted in an implementation plan MUST pass the 3-part Anti-Slop Task
 - **Check 3: Is it mission-critical? (Domain Boundary Invariant)**  
   High-stakes core domain logic—including monetary calculations, auth/cryptography, sensitive database migrations, and proprietary core algorithmic IP—is strictly owned and authored by the human engineer (the Captain).  
   - If **Yes** (mission-critical): Tag as `[HUMAN-CORE / AI-TEST]`. The AI is restricted to authoring test harnesses, edge-case mocks, and conducting reviews, while the Captain authors the core logic.  
-  - If **No** (non-critical domain such as dashboards, tooling, CRUD scaffolding, adapters, and plumbing): Tag as `[AUTONOMOUS-SHIP]` for autonomous subagent implementation.
+  - If **No** (non-critical domain such as dashboards, tooling, CRUD scaffolding, connectors, and plumbing): Tag as `[AUTONOMOUS-SHIP]` for autonomous subagent implementation.
 - **Reproduction-First Bug Protocol:**  
   For bug fix tasks, the agent is strictly prohibited from touching production code until a standalone reproduction test case reliably fails in a closed loop.
 
