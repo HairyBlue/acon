@@ -1,6 +1,6 @@
 ---
 name: productivity
-description: "Master productivity and communication suite covering plan interrogation, conversation handoff, interactive teaching, questionnaires, technical writing, implementation planning (writing-plans), daily work reporting, prompt calibration, repository adoption (adopt-acon), anti-overengineering (ponytail), and machine grammars & constrained sampling."
+description: "Master productivity and communication suite covering plan interrogation, conversation handoff, interactive teaching, questionnaires, technical writing, implementation planning (writing-plans), daily work reporting, prompt calibration, repository adoption (adopt-acon), anti-overengineering (ponytail), machine grammars, and I/O verification control."
 license: MIT
 metadata:
   author: acon
@@ -8,7 +8,7 @@ metadata:
 
 # Productivity Master Suite
 
-This skill serves as the primary router and master guide for communication, alignment, prompt engineering, repository adoption, machine grammars, and pragmatic development workflows in ACON.
+This skill serves as the primary router and master guide for communication, alignment, prompt engineering, repository adoption, machine grammars, I/O & verification control, and pragmatic development workflows in ACON.
 
 ---
 
@@ -17,7 +17,8 @@ This skill serves as the primary router and master guide for communication, alig
 | Skill Name | Description & When to Activate | Child Path |
 | :--- | :--- | :--- |
 | **`adopt-acon`** | Universal adoption and synchronization suite enforcing the Universal Physical Copy Invariant (zero symlinks) and Two-Tier AGENTS.md merge standard. | [`adopt-acon/SKILL.md`](adopt-acon/SKILL.md) |
-| **`grammars-and-constrained-sampling`** | Eliminates conversational token waste and formatting drift by enforcing formal machine grammars (YAML/JSON schemas, enums, regexes) and constrained token sampling across the multi-agent lifecycle. | [`grammars-and-constrained-sampling/SKILL.md`](grammars-and-constrained-sampling/SKILL.md) |
+| **`grammars-and-constrained-sampling`** | Eliminates conversational token waste and formatting drift by enforcing formal machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) across the multi-agent lifecycle. | [`grammars-and-constrained-sampling/SKILL.md`](grammars-and-constrained-sampling/SKILL.md) |
+| **`io-verification-control`** | Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification. | [`io-verification-control/SKILL.md`](io-verification-control/SKILL.md) |
 | **`grill-me`** | Stress-test thinking in rounds across the decision frontier until the design tree is fully settled. | [`grill-me/SKILL.md`](grill-me/SKILL.md) |
 | **`handoff`** | Compacts active conversation history into a structured handoff artifact for subsequent sessions. | [`handoff/SKILL.md`](handoff/SKILL.md) |
 | **`ponytail`** | Pragmatically lazy senior engineer persona and anti-overengineering engine: 7-Rung Decision Ladder, YAGNI razor, review rubric, and debt ledger. | [`ponytail/SKILL.md`](ponytail/SKILL.md) |

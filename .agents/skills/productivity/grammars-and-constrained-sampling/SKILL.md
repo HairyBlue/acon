@@ -1,27 +1,30 @@
 ---
 name: grammars-and-constrained-sampling
-description: Principles for instructing LLMs with structural constraints, zero preamble, schema-locked envelopes, closed enums, and bounded token scope.
+description: Machine contracts, Token-0 anchoring, zero-preamble enforcement, closed enums, and schema-locked YAML envelopes.
 ---
 
-# Machine Contracts & Constrained Prompting (`grammars-and-constrained-sampling`)
+# Machine Contracts & Grammar Envelopes (`grammars-and-constrained-sampling`)
 
-> *"Do not ask an LLM to be concise in English. Constrain its structure."*
+> *"Do not ask an LLM to be concise in English. Constrain its structure to machine contracts."*
 
-In multi-agent architectures, conversational token bloat is the primary driver of context degradation, attention drift, and parsing failures. Instructing an LLM with qualitative pleas ("be concise", "don't include filler") routinely fails. To achieve deterministic reliability and zero-overhead velocity, communication must be governed by structural prompt constraints.
+In multi-agent architectures, conversational token bloat drives context degradation, attention drift, and parser failures. Instructing an LLM with qualitative pleas ("be concise", "don't include filler") routinely fails. To achieve deterministic reliability, zero-overhead velocity, and reproducible execution, agent orchestration is governed by **The Machine Contract & Zero-Preamble Invariant**.
+
+*(For the overarching 4-stage I/O & verification lifecycle—including input context slicing, dynamic sampling calibration, repetition penalties, and deterministic tool verification—see [`io-verification-control`](../io-verification-control/SKILL.md).)*
 
 ---
 
-## The 5 Behavioral Principles of Constrained Prompting
+## The Machine Contract & Zero-Preamble Invariant
 
-1. **First-Token Anchoring (Killing Preambles at Token 0):**  
+1. **First-Token Anchoring (Token-0):**  
    Never permit opening pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). Anchor the prompt so the model's first generated token must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
-2. **Schema-Locked Envelopes (Replacing Essays with `.agents/schemas/`):**  
+
+2. **Schema-Locked Envelopes ([`.agents/schemas/`](../../../schemas/)):**  
    Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Dispatched subagents must return data strictly within designated schema envelopes in [`.agents/schemas/`](../../../schemas/).
-3. **Closed Enum Choices (Eliminating Subjective Hallucination):**  
-   Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`).
-4. **Bounded Output Scope (Strict Field Quotas, Max Tokens per Message):**  
-   Impose explicit field budgets and token limits (e.g. max 3 bullet items, $\le 500$ tokens per state handoff). Unbounded fields inevitably degrade into narrative drift.
-5. **Tool-Bound Execution (Mutations in Tools, Not Chat):**  
+
+3. **Closed Enum Constraints:**  
+   Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`). Closed enums eliminate subjective hallucinations and provide deterministic parsing.
+
+4. **Tool-Bound Execution:**  
    Code edits, file creations, and system mutations must NEVER be emitted as conversational markdown code blocks. Force execution strictly through verified tool calls (`write_to_file`, `replace_file_content`).
 
 ---
@@ -62,17 +65,44 @@ findings: [{topic: str, observation: str, evidence: str}]
 risks: [list of str]
 ```
 
-### 2. Eliminating Qualitative Ambiguity with Closed Enums
+### 2. Eliminating Qualitative Ambiguity with Closed Enums & Schema Locks
 
-❌ **Weak Prompt (Qualitative):**
+❌ **Weak Prompt (Qualitative & Unstructured):**
 ```text
 Let me know if you think this migration is risky and what the status of the tests are.
 ```
 
-✅ **Constrained Prompt (Enum-Locked):**
+✅ **Constrained Prompt (Enum-Locked & Schema-Bound):**
 ```text
-Deliver migration assessment strictly adhering to these enums:
+Deliver migration assessment strictly adhering to these closed enums and YAML structure:
+---
 risk_level: [LOW | MEDIUM | HIGH | CRITICAL]
 test_status: [ALL_PASS | FAILING | UNVERIFIED]
 blocking_issue: [NONE | SCHEMA_LOCK | DATA_LOSS_RISK]
 ```
+
+### 3. Tool-Bound Execution vs. Speculative Markdown Dumps
+
+❌ **Weak Prompt (Chat Code Dump):**
+```text
+Write a function that parses bearer tokens from HTTP authorization headers and show me the code.
+```
+*Result:* Model outputs conversational explanations and markdown fenced code blocks in chat that require human copy-pasting and risk unverified execution.
+
+✅ **Constrained Prompt (Tool-Bound):**
+```text
+Implement `extractBearerToken(header: string): string | null` in `src/auth/token.ts`.
+Do not output code blocks in chat. Execute edits directly using `replace_file_content`.
+Verify immediately using `npm test -- src/auth/token.test.ts`.
+```
+
+---
+
+## Related Skills & System Governance
+
+- **[`io-verification-control`](../io-verification-control/SKILL.md):** Overarching 4-stage I/O and verification lifecycle (Input Control, Sampling Calibration, Output Contracts, and Ground Truth Verification).
+- **[`ponytail`](../ponytail/SKILL.md):** Anti-overengineering review, minimal diffs, and 7-Rung Decision Ladder.
+- **[`prompt-master`](../prompt-master/SKILL.md):** 9-dimension prompt calibration and task brief templates.
+- **[`writing-plans`](../writing-plans/SKILL.md):** Implementation plans with atomic tasks and typed `Consumes`/`Produces` contracts.
+- **[`.agents/rules/agent-control-plane.md`](../../../rules/agent-control-plane.md):** Constitution §6 (The Machine Contract & Zero-Preamble Invariant).
+

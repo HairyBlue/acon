@@ -44,13 +44,15 @@ Master Orchestrator: **[`engineering/SKILL.md`](engineering/SKILL.md)** | Full S
 Master Orchestrator: **[`productivity/SKILL.md`](productivity/SKILL.md)** | Full Suite Details: **[`productivity/README.md`](productivity/README.md)**
 
 - **[`adopt-acon`](productivity/adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
-- **[`grammars-and-constrained-sampling`](productivity/grammars-and-constrained-sampling/SKILL.md)**: Formal machine grammars (YAML/JSON schemas, enums, regexes) and token-level constrained sampling to eliminate preamble fluff and formatting drift.
+- **[`grammars-and-constrained-sampling`](productivity/grammars-and-constrained-sampling/SKILL.md)**: Formal machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) to eliminate preamble fluff and formatting drift.
+- **[`io-verification-control`](productivity/io-verification-control/SKILL.md)**: Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification.
 - **[`grill-me`](productivity/grill-me/SKILL.md)**: Relentless design and plan interrogation: design tree interview engine along the decision frontier.
 - **[`handoff`](productivity/handoff/SKILL.md)**: Context compacting and session handoff.
 - **[`ponytail`](productivity/ponytail/SKILL.md)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder, YAGNI reviews, and debt ledger.
 - **[`prompt-master`](productivity/prompt-master/SKILL.md)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
 - **[`to-questionnaire`](productivity/to-questionnaire/SKILL.md)**: Async decision-making questionnaires.
 - **[`writing-for-agents`](productivity/writing-for-agents/SKILL.md)**: Authoring skills and AGENTS.md instructions.
+- **[`writing-plans`](productivity/writing-plans/SKILL.md)**: Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code.
 - **[`technical-writing-for-engineers`](productivity/technical-writing-for-engineers/SKILL.md)**: Technical RFCs and post-mortems.
 - **[`daily-progress-report`](productivity/daily-progress-report/SKILL.md)**: Git work summaries and Notion publisher.
 - **[`developer-story`](productivity/developer-story/SKILL.md)**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.

@@ -194,7 +194,7 @@ acon/
     └── skills/                                   # Curated Modular Agent Skills
         ├── design/                               # 3 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
-        ├── productivity/                         # 12 Skills (adopt-acon, prompt-master, ponytail, grammars, grill-me...)
+        ├── productivity/                         # 13 Skills (adopt-acon, prompt-master, ponytail, grammars, io-control...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
 
@@ -237,13 +237,15 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
 - **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
 
-### 🧠 3. Productivity (`.agents/skills/productivity/` - 12 Skills)
+### 🧠 3. Productivity (`.agents/skills/productivity/` - 13 Skills)
 - **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces physical catalog deployment, CLAUDE.md symlink to AGENTS.md, Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
-- **`grammars-and-constrained-sampling`**: Formal machine grammars (YAML/JSON schemas, enums, regexes) and token-level constrained sampling to eliminate preamble fluff and formatting drift.
+- **`grammars-and-constrained-sampling`**: Formal machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) to eliminate preamble fluff and formatting drift.
+- **`io-verification-control`**: Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification.
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
 - **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
 - **`grill-me`**: Relentless design & plan interrogation: core design tree interview engine in rounds along the decision frontier.
 - **`handoff`**: Compacts conversation context into a structured handoff document.
+- **`writing-plans`**: Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code.
 - **`developer-story`**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
 - **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
 - **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.

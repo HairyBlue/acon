@@ -87,6 +87,10 @@ To eliminate context degradation and token bloat during multi-step missions, the
    - `Security & DevOps Auditor`: Static code security analysis (OWASP), pre-commit hooks, CI checks.
    - `Git Ops & Release Specialist`: Staging, committing, pushing, branch management, and git worktree isolation upon explicit Captain approval.
    - `Codebase Scout`: Read-only codebase archaeology, external library evaluation, diagnostic spikes.
+   - **Single-Model `inherit` Standard & Speculative Verification:**
+     - *Single-Model Standard:* All subagent dispatches use `Model: inherit`. The fleet operates on a single unified model.
+     - *Deterministic Verification:* Verification is performed deterministically by the local compiler and test runner (`npm test`, `pytest`, `cargo test`), eliminating any credit or model dependency.
+     - *Graceful Degradation Rule:* If credits are low or on smaller models: apply the graceful degradation rule: (1) micro-tasks $\le 1$ file per task boundary, (2) 100% rigid closed enums (no subjective generation or prose), and (3) hard automated CLI exit code `0` verification gates.
 2. **Equip with Modular Skills on Demand:** Provide specialists with domain skills from [`.agents/skills/`](../skills/) (`design/`, `design/impeccable/`, `engineering/`, `productivity/`, `security-devops/`) in prompt instructions.
 3. **Strict Task Shaping (Ship vs. Scout):**  
    - **`SHIP` Tasks:** Concrete code deliverables with explicit file boundaries, compile/lint/test verification (authoring new tests strictly when triggered by the Pragmatic Testing Standard), and diff presentation.
@@ -157,11 +161,13 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
   4. *Consequences:* Clear trade-offs of each option.
   5. *Recommendation:* Reasoned recommendation for Captain decision.
 - **The Machine Contract & Zero-Preamble Principle (Token & Velocity Discipline):**  
-  To eliminate context bloat, conversational token waste, and formatting drift across the fleet, all communications and subagent dispatches adhere to [`grammars-and-constrained-sampling`](../skills/productivity/grammars-and-constrained-sampling/SKILL.md):
+  To eliminate context bloat, conversational token waste, and formatting drift across the fleet, all communications and subagent dispatches adhere to [`grammars-and-constrained-sampling`](../skills/productivity/grammars-and-constrained-sampling/SKILL.md) and [`io-verification-control`](../skills/productivity/io-verification-control/SKILL.md):
   1. *Token-0 Anchoring & Zero Preamble:* Agents and subagents MUST NEVER emit conversational pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). The very first emitted character must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
   2. *Schema-Locked Envelopes:* Subagents must report progress, inventories, and diffs strictly inside the canonical YAML schemas in `.agents/schemas/` (`scout-report.yaml`, `ship-diff.yaml`, `handoff-state.yaml`, `task-contract.yaml`).
   3. *Closed Enum Constraints:* Ambiguous qualitative assessments are forbidden; state and outcomes must be constrained to discrete enums (`[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`).
-  4. *Tool-Bound Delivery:* File edits and mutations must NEVER be speculative conversational code blocks in chat; they must be executed exclusively through verified tool calls (`write_to_file`, `replace_file_content`).
+  4. *Role-Based Sampling Calibration:* Enforce dynamic temperature calibration per task role: Temp `0.0–0.2` (Top-p `0.9`) for deterministic execution (`SHIP`, security audit, QA, git ops) to guarantee reproducible AST mutations; Temp `0.7–0.8` (Top-p `0.95`) for divergent exploration (`grill-me`, alignment, red-teaming).
+  5. *Anti-Loop Repetition Discipline:* Prevent infinite token recursion, repetitive loops, and echo-chamber summaries via prompt directives: emit each entity once, never re-state input context, and cap lists to $\le 5$ key elements.
+  6. *Tool-Bound Delivery:* File edits and mutations must NEVER be speculative conversational code blocks in chat; they must be executed exclusively through verified tool calls (`write_to_file`, `replace_file_content`).
 
 ---
 
