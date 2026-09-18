@@ -1,6 +1,6 @@
 # Agent Skills Catalog
 
-Welcome to the ACON skills directory. This directory contains modular skills and domain orchestrators organized into 5 specialized domains:
+Welcome to the ACON skills directory. This directory contains modular skills and domain orchestrators organized into 4 specialized domains:
 
 ---
 
@@ -40,21 +40,7 @@ Master Orchestrator: **[`engineering/SKILL.md`](engineering/SKILL.md)** | Full S
 
 ---
 
-## 3. Fullstack & Frameworks Suite
-Master Orchestrator: **[`frameworks/SKILL.md`](frameworks/SKILL.md)** | Full Suite Details: **[`frameworks/README.md`](frameworks/README.md)**
-
-- **[`laravel-best-practices`](frameworks/laravel-best-practices/SKILL.md)**: 19 query, cache, queue, event, and architecture rules.
-- **[`laravel-boost`](frameworks/laravel-boost/SKILL.md)**: Laravel Boost MCP tools and `.ai/rules` workflow.
-- **[`laravel-projects`](frameworks/laravel-projects/SKILL.md)**: Laravel 13.x & Filament 5.x offline documentation.
-- **[`inertia-vue-development`](frameworks/inertia-vue-development/SKILL.md)**: Inertia v3 + Vue 3 client-side SPA patterns.
-- **[`tailwindcss-development`](frameworks/tailwindcss-development/SKILL.md)**: Tailwind CSS styling and responsive layouts.
-- **[`wayfinder-development`](frameworks/wayfinder-development/SKILL.md)**: Laravel Wayfinder TypeScript route bindings.
-- **[`testing-best-practices`](frameworks/testing-best-practices/SKILL.md)**: Pest and PHPUnit testing standards.
-- **[`infer-conventions`](frameworks/infer-conventions/SKILL.md)**: Repository pattern discovery checklist.
-
----
-
-## 4. Productivity & Alignment Suite
+## 3. Productivity & Alignment Suite
 Master Orchestrator: **[`productivity/SKILL.md`](productivity/SKILL.md)** | Full Suite Details: **[`productivity/README.md`](productivity/README.md)**
 
 - **[`adopt-acon`](productivity/adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
@@ -71,13 +57,13 @@ Master Orchestrator: **[`productivity/SKILL.md`](productivity/SKILL.md)** | Full
 
 ---
 
-## 5. Security & DevOps Suite
+## 4. Security & DevOps Suite
 Master Orchestrator: **[`security-devops/SKILL.md`](security-devops/SKILL.md)** | Full Suite Details: **[`security-devops/README.md`](security-devops/README.md)**
 
 - **[`conventional-commits`](security-devops/conventional-commits/SKILL.md)**: Conventional Commits v1.0.0 enforcement.
-- **[`git-guardrails-claude-code`](security-devops/git-guardrails-claude-code/SKILL.md)**: Blocking destructive git commands.
+- **[`git-guardrails`](security-devops/git-guardrails/SKILL.md)**: Blocking destructive git commands.
 - **[`git-worktrees`](security-devops/git-worktrees/SKILL.md)**: Multi-agent git worktree isolation and lifecycle.
-- **[`security-audit`](security-devops/security-audit/SKILL.md)**: Static code analysis covering 50+ vulnerability types.
+- **[`security-audit`](security-devops/security-audit/SKILL.md)**: Universal, language-agnostic static security audit engine with OWASP Top 10 (2021), OWASP API Security Top 10 (2023), D1-D10 matrix, taint analysis, and closed-loop remediation.
 - **[`setup-pre-commit`](security-devops/setup-pre-commit/SKILL.md)**: Husky + lint-staged + Prettier/typecheck hooks.
 - **[`shell-scripting`](security-devops/shell-scripting/SKILL.md)**: Production bash scripting, strict modes, traps, and option parsing.
 

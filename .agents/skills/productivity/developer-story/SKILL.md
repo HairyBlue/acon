@@ -133,40 +133,40 @@ tags: ["Architecture", "Multi-Agent", "Developer Tools"]
 ---
 
 # Late to the Wave, But I Built My Own Boat
-**Broadsheet Section: `[ BUILDER JOURNEY ]` · Special Personal Dispatch**  
-*How constraints, not doubt, forced me to architect an autonomous agent crew*  
-*By Nicki Marty Pecision · Mindanao, Philippines · 4 min read*
+**Broadsheet Section: `[ BUILDER JOURNEY ]` · Special Engineering Dispatch**  
+*How constraints, not doubt, forced us to architect an autonomous agent control plane*  
+*By Systems Architecture Group · 4 min read*
 
 ---
 
-Everyone else seemed to be sprinting. Whole fleets of AI coding agents shipping features while their operators slept—and I was still watching from the shore.
+Everyone else seemed to be sprinting. Whole fleets of AI coding agents shipping features while their operators slept—and our team was still watching from the shore.
 
-It wasn't ego. It wasn't skepticism about the technology either. It was economics.
+It wasn't ego. It wasn't skepticism about the technology either. It was economics and architecture.
 
 ### 1. The Cost of the Race
-I help support my mother alongside my siblings. Every peso mattered more than every shiny new developer tool. While other engineers were stacking three monthly AI subscriptions, my workflow was a scramble: open browser, burn free tier credits, hit the wall, switch windows. You cannot build a dependable autonomous workflow on free token crumbs.
+We operated under strict cloud infrastructure budget ceilings. Every dollar of compute allocation mattered more than shiny new developer tools. While other teams were stacking multiple expensive AI orchestrator subscriptions, our workflow was bottlenecked: browser context limits, rapid rate-limit hits, and fragmented terminal windows. You cannot build a dependable autonomous workflow on fragile token-churning architectures.
 
 ### 2. The Bottleneck & The Wall
-When I finally secured access through a student Antigravity account, I hit a second wall: I work inside WSL on Linux, and the desktop orchestrators didn't integrate smoothly with my shell. Switching back to pure Windows felt like trading a sharp scalpel for a blunt hammer.
+When we deployed local coding agents across developer workstations, we hit a second wall: the desktop orchestrators locked the command terminal during execution, preventing human oversight and steering. Switching between separate environment silos introduced context fragmentation and fragile sync issues.
 
 ### 3. The Pivot
-That constraint forced a pivot: stop looking for an all-in-one GUI app. Build from the Unix philosophy instead. I discovered Kun Chen's work on terminal multiplexing and his First Mate concept: *"Talk to one agent. Ship with a crew."*
+That constraint forced a pivot: stop relying on monolithic all-in-one orchestrators. Build from the Unix philosophy instead. We embraced terminal multiplexing and the First Mate architectural pattern: *"Talk to one agent. Ship with a crew."*
 
 ![Terminal setup with multiplexer](/images/terminal-panes.png)
-*Fig. 1: Four parallel CLI worker panes running on a single subscription.*
+*Fig. 1: Four parallel CLI worker panes running under a single coordinated control plane.*
 
-### 4. The Custom Solution: ACON
-I architected ACON: an Agent Control Plane that treats the primary AI as an unblocked supervisor. Workers execute in isolated Git worktrees, partitioned into zero-collision file scopes (SHIP vs SCOUT contracts). Reactive wakeups replaced token-burning polling loops.
+### 4. The Custom Solution: Agent Control Plane
+We architected a centralized Agent Control Plane that treats the primary AI as an unblocked supervisor. Specialized subagents execute in isolated Git worktrees, partitioned into zero-collision file scopes (SHIP vs SCOUT contracts). Reactive event wakeups replaced token-burning polling loops.
 
 ### 5. The Earned Insight
-You don't need a venture budget to build serious engineering infrastructure. Constraints aren't an excuse—they are the exact pressure chamber that forges resilient architecture.
+You don't need an unlimited venture budget to build serious engineering infrastructure. Constraints aren't an excuse—they are the exact pressure chamber that forges resilient architecture.
 
 ---
 
 ### Editorial Colophon
-- **Author**: Nicki Marty Pecision ([@HairyBlue](https://github.com/HairyBlue))
-- **Architecture**: ACON Control Plane
-- **Source**: [github.com/HairyBlue/acon](https://github.com/HairyBlue/acon)
+- **Author**: Systems Architecture Team ([@example-org](https://github.com/example-org))
+- **Architecture**: Agent Control Plane Pattern
+- **Source**: [github.com/example-org/control-plane](https://github.com/example-org/control-plane)
 ```
 
 ---
@@ -196,34 +196,34 @@ export interface ProjectCASI {
 }
 
 export const sampleProject: ProjectCASI = {
-  id: "acon",
-  title: "ACON — AGENT CONTROL PLANE",
+  id: "telemetry-router",
+  title: "AEROFLEET — DISTRIBUTED TELEMETRY ROUTER",
   year: "2026",
-  subtitle: "Autonomous Multi-Agent Systems & Developer Tooling",
-  category: "Developer Tooling",
-  badgeText: "AC",
+  subtitle: "High-Throughput Edge Telemetry & Real-Time Stream Partitioning",
+  category: "Distributed Systems",
+  badgeText: "AF",
   featured: true,
-  stats: "Subscription-Optimized Multi-Agent Fleet",
+  stats: "Sub-10ms P99 Latency at 40k Events/Sec",
   technologies: [
-    "Multi-Agent Systems",
-    "Antigravity CLI",
-    "Gemini 3.8 Flash",
+    "Rust",
+    "Tokio",
+    "Apache Kafka",
     "TypeScript",
-    "Bash",
-    "Git Worktrees"
+    "Docker",
+    "OpenTelemetry"
   ],
-  githubUrl: "https://github.com/HairyBlue/acon",
-  liveUrl: "/story",
+  githubUrl: "https://github.com/example-org/aerofleet-router",
+  liveUrl: "/case-studies/aerofleet",
   description:
-    "Architected a production-grade multi-agent control plane that coordinates specialist AI subagents (Frontend, Backend, QA, Git Ops) under a strict zero-execution command bridge—optimized to run an entire autonomous development fleet on a single subscription.",
+    "Architected a high-throughput edge telemetry router that ingests, validates, and partitions multi-tenant event streams with zero message loss and deterministic memory bounds.",
   challenge:
-    "Autonomous agent workflows typically suffer from severe token exhaustion through polling loops, frequent Git merge conflicts between parallel workers, and bridge latency that blocks human steering. Running multiple concurrent agents usually requires multiple costly subscriptions.",
+    "Legacy event ingestion relied on synchronous HTTP webhooks that backed up under sudden traffic spikes, causing backpressure collapses, socket exhaustion, and unrecoverable data loss during peak ingest windows.",
   architecture:
-    "Separated supervisory command from worker execution via the First Mate Protocol. Configured physical Git worktree isolation under .worktrees/<branch> for zero-collision concurrency. Implemented reactive terminal multiplexing with event wakeups, completely removing polling overhead.",
+    "Decoupled edge ingestion from storage processing via non-blocking ring buffers and consumer groups. Partitioned stream processing by tenant hash to ensure deterministic zero-collision ordering across concurrent consumer workers.",
   solution:
-    "Formulated seam-isolated contracts (SHIP for code modification, SCOUT for read-only exploration). Enforced the Ponytail 7-Rung decision ladder to prevent agent bloat. Packaged a 67-preset craft design engine and security audit suite into modular, zero-symlink agent memory files.",
+    "Built a lightweight Rust daemon using Tokio async tasks and zero-copy byte deserialization. Implemented adaptive rate-limiting with exponential backoff and backpressure signaling to upstream publishers.",
   impact:
-    "Enabled a full 5-worker specialist AI crew to run concurrently on a single standard subscription with zero file collisions, sub-second supervisor responsiveness, and 100% automated test verification."
+    "Reduced P99 processing latency from 480ms to 8ms, eliminated 100% of socket exhaustion failures, and reduced infrastructure host count by 65% under identical load."
 }
 ```
 
@@ -243,15 +243,15 @@ export interface MiniBlog {
 }
 
 export const miniBlogEntry: MiniBlog = {
-  title: "From Ledgers to Pipelines",
-  subtitle: "The unexpected journey into software architecture",
+  title: "Building from Constraints",
+  subtitle: "Why hardware ceilings and tight bounds produce cleaner software",
   readTime: "2 min read",
-  date: "2026 Journey Story",
+  date: "2026 Engineering Retrospective",
   quote: "Constraints aren't an excuse—they are the pressure chamber that forges resilient architecture.",
   paragraphs: [
-    "I didn't start with code. I started with ledgers. In 2021, I made the life-altering pivot from Management Accounting to Computer Science. The irony? I was barely computer literate. I literally didn't know how to copy-and-paste a file onto a USB drive.",
-    "The learning curve wasn't just steep; it was a vertical cliff. Terminal commands and abstract algorithms replaced balance sheets. But somewhere between the syntax errors and late-night debugging sessions, frustration gave way to obsession. I discovered the sheer force multiplier of building systems from scratch.",
-    "That raw curiosity forged a disciplined commitment to engineering. Today, I'm no longer struggling with USB drives—I'm architecting deployment pipelines, building government platforms, and engineering systems for international startups. I write code because it's the ultimate tool for solving complex, real-world problems at scale."
+    "Early in my engineering career, I inherited a legacy service running on severely underprovisioned infrastructure. Memory leaks were frequent, and every background queue burst brought the web tier to a crawl. The natural temptation was to request a tenfold server upgrade.",
+    "Instead, we chose the harder discipline: profiling memory allocations, replacing unbounded queues with backpressure-aware ring buffers, and eliminating redundant query waterfalls. Within three weeks, the service was handling twice the traffic at half the memory footprint.",
+    "That experience cemented a foundational principle: excessive resources often mask architectural negligence. When you embrace tight bounds from day one, simplicity stops being an abstract aspiration and becomes an unavoidable engineering reality."
   ]
 }
 ```

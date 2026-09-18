@@ -1,0 +1,37 @@
+# Schema: ship-diff.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: ShipDiff
+description: Canonical machine grammar for implementation specialist task completion summaries.
+type: object
+required: [task_id, status, files_created, files_modified, files_deleted, verification, diff_stat]
+properties:
+  task_id:
+    type: string
+  status:
+    type: string
+    enum: [COMPLETED, FAILED, PARTIAL]
+  files_created:
+    type: array
+    items: { type: string }
+  files_modified:
+    type: array
+    items: { type: string }
+  files_deleted:
+    type: array
+    items: { type: string }
+  verification:
+    type: object
+    required: [command, exit_code, summary]
+    properties:
+      command: { type: string }
+      exit_code: { type: integer }
+      summary: { type: string }
+  diff_stat:
+    type: object
+    required: [insertions, deletions, files_changed]
+    properties:
+      insertions: { type: integer }
+      deletions: { type: integer }
+      files_changed: { type: integer }
+  notes:
+    type: string

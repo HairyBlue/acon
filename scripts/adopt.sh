@@ -2,15 +2,16 @@
 # ==============================================================================
 # ACON Repository Adoption & Synchronization: adopt.sh
 # Description: Installs and updates ACON's Control Plane constitution (AGENTS.md),
-#              114-skill catalog (.agents/skills/), and constitutional rules
-#              (.agents/rules/) into any target repository.
+#              domain skills catalog (.agents/skills/), constitutional rules
+#              (.agents/rules/), machine schemas (.agents/schemas/), and reference
+#              catalogs (.agents/reference/) into any target repository.
 #
 # Non-Negotiable Invariants:
-# 1. Universal Physical Copy Invariant (zero symlinks across all target assets)
-# 2. Two-Tier AGENTS.md Merge Standard (preserves target repo rules verbatim)
-# 3. Strict Lightweight Adoption Boundary (adopts ONLY AGENTS.md, .agents/skills/,
-#    and .agents/rules/; never copies scripts/)
-# 4. Fail-Closed Verification Gate (symlink audit + boundary enforcement)
+# 1. Universal Physical Copy Invariant for catalog assets (zero symlinks in .agents/)
+# 2. Single Source of Truth: CLAUDE.md symlinks cleanly to AGENTS.md
+# 3. Two-Tier AGENTS.md Merge Standard (preserves target repo rules verbatim)
+# 4. Strict Lightweight Adoption Boundary (adopts constitution, skills, rules, schemas, reference)
+# 5. Fail-Closed Verification Gate (symlink audit + boundary enforcement)
 # ==============================================================================
 set -euo pipefail
 IFS=$'\n\t'
@@ -52,14 +53,18 @@ usage() {
 Usage: adopt.sh [OPTIONS] <TARGET_DIRECTORY>
 
 Universal lightweight adoption, bootstrap, and synchronization suite for
-transferring ACON's Control Plane constitution, 114-skill catalog, and
-constitutional rules into any new or existing repository.
+transferring ACON's Control Plane constitution, domain skills catalog,
+constitutional rules, machine schemas, and reference catalogs into any
+new or existing repository.
 
 Strict Adoption Standard:
   Adopts ONLY:
     • AGENTS.md          (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
-    • .agents/skills/    (114 domain skills dereferenced into real physical files)
+    • CLAUDE.md          (Symlink to AGENTS.md for single source of truth)
+    • .agents/skills/    (Domain skills dereferenced into real physical files)
     • .agents/rules/     (Constitutional rules dereferenced into real physical files)
+    • .agents/schemas/   (Machine schemas dereferenced into real physical files)
+    • .agents/reference/ (Reference catalogs dereferenced into real physical files)
   Strictly EXCLUDES:
     • scripts/           (Adoption and management scripts belong to ACON control plane only)
 
@@ -73,9 +78,10 @@ Options:
   -h, --help             Show this help message and exit
 
 Invariants Enforced:
-  • Universal Physical Copy Invariant: 0 symlinks in target repository
+  • Physical Catalog Assets: 0 symlinks in target .agents/ (and IDE folders)
+  • Single Source of Truth: CLAUDE.md symlinks cleanly to AGENTS.md
   • Two-Tier AGENTS.md: Tier 1 (Command Bridge) + Tier 2 (Workshop Manual)
-  • Strict Adoption Boundary: Only AGENTS.md, skills, and rules deployed
+  • Strict Adoption Boundary: Only constitution, skills, rules, schemas, reference deployed
   • Fail-Closed Gate: Automated symlink audit and boundary check
 
 Examples:
@@ -106,10 +112,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ide)
       DEPLOY_IDE=1
-      shift
-      ;;
-    -s|--skip-ide)
-      DEPLOY_IDE=0
       shift
       ;;
     -h|--help)
@@ -164,7 +166,7 @@ echo "==========================================================================
 echo "Source Repository : ${ACON_ROOT}"
 echo "Target Repository : ${TARGET}"
 echo "Dry Run Mode      : $([[ ${DRY_RUN} -eq 1 ]] && echo "YES (preview only)" || echo "NO (live adoption)")"
-echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/"
+echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/, .agents/schemas/, .agents/reference/"
 echo "Excluded Assets   : scripts/ (Strict Boundary Enforced)"
 echo "Deploy IDE Folders: $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "YES (.cursor, .claude)" || echo "NO (default: clean lightweight)")"
 echo "Force Overwrite   : $([[ ${FORCE} -eq 1 ]] && echo "YES" || echo "NO")"
@@ -266,26 +268,24 @@ else
 fi
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
-  # Remove any pre-existing symlinks first to uphold Physical Copy Invariant
+  # Remove any pre-existing symlinks first to uphold Physical Copy Invariant for AGENTS.md
   rm -f "${TARGET}/AGENTS.md"
   cp "${SYNTHESIZED_AGENTS}" "${TARGET}/AGENTS.md"
   echo "  ✓ Installed physical AGENTS.md"
-  if [[ ${TARGET_HAS_CLAUDE_MD} -eq 1 || ${DEPLOY_IDE} -eq 1 ]]; then
-    rm -f "${TARGET}/CLAUDE.md"
-    cp "${SYNTHESIZED_AGENTS}" "${TARGET}/CLAUDE.md"
-    echo "  ✓ Installed physical CLAUDE.md"
-  fi
+
+  # Ensure CLAUDE.md in target is created as a symlink to AGENTS.md (Single Source of Truth)
+  rm -f "${TARGET}/CLAUDE.md"
+  ln -s AGENTS.md "${TARGET}/CLAUDE.md"
+  echo "  ✓ Created symlink CLAUDE.md -> AGENTS.md"
 else
   echo "  [DRY RUN] Manifest item: AGENTS.md (${SYNTHESIZED_AGENTS})"
-  if [[ ${TARGET_HAS_CLAUDE_MD} -eq 1 || ${DEPLOY_IDE} -eq 1 ]]; then
-    echo "  [DRY RUN] Manifest item: CLAUDE.md (Mirrored physical file)"
-  fi
+  echo "  [DRY RUN] Manifest item: CLAUDE.md (Symlink -> AGENTS.md)"
 fi
 
 # ------------------------------------------------------------------------------
-# Phase 3: Pure Physical Copy Deployment (.agents/skills/ & .agents/rules/)
+# Phase 3: Pure Physical Copy Deployment (.agents/skills/, .agents/rules/, .agents/schemas/, .agents/reference/)
 # ------------------------------------------------------------------------------
-echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, and catalog indexes (dereferencing all symlinks)..."
+echo "[PHASE 3] Deploying .agents/skills/, .agents/rules/, .agents/schemas/, .agents/reference/, and catalog indexes (dereferencing all symlinks)..."
 echo "  • Boundary Policy: Strictly excluding internal control plane scripts (scripts/)"
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
@@ -308,7 +308,23 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
     echo "  ✓ Deployed .agents/rules/ directory (100% physical, 0 symlinks)"
   fi
 
-  # 3. Deploy root documentation in .agents/ (INDEX.md, README.md)
+  # 3. Deploy .agents/schemas/ (if exists)
+  if [[ -d "${ACON_ROOT}/.agents/schemas" ]]; then
+    mkdir -p "${TARGET}/.agents/schemas"
+    rsync -avL --delete \
+      "${ACON_ROOT}/.agents/schemas/" "${TARGET}/.agents/schemas/"
+    echo "  ✓ Deployed .agents/schemas/ directory (100% physical, 0 symlinks)"
+  fi
+
+  # 4. Deploy .agents/reference/ (if exists)
+  if [[ -d "${ACON_ROOT}/.agents/reference" ]]; then
+    mkdir -p "${TARGET}/.agents/reference"
+    rsync -avL --delete \
+      "${ACON_ROOT}/.agents/reference/" "${TARGET}/.agents/reference/"
+    echo "  ✓ Deployed .agents/reference/ directory (100% physical, 0 symlinks)"
+  fi
+
+  # 5. Deploy root documentation in .agents/ (INDEX.md, README.md)
   for doc_file in INDEX.md README.md; do
     if [[ -f "${ACON_ROOT}/.agents/${doc_file}" ]]; then
       rm -f "${TARGET}/.agents/${doc_file}"
@@ -316,12 +332,27 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
       echo "  ✓ Deployed .agents/${doc_file}"
     fi
   done
+
+  # 6. Prune obsolete legacy frameworks directory if present in target
+  if [[ -d "${TARGET}/.agents/skills/frameworks" ]]; then
+    rm -rf "${TARGET}/.agents/skills/frameworks"
+    echo "  ✓ Pruned obsolete .agents/skills/frameworks directory"
+  fi
 else
   echo "  [DRY RUN] Manifest item: .agents/skills/ (rsync -avL dereferencing all symlinks)"
   if [[ -d "${ACON_ROOT}/.agents/rules" ]]; then
     echo "  [DRY RUN] Manifest item: .agents/rules/ (rsync -avL dereferencing all symlinks)"
   fi
+  if [[ -d "${ACON_ROOT}/.agents/schemas" ]]; then
+    echo "  [DRY RUN] Manifest item: .agents/schemas/ (rsync -avL dereferencing all symlinks)"
+  fi
+  if [[ -d "${ACON_ROOT}/.agents/reference" ]]; then
+    echo "  [DRY RUN] Manifest item: .agents/reference/ (rsync -avL dereferencing all symlinks)"
+  fi
   echo "  [DRY RUN] Manifest items: .agents/INDEX.md, .agents/README.md"
+  if [[ -d "${TARGET}/.agents/skills/frameworks" ]]; then
+    echo "  [DRY RUN] Would prune obsolete .agents/skills/frameworks directory"
+  fi
   echo "  [DRY RUN] Explicitly excluded: scripts/"
 fi
 
@@ -376,7 +407,16 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
     exit 1
   fi
 
-  echo "  ✓ Invariant Verified: Zero symlinks found in adopted ACON assets"
+  # Check root CLAUDE.md symlink resolves cleanly
+  if [[ -L "${TARGET}/CLAUDE.md" ]]; then
+    if [[ ! -e "${TARGET}/CLAUDE.md" ]]; then
+      echo "[FAIL-CLOSED] CLAUDE.md symlink is broken!" >&2
+      exit 1
+    fi
+    echo "  ✓ Single Source Verified: CLAUDE.md resolves cleanly to AGENTS.md"
+  fi
+
+  echo "  ✓ Invariant Verified: Zero symlinks found in adopted ACON catalog assets"
 
   # 2. Invariant Check: Adoption Boundary Enforcement (Zero Leaked Internal Scripts)
   echo "  • Verifying adoption boundary enforcement..."
@@ -395,9 +435,17 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
   done
   echo "  ✓ Boundary Verified: scripts/ strictly excluded"
 
-  # 3. Skill Catalog Count Check
+  # 3. Catalog, Schema, & Reference Integrity Checks
   SKILL_COUNT=$(find "${TARGET}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
   echo "  ✓ Catalog Verified: ${SKILL_COUNT} active skills installed"
+  if [[ -d "${TARGET}/.agents/schemas" ]]; then
+    SCHEMA_COUNT=$(find "${TARGET}/.agents/schemas" -name "*.yaml" | wc -l | tr -d ' ')
+    echo "  ✓ Schemas Verified: ${SCHEMA_COUNT} canonical schemas installed"
+  fi
+  if [[ -d "${TARGET}/.agents/reference" ]]; then
+    REF_COUNT=$(find "${TARGET}/.agents/reference" -name "*.md" | wc -l | tr -d ' ')
+    echo "  ✓ Reference Verified: ${REF_COUNT} reference catalogs installed"
+  fi
 else
   echo "  [DRY RUN] Verification Gate checks simulated."
 fi
@@ -406,14 +454,18 @@ fi
 # Completion Digest
 # ------------------------------------------------------------------------------
 SKILL_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
+SCHEMA_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/schemas" -name "*.yaml" 2>/dev/null | wc -l | tr -d ' ')
 echo "================================================================================"
 echo "⚓ ACON Adoption Complete: Target repository is shipshape!"
 echo "================================================================================"
 echo "Target Root      : ${TARGET}"
 echo "Constitution     : ${TARGET}/AGENTS.md (Two-Tier Architecture)"
+echo "Claude Code Sync : ${TARGET}/CLAUDE.md -> AGENTS.md (Single Source of Truth)"
 echo "Catalog Location : ${TARGET}/.agents/skills/ (${SKILL_COUNT_DISPLAY} Skills)"
 echo "Rules Location   : ${TARGET}/.agents/rules/"
+echo "Schemas Location : ${TARGET}/.agents/schemas/ (${SCHEMA_COUNT_DISPLAY} Schemas)"
+echo "Reference Path   : ${TARGET}/.agents/reference/"
 echo "Boundary Policy  : Strict Lightweight (scripts/ excluded)"
-echo "Symlink Status   : 0 symlinks (Universal Physical Copy Invariant Satisfied)"
+echo "Symlink Status   : 0 symlinks in catalog (CLAUDE.md symlinked to AGENTS.md)"
 echo "Verification     : PASSED"
 echo "================================================================================"

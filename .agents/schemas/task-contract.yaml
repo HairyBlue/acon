@@ -1,0 +1,49 @@
+# Schema: task-contract.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: TaskContract
+description: Canonical machine grammar for implementation plan atomic task boundaries.
+type: object
+required: [task_id, title, eligibility, scope, consumes, produces, verification]
+properties:
+  task_id:
+    type: string
+    pattern: "^TASK-[0-9]{2}$"
+  title:
+    type: string
+  eligibility:
+    type: object
+    required: [closed_loop, anti_gobble_file_count, domain_criticality]
+    properties:
+      closed_loop: { type: boolean }
+      anti_gobble_file_count: { type: integer, maximum: 3 }
+      domain_criticality: { type: string, enum: [AUTONOMOUS-SHIP, HUMAN-CORE / AI-TEST] }
+  scope:
+    type: object
+    required: [create, modify, forbidden]
+    properties:
+      create: { type: array, items: { type: string } }
+      modify: { type: array, items: { type: string } }
+      forbidden: { type: array, items: { type: string } }
+  consumes:
+    type: array
+    items:
+      type: object
+      required: [symbol, source_module]
+      properties:
+        symbol: { type: string }
+        source_module: { type: string }
+  produces:
+    type: array
+    items:
+      type: object
+      required: [symbol, type_signature]
+      properties:
+        symbol: { type: string }
+        type_signature: { type: string }
+  verification:
+    type: object
+    required: [command, expected_exit_code, verification_type]
+    properties:
+      command: { type: string }
+      expected_exit_code: { type: integer, default: 0 }
+      verification_type: { type: string, enum: [TDD_TEST_SUITE, TYPECHECK_OR_LINT, COMPILER_BUILD] }

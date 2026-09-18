@@ -1,0 +1,34 @@
+# Schema: handoff-state.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: HandoffState
+description: Canonical machine grammar for session compaction and clean-slate context handoffs.
+type: object
+required: [session_id, timestamp, plan_file, baseline_status, modified_files, active_blockers, exact_next_step]
+properties:
+  session_id:
+    type: string
+  timestamp:
+    type: string
+  plan_file:
+    type: string
+  baseline_status:
+    type: string
+    enum: [CLEAN, DIRTY_UNTESTED, BROKEN]
+  invariants_preserved:
+    type: boolean
+  completed_tasks:
+    type: array
+    items: { type: string }
+  modified_files:
+    type: array
+    items: { type: string }
+  active_blockers:
+    type: array
+    items: { type: string }
+  exact_next_step:
+    type: object
+    required: [action, target_task, prompt_brief]
+    properties:
+      action: { type: string, enum: [DISPATCH_WORKER, AWAIT_CAPTAIN, RUN_TESTS] }
+      target_task: { type: string }
+      prompt_brief: { type: string }

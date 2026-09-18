@@ -3,6 +3,7 @@
 # Ephemeral session runtime files, bridge mailboxes, and worktrees
 .agents/sessions/
 .worktrees/
+scratch/
 
 # Operating System & Editor Artifacts
 .DS_Store

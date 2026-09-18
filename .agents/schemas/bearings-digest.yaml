@@ -1,0 +1,43 @@
+# Schema: bearings-digest.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: BearingsDigest
+description: Canonical machine grammar for the 4-section Fleet Bearings status report.
+type: object
+required: [captains_call, recently_landed, underway, charted_next]
+properties:
+  captains_call:
+    type: array
+    items:
+      type: object
+      required: [item, type, action_needed]
+      properties:
+        item: { type: string }
+        type: { type: string, enum: [DECISION, BLOCKER, APPROVAL, CREDENTIAL] }
+        action_needed: { type: string }
+  recently_landed:
+    type: array
+    items:
+      type: object
+      required: [task_id, description, status]
+      properties:
+        task_id: { type: string }
+        description: { type: string }
+        status: { type: string, enum: [MERGED, VERIFIED, PASSED] }
+  underway:
+    type: array
+    items:
+      type: object
+      required: [specialist, task_id, current_action]
+      properties:
+        specialist: { type: string }
+        task_id: { type: string }
+        current_action: { type: string }
+  charted_next:
+    type: array
+    items:
+      type: object
+      required: [task_id, description, blocked_by]
+      properties:
+        task_id: { type: string }
+        description: { type: string }
+        blocked_by: { type: array, items: { type: string } }

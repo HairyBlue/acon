@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), and constitutional rules (.agents/rules/) into any new or existing repository while strictly excluding internal control plane scripts."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), constitutional rules (.agents/rules/), machine schemas (.agents/schemas/), and reference catalogs (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
 license: MIT
 metadata:
   author: acon
@@ -14,7 +14,7 @@ metadata:
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Orchestration Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **114-skill** catalog (`.agents/skills/`), and constitutional rules (`.agents/rules/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **114-skill** catalog (`.agents/skills/`), constitutional rules (`.agents/rules/`), machine schemas (`.agents/schemas/`), and reference catalogs (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
@@ -42,6 +42,8 @@ Modern software engineering with AI agents faces three fundamental dilemmas:
 │   • AGENTS.md         --> Real physical root constitution file         │
 │   • .agents/skills/   --> Real physical copies of all domain skills    │
 │   • .agents/rules/    --> Real physical copies of constitutional rules │
+│   • .agents/schemas/  --> Real physical copies of machine schemas      │
+│   • .agents/reference/--> Real physical copies of reference catalogs   │
 │                                                                        │
 │   🚫 STRICTLY EXCLUDED FROM TARGET REPOSITORIES:                       │
 │   • scripts/                   (Control plane scripts stay with ACON)  │
@@ -55,6 +57,8 @@ When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
 2. `.agents/skills/` (Domain skills dereferenced into physical directories)
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
+4. `.agents/schemas/` (Machine schemas dereferenced into physical files)
+5. `.agents/reference/` (Reference catalogs dereferenced into physical files)
 
 And explicitly forbids copying:
 - `scripts/`
@@ -162,6 +166,7 @@ Before transferring any files, the target repository is inspected:
   - Add explicit cross-reference in Section 3 linking to the Local Workshop Manual.
 - If target repository has no `AGENTS.md`:
   - Copy ACON's `AGENTS.md` directly.
+- **Claude Code Single Source of Truth:** `CLAUDE.md` is installed as a relative symlink to `AGENTS.md` (`CLAUDE.md -> AGENTS.md`), preventing rule divergence.
 
 ### Phase 3: Pure Physical Copy Deployment
 - Copy `.agents/skills/` physically using `rsync -avL`.
@@ -226,7 +231,7 @@ The automated adoption script is located at `scripts/adopt.sh`.
 When verifying an adopted repository, complete this checklist:
 
 ### Repository Adoption Checklist
-- [ ] **Physical Copy Invariant:** No symlinks in `$TARGET/.agents` or `$TARGET/AGENTS.md`.
+- [ ] **Physical Copy & Symlink Standard:** No symlinks in `$TARGET/.agents` or `$TARGET/AGENTS.md`; `$TARGET/CLAUDE.md` symlinks cleanly to `AGENTS.md`.
 - [ ] **Strict Boundary Enforced:** Internal ACON scripts from `scripts/` do NOT leak into `$TARGET`.
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.
 - [ ] **Catalog Integrity:** All active skills exist physically under `$TARGET/.agents/skills/`.

@@ -192,12 +192,22 @@ acon/
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
     └── skills/                                   # Curated Modular Agent Skills
-        ├── design/                               # 2 Skills + 67 style presets (interface-design & 67 style presets)
+        ├── design/                               # 3 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
-        ├── frameworks/                           # 8 Skills (laravel-best-practices, inertia-vue, wayfinder...)
-        ├── productivity/                         # 10 Skills (adopt-acon, prompt-master, ponytail, grill-me, handoff...)
+        ├── productivity/                         # 12 Skills (adopt-acon, prompt-master, ponytail, grammars, grill-me...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
+
+---
+
+## 📖 Dynamic Documentation Standard
+
+ACON intentionally ships **zero bundled framework tutorials or static library manuals**. Bundled framework documentation rapidly becomes outdated, adds maintenance overhead, and causes version drift against target codebases.
+
+Instead, ACON enforces the **Dynamic Documentation Standard**:
+1. **Manifest Inspection:** When an agent operates on a specific framework or library, it inspects the target project's dependency manifest (`package.json`, `composer.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) to determine the exact pinned version.
+2. **On-Demand Consultation:** The agent consults the framework's official documentation, releases, or repository matching that specific version on demand.
+3. **Workshop Manual Alignment:** Local framework conventions, project quirks, or architecture standards are maintained in the target repository's Tier 2 [Workshop Manual](AGENTS.md#3-command-bridge-vs-workshop-manuals-multi-repo-interoperability).
 
 ---
 
@@ -205,8 +215,9 @@ acon/
 
 When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets)
+### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 3 Skills + 67 Presets)
 - **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
+- **`impeccable`**: Design Director and visual quality floor engine with 23 lifecycle commands, craft floor quality checks, and mechanical anti-pattern detection.
 - **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
   - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/DESIGN.md), [`styles/minimal`](.agents/skills/design/styles/minimal/DESIGN.md), [`styles/spacious`](.agents/skills/design/styles/spacious/DESIGN.md) (ample whitespace, 8pt grid, low cognitive load).
   - **Slick & Modern Tech**: [`styles/sleek`](.agents/skills/design/styles/sleek/DESIGN.md), [`styles/bento`](.agents/skills/design/styles/bento/DESIGN.md), [`styles/shadcn`](.agents/skills/design/styles/shadcn/DESIGN.md), [`styles/modern`](.agents/skills/design/styles/modern/DESIGN.md) (Inter + JetBrains Mono, dark elevation, subtle borders).
@@ -226,31 +237,25 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
 - **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
 
-### 🧠 3. Productivity (`.agents/skills/productivity/` - 10 Skills)
-- **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces the Universal Physical Copy Invariant (zero symlinks across all directories including .cursor, .claude, and .agents), the Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
+### 🧠 3. Productivity (`.agents/skills/productivity/` - 12 Skills)
+- **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces physical catalog deployment, CLAUDE.md symlink to AGENTS.md, Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
+- **`grammars-and-constrained-sampling`**: Formal machine grammars (YAML/JSON schemas, enums, regexes) and token-level constrained sampling to eliminate preamble fluff and formatting drift.
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
 - **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
 - **`grill-me`**: Relentless design & plan interrogation: core design tree interview engine in rounds along the decision frontier.
 - **`handoff`**: Compacts conversation context into a structured handoff document.
+- **`developer-story`**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
 - **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
 - **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.
 - **`technical-writing-for-engineers`**: Technical RFCs, architecture decisions, and post-mortems.
 - **`daily-progress-report`**: Work summary and Notion publishing via MCP.
 
-### 🌐 4. Frameworks (`.agents/skills/frameworks/` - 8 Skills)
-- **`laravel-best-practices`**: 19 comprehensive rules covering queries, caching, queues, events, db performance.
-- **`laravel-boost`**: Modular guidance for Laravel Boost MCP tools and `.ai/rules` persistence.
-- **`inertia-vue-development`**: Inertia v3 + Vue 3 client-side SPA patterns, forms, hooks, deferred props.
-- **`tailwindcss-development`**: Tailwind CSS layout structures and responsive styling.
-- **`wayfinder-development`**: Laravel Wayfinder TypeScript route binding generator.
-- **`testing-best-practices`**: Pest and PHPUnit testing standards, isolation, assertions.
-
-### 🔒 5. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
-- **`security-audit`**: Static security analysis (50+ vulnerability types across PHP, JS, Python, C#).
+### 🔒 4. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
+- **`security-audit`**: Universal, language-agnostic static security audit engine (OWASP Top 10 (2021), OWASP API Security Top 10 (2023), D1-D10 matrix, taint analysis, AST triage, closed-loop remediation).
 - **`shell-scripting`**: Production bash scripting, `set -euo pipefail`, cleanup traps, safe quoting, and option parsing.
 - **`git-worktrees`**: Multi-agent git worktree isolation topology, lifecycle management, and branch collision avoidance.
 - **`conventional-commits`**: Conventional Commits v1.0.0 specification enforcement.
-- **`git-guardrails-claude-code`**: PreToolUse hooks blocking destructive git operations.
+- **`git-guardrails`**: Universal pre-execution hooks blocking destructive git operations.
 - **`setup-pre-commit`**: Husky + lint-staged + Prettier / typecheck pre-commit hooks.
 
 ---

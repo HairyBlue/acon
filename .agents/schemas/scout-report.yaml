@@ -1,0 +1,48 @@
+# Schema: scout-report.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: ScoutReport
+description: Canonical machine grammar for Codebase Scout subagent reports.
+type: object
+required: [status, objective, files_inspected, inventory, findings, risks, next_actions]
+properties:
+  status:
+    type: string
+    enum: [SUCCESS, PARTIAL, BLOCKED]
+  objective:
+    type: string
+  files_inspected:
+    type: array
+    items: { type: string }
+  inventory:
+    type: array
+    items:
+      type: object
+      required: [path, role, symbols]
+      properties:
+        path: { type: string }
+        role: { type: string, enum: [SOURCE, CONFIG, TEST, ASSET, DOC] }
+        symbols: { type: array, items: { type: string } }
+  findings:
+    type: array
+    items:
+      type: object
+      required: [topic, observation, evidence]
+      properties:
+        topic: { type: string }
+        observation: { type: string }
+        evidence: { type: string }
+  broken_references:
+    type: array
+    items:
+      type: object
+      required: [source_file, target_reference, issue]
+      properties:
+        source_file: { type: string }
+        target_reference: { type: string }
+        issue: { type: string }
+  risks:
+    type: array
+    items: { type: string }
+  next_actions:
+    type: array
+    items: { type: string }

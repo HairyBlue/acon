@@ -1,0 +1,36 @@
+# Schema: grill-interview.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: GrillInterview
+description: Canonical machine grammar for front-loaded alignment interview rounds.
+type: object
+required: [round, frontier_status, questions]
+properties:
+  round:
+    type: integer
+  frontier_status:
+    type: string
+    enum: [ACTIVE, RESOLVED]
+  questions:
+    type: array
+    minItems: 1
+    maxItems: 3
+    items:
+      type: object
+      required: [id, title, context, options, recommended_option]
+      properties:
+        id: { type: string, pattern: "^Q[0-9]+$" }
+        title: { type: string }
+        context: { type: string }
+        options:
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            type: object
+            required: [key, label, trade_off]
+            properties:
+              key: { type: string }
+              label: { type: string }
+              trade_off: { type: string }
+        recommended_option: { type: string }
+        rationale: { type: string }

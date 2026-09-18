@@ -48,14 +48,8 @@ AI coding agents excel at focused execution within well-defined boundaries, but 
 Every implementation plan created under `writing-plans` MUST strictly pair with the [`ponytail`](../ponytail/SKILL.md) anti-overengineering framework.
 
 ### The 7-Rung Ladder in Plan Design
-Before specifying any task or component in the plan, evaluate it against the 7 rungs:
-1. **Rung 1 (YAGNI):** Does this file or abstraction need to exist at all? Reject speculative hooks, generic interfaces for single implementations, and unrequested flexibility.
-2. **Rung 2 (Codebase Reuse):** Has another module in the repository already solved this? Audit existing helpers and models before creating new ones.
-3. **Rung 3 (Stdlib First):** Use language and runtime built-ins (`crypto.randomUUID()`, `structuredClone()`, `pathlib`) rather than pulling in external libraries.
-4. **Rung 4 (Platform Natives):** Leverage native platform features (e.g., HTML `<dialog>`, CSS Grid, native FormData) rather than custom multi-file state machines.
-5. **Rung 5 (Zero New Dependencies):** Zero new dependencies in manifests (`package.json`, `composer.json`, `pyproject.toml`) without explicit prior Captain authorization.
-6. **Rung 6 (Inline Clarity):** Keep simple logic inline at the call site. Do not introduce single-use 3-line micro-helpers.
-7. **Rung 7 (Minimum Working Diff):** Design the smallest possible diff that completely satisfies the requirements and passes all tests.
+Before specifying any task or component in the plan, evaluate proposed solutions through the **7-Rung Decision Ladder** in strict descending order:
+$\rightarrow$ Consult [`ponytail`](../ponytail/SKILL.md) for the complete decision tree (Rung 1: YAGNI → Rung 2: Codebase Reuse → Rung 3: Stdlib First → Rung 4: Platform Natives → Rung 5: Zero New Dependencies → Rung 6: Inline Clarity → Rung 7: Minimum Working Diff).
 
 ### The Non-Negotiable Safety Invariant
 While minimizing code diffs, the plan must never compromise on the 5 safety pillars:
@@ -137,27 +131,17 @@ To eliminate integration bugs when tasks are executed by separate subagents, eve
 ```
 
 #### Machine Grammar Pairing: `task-contract.yaml`
-Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and can be formally validated against the `task-contract.yaml` schema:
-- **Zero Hand-Waving:** Eliminates conversational ambiguity by requiring explicit schema properties (`task_id`, `eligibility`, `scope`, `consumes`, `produces`, `verification`).
+Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and MUST conform to the canonical machine contract defined at [`.agents/schemas/task-contract.yaml`](../../../schemas/task-contract.yaml):
+- **Canonical Schema:** [`.agents/schemas/task-contract.yaml`](../../../schemas/task-contract.yaml)
+- **Zero Hand-Waving:** Eliminates conversational ambiguity by strictly enforcing required schema properties (`task_id`, `title`, `eligibility`, `scope`, `consumes`, `produces`, `verification`).
 - **Context-Sliced Subagent Briefs:** Slices the task contract directly into subagent briefs without conversational baggage.
 - **Closed-Loop Verification Contract:** Locks the exact verification command and expected exit code into the machine contract.
 
 ### The Verification & TDD Cycle (Pragmatic Testing Standard)
-Every code task in the plan must specify its closed-loop verification steps based on the Pragmatic Testing Standard:
+Every code task in the plan must specify its closed-loop verification steps. Task test requirements are governed strictly by the **Pragmatic Testing Standard** documented in [`.agents/skills/engineering/tdd/SKILL.md`](../../engineering/tdd/SKILL.md) and [`AGENTS.md §8`](../../../../AGENTS.md#8-anti-slop-task-eligibility-standard-pre-flight-audit-checklist):
 
-**For Test-Required Tasks (Business Logic, Calculations, Invariants, Public APIs, Bug Reproductions):**
-Specify the 5 TDD steps:
-1. **Step 1: Write Failing Test:** Provide the full test code block targeting the unit or feature.
-2. **Step 2: Verify Test Failure:** State the exact test runner command and the expected failure mode (e.g., `Expected calculateBillingSummary to be defined`).
-3. **Step 3: Write Minimal Implementation:** Provide the exact code fulfilling the test, adhering strictly to Ponytail.
-4. **Step 4: Verify Test Pass:** State the exact test runner command and the expected passing confirmation.
-5. **Step 5: Codebase Verification & Static Checks:** Run linters, type checkers, and formatters (`npm run lint`, `phpstan`, `tsc --noEmit`).
-
-**For Test-Exempt Tasks (UI Templates, Styling, Obvious CRUD, Config Glue):**
-Specify the 3-step verification cycle:
-1. **Step 1: Minimal Implementation:** Provide the exact code/markup, adhering strictly to Ponytail.
-2. **Step 2: Deterministic Verification:** State the exact compiler, typecheck, or linting command (`npm run build`, `tsc --noEmit`, `phpstan`).
-3. **Step 3: Visual / Seam Confirmation:** State the expected render/response or craft checks.
+- **For Test-Required Tasks:** (Business logic, financial calculations, mission-critical invariants, shared API contracts, and bug reproductions as defined in [`tdd`](../../engineering/tdd/SKILL.md)). Specify the 5 TDD steps (Write Failing Test → Verify Failure → Minimal Implementation → Verify Pass → Static Checks).
+- **For Test-Exempt Tasks:** (UI templates, styling, routine CRUD, config glue). Specify the 3-step verification cycle (Minimal Implementation → Deterministic Verification via compiler/linter → Visual/Seam Confirmation).
 
 ---
 

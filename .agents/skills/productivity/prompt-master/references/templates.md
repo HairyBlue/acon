@@ -210,6 +210,7 @@ Done When:
 
 ---
 
+<a id="template-h--react--stop-conditions"></a>
 ## Template H — ReAct + Stop Conditions (Ship)
 
 *Use for Claude Code, Devin, AutoGPT, and any AI that takes autonomous actions (Ship deliverables). Runaway loops and scope explosion are the biggest credit killers in agentic workflows — stop conditions and grammar envelopes are not optional.*
@@ -235,6 +236,9 @@ Forbidden Actions:
 - Do NOT delete files without showing a diff first
 - Do NOT make architecture decisions without human approval
 
+Code Minimalism & Diff Constraints:
+Enforce [ponytail](../../ponytail/SKILL.md) 7-Rung Ladder: deliver the minimum working diff, eliminate dead code, prefer existing codebase utilities and standard libraries over new dependencies, and avoid speculative abstractions.
+
 Stop Conditions:
 Pause and ask for human review when:
 - A file would be permanently deleted
@@ -247,9 +251,9 @@ Checkpoints:
 After each major step, output: ✅ [what was completed]
 
 Grammar Envelope (Constrained Sampling):
-Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the ship-diff.yaml schema:
+Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the canonical [ship-diff.yaml](../../../../schemas/ship-diff.yaml) schema:
 - Zero Conversational Preamble (forbid "Sure!", "Here is...", pleasantries; start directly with the YAML envelope).
-- Include files_created, files_modified, files_deleted, verification (command, exit_code, summary), and diff_stat.
+- Schema-locked output must validate against [ship-diff.yaml](../../../../schemas/ship-diff.yaml).
 - Zero markdown prose or filler outside the envelope.
 ```
 
@@ -397,6 +401,7 @@ Run these in order. Each output feeds the next.
 ```
 ---
 
+<a id="template-m--current-claude-task-brief"></a>
 ## Template M — Current Claude Task Brief (Scout / Agentic)
 
 *Use for complex, multi-step, or agentic tasks (including Scout investigations) on current Claude models—Claude.ai, API, or Claude Code. It front-loads the outcome, context, scope, action boundaries, and machine grammar envelopes while avoiding obsolete manual-thinking scaffolding.*
@@ -418,6 +423,7 @@ Run these in order. Each output feeds the next.
 ## Constraints
 - [Stack version, naming conventions, no new dependencies without asking]
 - Only make changes directly requested. Do not add features, abstractions, or files beyond what was asked.
+- Enforce [ponytail](../../ponytail/SKILL.md) minimalism: prefer minimum working diff, eliminate dead code, and avoid speculative architecture.
 
 ## Acceptance Criteria
 - [ ] [Binary check 1]
@@ -432,9 +438,9 @@ Run these in order. Each output feeds the next.
 For long-running work, report progress only when it changes or when a checkpoint is reached. Ground every completion claim in a tool result, changed artifact, or verification output.
 
 ## Grammar Envelope (Constrained Sampling)
-Enforce grammars-and-constrained-sampling. For Scout investigations or structured findings, deliver output strictly conforming to the scout-report.yaml schema:
+Enforce grammars-and-constrained-sampling. For Scout investigations or structured findings, deliver output strictly conforming to the canonical [scout-report.yaml](../../../../schemas/scout-report.yaml) schema:
 - Zero Conversational Preamble (start directly with the schema envelope).
-- Schema-locked fields: status [SUCCESS, PARTIAL, BLOCKED], objective, files_inspected, inventory, findings, broken_references, risks, next_actions.
+- Schema-locked deliverable must strictly conform to [scout-report.yaml](../../../../schemas/scout-report.yaml).
 - Zero conversational padding or pleasantries outside the YAML block.
 ```
 

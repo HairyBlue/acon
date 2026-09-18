@@ -22,7 +22,7 @@ If the user passed arguments, treat them as a description of what the next sessi
 `handoff` pairs directly with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) to eliminate token bloat and enable clean-slate session resumption:
 
 1. **Zero Conversational Preamble:** The handoff document opens directly with metadata or structured YAML without conversational introductions or sign-offs.
-2. **Dense Machine State:** Rather than a verbose multi-page summary, structure active state using the `handoff-state.yaml` schema:
+2. **Dense Machine State:** Rather than a verbose multi-page summary, structure active state using the canonical [`.agents/schemas/handoff-state.yaml`](../../../schemas/handoff-state.yaml) schema:
    ```yaml
    session_id: "<id>"
    timestamp: "YYYY-MM-DDTHH:MM:SSZ"

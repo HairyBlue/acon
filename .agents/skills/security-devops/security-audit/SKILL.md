@@ -1,51 +1,140 @@
 ---
 name: security-audit
-description: Static code security auditing skill covering 50+ vulnerability types across PHP, JavaScript/Node.js, Python, and C#/.NET. Orchestrates sub-directories for core logic, frameworks, checklists, languages, security principles, case studies, wooyun archives, and reporting templates. Use when performing security audits, code reviews for vulnerabilities, or pre-deployment security checks.
+description: Universal, language-agnostic defensive security audit skill. Orchestrates a 3-tier architecture (core methodologies, extensible threat models, evidence-based reporting) for static code analysis, closed-loop remediation, and anti-hallucination verification across any tech stack. Use when performing security audits, architectural code reviews, or pre-deployment security verification.
 license: MIT
 metadata:
-  version: "1.2.0"
-  supported_languages: ["php", "javascript", "typescript", "python", "csharp"]
+  version: "2.0.0"
+  architecture: "3-tier-modular"
+  universal: true
 ---
 
 # Security Audit Skill
 
-Professional static code analysis and security auditing skill tailored for **PHP**, **JavaScript / TypeScript (Node.js)**, **Python**, and **C# (.NET)**.
+A 100% universal, language-agnostic, and vendor-neutral defensive security principle engine. 
 
-## Directory Orchestration
+This skill transforms security code review from ad-hoc offensive guessing into an evidence-based engineering discipline: tracking untrusted taint across syntax trees, verifying control-flow reachability, enforcing domain invariants, proving defects with non-offensive native reproduction tests, applying architectural root patches, and honestly documenting verification boundaries.
 
-This skill utilizes a modular directory structure to organize auditing resources:
+---
 
-- **`core/`**: Core auditing methodologies, data flow analysis techniques (`taint-analysis.md`), and anti-hallucination rules.
-- **`frameworks/`**: Framework-specific security configurations and common pitfalls (`laravel.md`, `express-nextjs.md`, `django-fastapi.md`, `dotnet-asp.md`).
-- **`checklists/`**: Language checklists and the D1-D10 security coverage matrix (`coverage-matrix.md`).
-- **`languages/`**: Deep language security guides (`php.md`, `javascript.md`, `python.md`, `dotnet.md`).
-- **`security/`**: In-depth explanations of security concepts (`business-logic.md`, `auth-oauth-jwt.md`, `graphql-realtime.md`, `supply-chain-infra.md`).
-- **`cases/`**: Real-world vulnerability case studies and exploit analysis (`cases/real-world-vulns.md`).
-- **`wooyun/`**: Historical vulnerability archives, bug bounty reports, and parameter priority statistics (`INDEX.md`, `bypass-techniques.md`).
-- **`reporting/`**: Standardized vulnerability reporting templates (`reporting/report-template.md`).
-
-## Audit Workflow
+## 1. Clean Three-Tier Modular Architecture
 
 ```text
-1. Reconnaissance   → Map project tech stack, frameworks, routers, and entry points.
-2. Vulnerability Hunt → Trace data flow from user inputs to dangerous sinks across D1-D10 dimensions. Consult `languages/` and `frameworks/`.
-3. Verification    → Confirm exploitability, eliminate false positives, and assess severity.
-4. Remediation     → Document findings using `reporting/report-template.md` with clear root cause, PoC impact, and secure code fixes.
+.agents/skills/security-devops/security-audit/
+├── SKILL.md                          # Master Orchestrator & Dynamic Router
+├── core/                             # Universal Invariant Methodologies
+│   ├── anti-hallucination.md         # Evidence-first rules, verified sinks, line numbers
+│   ├── taint-analysis.md             # Universal Source -> Sanitizer -> Sink data flow
+│   ├── ast-triage.md                 # Two-tier triage (Heuristic regex -> AST confirmation)
+│   ├── closed-loop-remediation.md    # Native reproduction test -> Root patch -> Regression
+│   └── negative-reporting.md         # Limits of static analysis, confidence tiers
+├── threat-models/                    # Universal Invariants & Extension Hub
+│   ├── README.md                     # Formal extension guide & threat model schema
+│   ├── owasp-top-10.md               # Canonical OWASP Top 10 (2021) & API Security Top 10 (2023)
+│   ├── d1-d10-matrix.md              # Universal baseline matrix (D1–D10)
+│   ├── api-contracts.md              # OpenAPI/GraphQL contract drift & shadow endpoints
+│   └── webhooks-and-event-integrity.md # HMAC, constant-time, replay & idempotency
+└── reporting/                        # Evidence-Based Reporting
+    └── report-template.md            # Standardized template with findings matrix
+```
+
+### Tier Descriptions:
+1. **`core/` (Universal Invariant Methodologies)**: Foundational principles that never vary across programming languages, frameworks, or deployment environments.
+2. **`threat-models/` (Universal Invariants & Extension Hub)**: Declarative, domain-specific threat surfaces and security invariants. Easily extended with new domains without touching core logic.
+3. **`reporting/` (Evidence-Based Reporting)**: Standardized, actionable deliverables emphasizing closed-loop test harnesses, architectural patches, and honest confidence tiers.
+
+---
+
+## 2. The Dynamic Documentation Standard
+
+Rather than maintaining fragile, static, bundled language and framework files that quickly become outdated, this skill mandates the **Dynamic Documentation Standard**:
+
+> [!IMPORTANT]
+> **Dynamic Manifest Inspection**:
+> 1. The auditing agent inspects the target repository's dependency manifests (`package.json`, `Cargo.toml`, `pyproject.toml`, `composer.json`, `go.mod`, `pom.xml`, `.csproj`, etc.) to dynamically determine the exact language version, web framework, ORM, and cryptographic libraries in use.
+> 2. The agent looks up language-specific sink signatures, API semantics, and framework configuration defaults dynamically using project context or web documentation, then applies the invariant principles defined in `core/` and `threat-models/`.
+
+---
+
+## 3. End-to-End Audit Workflow
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ 1. RECONNAISSANCE & MANIFEST INSPECTION                     │
+│    • Identify tech stack via manifest files                 │
+│    • Map routers, controllers, gateways, and trust zones    │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. THREAT MODEL ROUTING & MAPPING                           │
+│    • Load `threat-models/owasp-top-10.md` (canonical)       │
+│    • Load `threat-models/d1-d10-matrix.md` (baseline)       │
+│    • Load `threat-models/api-contracts.md` (if APIs/schemas)│
+│    • Load `threat-models/webhooks-and-event-integrity.md`   │
+│    • Load any custom models in `threat-models/`             │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. TWO-TIER AST TRIAGE                                      │
+│    • Tier 1: Fast heuristic regex discovery (Candidate sinks)│
+│    • Tier 2: Surgical AST confirmation (Eliminate literals) │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4. TAINT ANALYSIS & CONTROL-FLOW REACHABILITY               │
+│    • Trace Source -> Sanitizer -> Sink chain                │
+│    • Verify router registration and branch conditions       │
+│    • Apply strict `anti-hallucination.md` rules             │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 5. CLOSED-LOOP DEFENSIVE REMEDIATION                        │
+│    • Write non-offensive reproduction test (RED)            │
+│    • Implement architectural root patch at sink             │
+│    • Run test suite to verify regression pass (GREEN)       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 6. REPORTING & BOUNDARY DECLARATION                         │
+│    • Categorize findings into standardized Confidence Tiers │
+│    • Document unverified scope via `negative-reporting.md`  │
+│    • Generate deliverable using `reporting/report-template` │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Language Specific Guides (`languages/`)
+## 4. Threat Model Catalog & Routing Table
 
-Query the target language guide when auditing matching files:
+The dynamic router matches target codebase architecture against the appropriate threat models:
 
-- **PHP & Laravel / WordPress**: [`languages/php.md`](languages/php.md)
-- **JavaScript / Node.js / Express / Next.js**: [`languages/javascript.md`](languages/javascript.md)
-- **Python / Django / FastAPI / Flask**: [`languages/python.md`](languages/python.md)
-- **C# / .NET Core / ASP.NET**: [`languages/dotnet.md`](languages/dotnet.md)
+| Threat Model | Domain & Scope | Activation Condition | Key Invariants Enforced |
+|---|---|---|---|
+| [`owasp-top-10.md`](threat-models/owasp-top-10.md) | Canonical OWASP Top 10 (2021) & OWASP API Security Top 10 (2023) | **Always Active** for Web Applications, REST/GraphQL APIs, and Backend Services | Broken Access Control, BOLA, Injection, Insecure Design, SSRF, BFLA, Mass Assignment, Rate Limiting, Component Integrity. |
+| [`d1-d10-matrix.md`](threat-models/d1-d10-matrix.md) | Universal baseline web & system security matrix (D1–D10) | **Always Active** as foundational baseline across any codebase | Comprehensive coverage spanning Injection, Auth, Access Control, Deserialization, Supply Chain, and Misconfigurations. |
+| [`api-contracts.md`](threat-models/api-contracts.md) | Vendor-agnostic API contract integrity (OpenAPI, Swagger, GraphQL, gRPC) | Detected API schemas or controller routing suites | Schema drift prevention, shadow endpoints, undocumented parameters, type/length boundary enforcement. |
+| [`webhooks-and-event-integrity.md`](threat-models/webhooks-and-event-integrity.md) | Asynchronous events, webhooks, and distributed messaging | Detected webhook routes, event handlers, or message queues | Raw body HMAC validation, constant-time comparison, replay mitigation (<300s), database idempotency tracking. |
 
 ---
 
-## References & Inspiration
+## 5. Extending Threat Models
 
-- **[3stoneBrother Code Audit Repository](https://github.com/3stoneBrother/code-audit)**: Source inspiration for multi-language security audit checklists, D1-D10 coverage matrix, taint analysis methodology, and WooYun real-world vulnerability insights.
+To add a new domain or architectural threat model (e.g., `smart-contracts.md`, `ai-agents.md`, `zero-trust.md`):
+
+1. Navigate to [`threat-models/`](threat-models/).
+2. Review [`threat-models/README.md`](threat-models/README.md) for the standardized 6-section schema.
+3. Author your threat model file (e.g., `threat-models/ai-agents.md`).
+4. The router automatically discovers and utilizes new models during the threat model selection phase. Zero core code modifications are required.
+
+---
+
+## 6. Confidence Tiers Quick Reference
+
+Every documented finding must carry one of three explicit confidence labels:
+- **`[VERIFIED STATIC FLAW]`**: Proven Source-to-Sink taint flow with verified dangerous sink and reachable control flow.
+- **`[CONTRACT MISMATCH]`**: Discrepancy between interface/schema contracts and controller implementation (shadow endpoints, unconstrained fields, missing validation).
+- **`[MANUAL REVIEW REQUIRED]`**: High-risk pattern traversing dynamic reflection, external microservices, or uninspected third-party libraries that cannot be mathematically proven statically.

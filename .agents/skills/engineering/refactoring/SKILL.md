@@ -397,19 +397,8 @@ The fundamental discipline of refactoring is taking tiny, verifiable steps. Neve
 
 ---
 
-## 5. Code Smells Reference Checklist
+## 5. Code Smells Reference Catalog
 
-| Smell | Definition | Target Fowler Recipe |
-|---|---|---|
-| **Mysterious Name** | Names do not reveal intent or domain concept | Rename Variable / Function / Class |
-| **Duplicated Code** | Similar logic shapes repeated in multiple places | Extract Function / Form Template Method |
-| **Long Function** | Function contains multiple levels of abstraction | Extract Function / Decompose Conditional |
-| **Long Parameter List** | More than 3-4 arguments passed to a function | Introduce Parameter Object / Preserve Whole Object |
-| **Primitive Obsession** | Basic strings/numbers used for domain concepts | Replace Primitive with Object / Value Object |
-| **Data Clumps** | Fields or parameters that always appear together | Extract Class / Introduce Parameter Object |
-| **Feature Envy** | Function queries another object more than its own | Move Function / Extract Method |
-| **Repeated Switches** | Identical `switch` or `if/else` ladders across files | Replace Conditional with Polymorphism |
-| **Divergent Change** | One module is changed for many different reasons | Single Responsibility Principle / Split Class |
-| **Shotgun Surgery** | One business change forces edits across many files | Move Field / Move Function / Inline Class |
-| **Speculative Generality**| Hooks, abstractions, or flags with no current use | Remove Dead Code / Inline Class / Inline Function |
-| **Message Chains** | Repeated navigation (`a.getB().getC().getD()`) | Hide Delegate / Extract Method |
+Code restructuring in ACON evaluates code smells against the canonical Fowler catalog centralized at [`.agents/reference/fowler-smells.md`](../../../reference/fowler-smells.md).
+
+Refer to [`.agents/reference/fowler-smells.md`](../../../reference/fowler-smells.md) for the consolidated matrix of 24 code smells, diagnostic criteria (*what it is* → *how to fix*), and mapping to target Fowler recipes (Guard Clauses, Extract Function, Replace Conditional with Polymorphism, Value Objects, and Strangler Fig).
