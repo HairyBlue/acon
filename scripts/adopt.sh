@@ -324,6 +324,22 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
     echo "  ✓ Deployed .agents/reference/ directory (100% physical, 0 symlinks)"
   fi
 
+  # 4b. Deploy .agents/crew/ (if exists)
+  if [[ -d "${ACON_ROOT}/.agents/crew" ]]; then
+    mkdir -p "${TARGET}/.agents/crew"
+    rsync -avL --delete \
+      "${ACON_ROOT}/.agents/crew/" "${TARGET}/.agents/crew/"
+    echo "  ✓ Deployed .agents/crew/ directory (100% physical, 0 symlinks)"
+  fi
+
+  # 4c. Deploy .agents/workflows/ (if exists)
+  if [[ -d "${ACON_ROOT}/.agents/workflows" ]]; then
+    mkdir -p "${TARGET}/.agents/workflows"
+    rsync -avL --delete \
+      "${ACON_ROOT}/.agents/workflows/" "${TARGET}/.agents/workflows/"
+    echo "  ✓ Deployed .agents/workflows/ directory (100% physical, 0 symlinks)"
+  fi
+
   # 5. Deploy root documentation in .agents/ (INDEX.md, README.md)
   for doc_file in INDEX.md README.md; do
     if [[ -f "${ACON_ROOT}/.agents/${doc_file}" ]]; then
