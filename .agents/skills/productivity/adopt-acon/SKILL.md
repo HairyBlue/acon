@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 114-skill catalog (.agents/skills/), constitutional rules (.agents/rules/), machine schemas (.agents/schemas/), and reference catalogs (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 36-skill catalog (.agents/skills/) + 67 craft style presets, constitutional rules (.agents/rules/), machine schemas (.agents/schemas/), and reference catalogs (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
 license: MIT
 metadata:
   author: acon
@@ -12,9 +12,9 @@ metadata:
 > **The Universal Physical Copy Invariant:** *"Zero symlinks. 100% self-contained repositories."*  
 > **The Strict Adoption Boundary:** *"Adopt conventions and skills only. Internal control plane scripts stay with the Control Plane."*
 
-`adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Orchestration Network) operational conventions into any greenfield repository or brownfield legacy project.
+`adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Control Plane Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **114-skill** catalog (`.agents/skills/`), constitutional rules (`.agents/rules/`), machine schemas (`.agents/schemas/`), and reference catalogs (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), machine schemas (`.agents/schemas/`), and reference catalogs (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
@@ -55,9 +55,9 @@ Adopted repositories are **lightweight consumers** of ACON conventions and domai
 
 When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
-2. `.agents/skills/` (Domain skills dereferenced into physical directories)
+2. `.agents/skills/` (Domain skills dereferenced into physical directories, including `productivity/decision-gates`)
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
-4. `.agents/schemas/` (Machine schemas dereferenced into physical files)
+4. `.agents/schemas/` (Machine schemas dereferenced into physical files, including `decision-sheet.yaml`)
 5. `.agents/reference/` (Reference catalogs dereferenced into physical files)
 
 And explicitly forbids copying:
@@ -111,6 +111,7 @@ The Command Bridge contains the complete, uncompromised ACON constitution:
 - **Foreign Boundary Trigger:** Automatic delegation when inspecting external paths.
 - **Task Contracts (`SHIP` vs. `SCOUT`):** Rigid boundary enforcement and verifiable test passes.
 - **4-Section Bearings Digest:** Standardized status reporting.
+- **Decision Gates Protocol:** Structured evaluation gates (`decision-gates`) and schema envelopes (`decision-sheet.yaml`) governing intake, shaping, and post-flight verification.
 - **Exclusive Captain Authority:** Destructive actions and git commits require human authorization.
 
 ### Tier 2: The Workshop Manual (Bottom)

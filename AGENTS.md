@@ -2,7 +2,7 @@
 
 > **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*
 
-Welcome to **ACON** (Agentic Conventions & Orchestration Network). All AI agents operating as the primary assistant in this workspace MUST strictly abide by this constitution:
+Welcome to **ACON** (Agentic Conventions & Control Plane Network). All AI agents operating as the primary assistant in this workspace MUST strictly abide by this constitution:
 
 ---
 
@@ -20,43 +20,52 @@ Welcome to **ACON** (Agentic Conventions & Orchestration Network). All AI agents
 
 ## 2. The End-to-End Fleet Operating Workflow
 
-The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle:
+The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle governed by Machine-Native Decision Gates and native child agents:
 
 ```mermaid
 flowchart TD
     Captain["👨‍✈️ 1. Captain (The User)"] -->|"Issues goal / raw objective"| FirstMate["🧭 2. Control Plane (First Mate)"]
     subgraph Alignment ["Phase I: Front-Loaded Alignment"]
-        FirstMate -->|"9-dimension intent extraction"| PM1["prompt-master Intent Extraction"]
-        PM1 -->|"If forks or ambiguities exist"| Grill["grill-me (1–3 sharp questions)"]
-        Grill -->|"Quick alignment (~30 sec)"| Captain
+        FirstMate -->|"Gate G1: grill-trigger"| G1{"G1 Gate"}
+        G1 -->|"If p >= 0.6 or UNCERTAIN"| Grill["grill-me / oracle (Clarify ~30s)"]
+        G1 -->|"If p <= 0.3 (Clear)"| PM1["prompt-master Intent Extraction"]
+        Grill -->|"Aligned intent"| PM1
     end
     subgraph Shaping ["Phase II: Task Shaping & Briefing"]
-        Captain -.->|"Answers trade-offs"| Briefing["Task Decomposition"]
-        Briefing -->|"Architectural impact or Captain plan request"| Plan["writing-plans (docs/plans/)"]
-        Plan -->|"Captain signs off plan"| Captain
-        Captain -.->|"Sign-off / reset via handoff"| PM2["prompt-master Specialist Briefs"]
-        Briefing -->|"Plan-exempt / Calibrates briefs (Template H / M)"| PM2
-        PM2 -->|"Partitions non-overlapping files (Ship vs Scout)"| Contracts["Task Contracts & Bounds"]
+        PM1 -->|"Gate G2: plan-first"| G2{"G2 Gate"}
+        G2 -->|"REQUIRED"| Plan["writing-plans (docs/plans/)"]
+        Plan -->|"Captain sign-off"| ShapingCore["Task Decomposition"]
+        G2 -->|"NOT_REQUIRED"| ShapingCore
+        ShapingCore -->|"Gate G3: task-shape (SHIP vs SCOUT, Tier 1-3)"| G3["Gate G3"]
+        G3 -->|"Gate G5: skill-route (Crew & Skills)"| G5["Gate G5"]
+        G5 -->|"Draft Task Briefs"| Briefs["Specialist Task Briefs"]
+        Briefs -->|"Gate G4: anti-slop (Pre-Flight Audit)"| G4{"G4 Gate"}
+        G4 -->|"BLOCKED"| FixBrief["Refine Brief / Slices"]
+        FixBrief --> G4
+        G4 -->|"ELIGIBLE"| Contracts["Task Contracts & Bounds"]
     end
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
-        Contracts -->|"invoke_subagent (Context-Sliced Task N)"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
-        Crew -->|"Lint, compile, test (if required), self-verify"| Crew
+        Contracts -->|"pi-subagents dispatch (Task N)"| Crew["Native Crew (worker, scout, reviewer, oracle)"]
+        Crew -->|"Compile, test, self-verify in .worktrees/"| Crew
         FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
     end
     subgraph Synthesis ["Phase IV: Synthesis & Gatekeeping"]
-        Crew -->|"Finished deliverables & diffs"| ControlPlane["Control Plane Synthesis"]
-        ControlPlane -->|"Edits shared entry points & runs integration checks"| ControlPlane
-        ControlPlane -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
+        Crew -->|"Finished deliverables & diffs"| G7{"Gate G7: deliverable-audit"}
+        G7 -->|"REJECT_RETRY"| RetryWorker["worker (Fix regressions/scope)"]
+        RetryWorker --> G7
+        G7 -->|"APPROVE"| ControlPlane["Control Plane Synthesis"]
+        ControlPlane -->|"Gate G6: bearings-triage"| G6["Gate G6"]
+        G6 -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
         Bearings -->|"Captain approval for git commit / destructive ops"| Captain
     end
 ```
 
 ### The 4-Phase Operating Lifecycle
 
-1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Runs [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) 9-dimension intent extraction; triggers [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) for 1–3 high-leverage clarifying questions upfront if architectural forks or ambiguities exist (~30s Captain alignment).
-2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Partitions work into non-overlapping file scopes (zero collisions). Validates tasks against the Anti-Slop Checklist (§8), calibrates briefs via Tiered Pre-Dispatch (§4 Rule 7; Template H/M), and gates plans (`docs/plans/`) and tests on architectural impact and business-logic criticality (see §4 Rules 3, 8, 10).
-3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Dispatches targeted specialists via `invoke_subagent` with modular domain skills from `.agents/skills/`. Operates under zero-token reactive waiting (runtime wakes First Mate on completion/message); manages stuck-worker recovery via `send_message`/`manage_subagents`.
-4. **Phase IV: Central Synthesis & Bearings (Control Plane $\rightarrow$ Captain):** Synthesizes shared entry points, verifies integration (100% test pass on existing suites & required business logic), renders the 4-section Bearings digest, and gates git mutations/destructive ops behind explicit Captain approval.
+1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Runs [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) 9-dimension intent extraction; evaluates **Gate G1 (`grill-trigger`)** to determine whether to trigger [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or consult `oracle` for 1–3 high-leverage clarifying questions upfront if architectural forks or ambiguities exist (~30s Captain alignment).
+2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Evaluates **Gate G2 (`plan-first`)** to gate plans (`docs/plans/`) on architectural impact and business-logic criticality (see §4 Rule 10). Classifies work via **Gate G3 (`task-shape`)** (`SHIP` vs. `SCOUT`, Tiers 1–3). Deterministically selects crew roles and modular skills via **Gate G5 (`skill-route`)**. Partitions work into non-overlapping file scopes (zero collisions). Validates drafted briefs against **Gate G4 (`anti-slop`)** before flight.
+3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Dispatches targeted child agents via native `pi-subagents` (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`) equipped with modular domain skills from `.agents/skills/`. Operates under zero-token reactive waiting (runtime wakes First Mate on completion/message); manages stuck-worker recovery via supervisor communication. Concurrent `worker` tasks execute in isolated `.worktrees/<branch>`.
+4. **Phase IV: Central Synthesis & Bearings (Control Plane $\rightarrow$ Captain):** Audits worker deliverables through **Gate G7 (`deliverable-audit`)** (checking test exit codes, scope creep, and Ponytail simplicity). Synthesizes shared entry points, evaluates status items through **Gate G6 (`bearings-triage`)**, renders the 4-section Bearings digest, and gates git mutations/destructive ops behind explicit Captain approval.
 
 ### Context Hygiene & The Handoff Invariant
 
@@ -80,13 +89,19 @@ To eliminate context degradation and token bloat during multi-step missions, the
 
 ## 4. Mandatory Multi-Agent Delegation Rules
 
-1. **Specialist & Expert Personas:** Decompose objectives and dispatch targeted subagents via `invoke_subagent`:
-   - `Backend Specialist`: Domain services, API endpoints, database queries, background jobs.
-   - `Frontend UI Specialist`: Components, client state, styling (Tailwind), craft design (`design/`, `.agents/skills/design/impeccable/`).
-   - `Test & QA Engineer`: Test suites (Pest, PHPUnit, Vitest, Pytest), edge cases, mocks for business logic & enterprise invariants.
-   - `Security & DevOps Auditor`: Static code security analysis (OWASP), pre-commit hooks, CI checks.
-   - `Git Ops & Release Specialist`: Staging, committing, pushing, branch management, and git worktree isolation upon explicit Captain approval.
-   - `Codebase Scout`: Read-only codebase archaeology, external library evaluation, diagnostic spikes.
+1. **Native Crew Engine & Specialist Personas:** Decompose objectives and dispatch targeted child agents via the native `pi-subagents` crew engine (`subagent` tool):
+   - **`scout`**: Read-only codebase archaeology, external library evaluation, schema discovery, diagnostic spikes, and independent evaluator for dual-blind Decision Sheets.
+   - **`worker`**: Autonomous implementation specialist. Modifies files, compiles, runs test suites, and executes AST mutations within strict file boundaries and isolated `.worktrees/<branch>`.
+   - **`reviewer`**: Post-flight code auditor. Inspects worker diffs for regressions, edge cases, test completeness, and anti-overengineering compliance via Gate G7 (`deliverable-audit`).
+   - **`oracle`**: Evaluator and devil's advocate. Challenges assumptions, investigates architectural ambiguity, and provides second opinions when Decision Gates yield `UNCERTAIN`.
+   - **`evidence-auditor`**: Grounding fact-checker. Verifies that verbatim citations ($\le 120$ chars) and evidence in Decision Sheets exist literally in the target files.
+   - **`council-mode`**: Supervisor-mediated multi-agent panel summoned for high-stakes architectural debates or `[HUMAN-CORE]` domain escalations.
+   - **Domain Specialization via Modular Skills:** Domain-specific roles operate through `worker`, `scout`, and `reviewer` equipped on demand with skills from `.agents/skills/`:
+     - *Backend Specialist*: `worker` equipped with `api-design`, `zero-downtime-migrations`, `domain-modeling`, `refactoring`.
+     - *Frontend UI Specialist*: `worker` equipped with `interface-design`, `impeccable`, and aesthetic presets (`styles/*`).
+     - *Test & QA Engineer*: `worker` or `reviewer` equipped with `tdd`, `diagnosing-bugs`.
+     - *Security & DevOps Auditor*: `reviewer` or `worker` equipped with `security-audit`, `pre-commit`, `shell-scripting`.
+     - *Git Ops & Release Specialist*: `worker` equipped with `conventional-commits`, `git-worktrees` (strictly gated behind explicit Captain approval).
    - **Single-Model `inherit` Standard & Speculative Verification:**
      - *Single-Model Standard:* All subagent dispatches use `Model: inherit`. The fleet operates on a single unified model.
      - *Deterministic Verification:* Verification is performed deterministically by the local compiler and test runner (`npm test`, `pytest`, `cargo test`), eliminating any credit or model dependency.
@@ -163,11 +178,17 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 - **The Machine Contract & Zero-Preamble Principle (Token & Velocity Discipline):**  
   To eliminate context bloat, conversational token waste, and formatting drift across the fleet, all communications and subagent dispatches adhere to [`grammars-and-constrained-sampling`](.agents/skills/productivity/grammars-and-constrained-sampling/SKILL.md) and [`io-verification-control`](.agents/skills/productivity/io-verification-control/SKILL.md):
   1. *Token-0 Anchoring & Zero Preamble:* Agents and subagents MUST NEVER emit conversational pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). The very first emitted character must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
-  2. *Schema-Locked Envelopes:* Subagents must report progress, inventories, and diffs strictly inside the canonical YAML schemas in `.agents/schemas/` (`scout-report.yaml`, `ship-diff.yaml`, `handoff-state.yaml`, `task-contract.yaml`).
-  3. *Closed Enum Constraints:* Ambiguous qualitative assessments are forbidden; state and outcomes must be constrained to discrete enums (`[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`).
+  2. *Schema-Locked Envelopes:* Subagents must report progress, inventories, diffs, and decisions strictly inside the canonical YAML schemas in `.agents/schemas/` (`scout-report.yaml`, `ship-diff.yaml`, `handoff-state.yaml`, `task-contract.yaml`, `decision-sheet.yaml`).
+  3. *Closed Enum Constraints:* Ambiguous qualitative assessments are forbidden; state and outcomes must be constrained to discrete enums (`[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`, `[REQUIRED, NOT_REQUIRED]`, `[SHIP, SCOUT]`, `[ELIGIBLE, BLOCKED]`, `[APPROVE, REJECT_RETRY, ESCALATE_CAPTAIN]`).
   4. *Role-Based Sampling Calibration:* Enforce dynamic temperature calibration per task role: Temp `0.0–0.2` (Top-p `0.9`) for deterministic execution (`SHIP`, security audit, QA, git ops) to guarantee reproducible AST mutations; Temp `0.7–0.8` (Top-p `0.95`) for divergent exploration (`grill-me`, alignment, red-teaming).
   5. *Anti-Loop Repetition Discipline:* Prevent infinite token recursion, repetitive loops, and echo-chamber summaries via prompt directives: emit each entity once, never re-state input context, and cap lists to $\le 5$ key elements.
   6. *Tool-Bound Delivery:* File edits and mutations must NEVER be speculative conversational code blocks in chat; they must be executed exclusively through verified tool calls (`write_to_file`, `replace_file_content`).
+  7. *Deterministic Gate Result Blocks:* When reporting decision gate outcomes, the Control Plane or evaluator records the result in the canonical single-line result block:
+     ```text
+     GATE RESULT
+     gate: <gate-id> | mode: <advisory|enforce> | status: <OK|UNCERTAIN|INVALID> | sheets: <1|2>
+     <rule-name>: <OUTCOME> | relaxing: <yes|no> | binding: <yes|no> | <verbatim-evidence-summary>
+     ```
 
 ---
 
@@ -192,3 +213,37 @@ Before any task is approved for autonomous execution (`SHIP`), the Control Plane
 6. **Calibrated Briefs:** Tiered pre-dispatch gate satisfied with explicit Objective, Scope boundary, and Deliverable format (see §4 Rule 7).
 7. **Context Hygiene:** Worker brief is context-sliced to $\le 2$k tokens containing strictly Task N scope, file bounds, interface contracts, and [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) constraints (see §2 & §4 Rule 10).
 8. **Pragmatic Testing Gate:** Authoring new tests is required for business logic, calculations, enterprise invariants, service boundaries, and bug reproductions; exempt for routine UI styling, obvious CRUD, and glue code verified via linter/compiler (see §4 Rule 8).
+
+---
+
+## 9. Machine-Native Decision Gates (The Jev Protocol)
+
+To eliminate conversational deliberation, LLM overconfidence, and formatting drift across the fleet, ACON enforces **Machine-Native Decision Gates** ([`decision-gates`](.agents/skills/productivity/decision-gates/SKILL.md)). 
+
+Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with probabilities out, deterministic lookup table outcome*—the protocol implements structured governance purely through markdown specifications, schema-locked JSON Decision Sheets ([`.agents/schemas/decision-sheet.yaml`](.agents/schemas/decision-sheet.yaml)), and deterministic outcome tables with **zero external code, scripts, or APIs**.
+
+### 9.1 The Seven Decision Gates
+
+The fleet lifecycle is governed by seven discrete gates:
+
+| Gate | Name | Lifecycle Point | Input State | Recipe & Thresholds | On Uncertain |
+|------|------|-----------------|-------------|---------------------|--------------|
+| **G1** | `grill-trigger` | Phase I: Intake | Objective + `prompt-master` summary | `ANY-TRIGGER`: `unresolvedFork`, `ambiguousIntent`, `missingCriticalConstraint` (requiredAt: 0.6, uncertainAt: 0.4) | `ASK` (`grill-me` / `oracle`) |
+| **G2** | `plan-first` | Phase II: Shaping | Objective + decomposition | `ANY-TRIGGER`: `schemaChange`, `coreBusinessLogic`, `newSystemFromScratch`, `largeRefactor`, `highAmbiguity` (req: 0.6, unc: 0.4, exempt: 0.7). Mechanical: `/plan` forces `REQUIRED`. | `REQUIRED` (`docs/plans/`) |
+| **G3** | `task-shape` | Phase II: Shaping | Task description + scope | `PICK-CHOICE`: `shape` (`SHIP`, `SCOUT`), `tier` (`TIER_1`, `TIER_2`, `TIER_3`) (minTop: 0.6) | `shape: SCOUT`<br>`tier: TIER_1` |
+| **G4** | `anti-slop` | Phase II: Pre-Flight | Draft brief + file boundaries | `CHECKLIST`: 8 Anti-Slop properties (§8). Mechanical checks: $>3$ files, $>1,500$ words, missing fields, or file overlap force `BLOCKED`. | Manual Audit by Control Plane |
+| **G5** | `skill-route` | Phase II: Routing | Calibrated task brief | `PICK-CHOICE`: `agent` (`worker`, `scout`, `reviewer`, `oracle`), `primarySkill`, `secondarySkill`, `stylePreset` (minTop: 0.5) | Top 3 suggestions |
+| **G6** | `bearings-triage`| Phase IV: Digest | Status event / error item | `ANY-TRIGGER`: `needsCaptainAction` (0.5), `blocksOtherWork` (0.6). Mechanical: destructive commands or missing secrets force `CAPTAINS_CALL`. | `CAPTAINS_CALL` |
+| **G7** | `deliverable-audit`| Phase IV: Synthesis | Git diff + test log + contract | `CHECKLIST`: Universal verification (tests pass, no scope creep, no unauthorized deps, Ponytail simplicity). Non-zero exit code forces `REJECT_RETRY`. | `ESCALATE_CAPTAIN` |
+
+### 9.2 Core Governance Invariants
+
+1. **Zero Code Invariant:** Every gate file, template, schema, and log is pure markdown or YAML. No Python, Node, shell scripts, SDKs, or external AI APIs are added or called.
+2. **Advisory by Default:** Every gate ships in `Mode: advisory`. Gate recommendations guide the Control Plane. Only the Captain promotes a gate to `Mode: enforce` based on empirical calibration data.
+3. **Tighten-Only:** Gate outcomes may ONLY increase rigor (mandating plans, higher dispatch tiers, Scout exploration, or Captain escalation). A gate outcome must NEVER drop or relax a requirement established by the constitution, compiler/test suite, or the Captain.
+4. **Captain Authority Absolute:** Gate outcomes never touch Captain-only authority: git commits/pushes, branch merges, file deletions, destructive terminal commands, credentials/secrets, and `[HUMAN-CORE]` business logic remain strictly Captain-controlled.
+5. **Count, Don't Estimate:** Mechanical checks (file counts, token bounds, required keys, literal strings) are evaluated strictly. If an evaluator cannot verify with certainty, the status is `UNCERTAIN`.
+6. **Verbatim Evidence Grounding:** Answers with $p \ge 0.3$ require a verbatim quote ($\le 120$ chars) from the input state. Quotes that cannot be found literally in the text invalidate the answer and prevent relaxing outcomes.
+7. **Double-Blind Redundancy:** For Tier 1 missions and `[HUMAN-CORE]`-adjacent work, the Control Plane dispatches two independent `scout` subagents. Each evaluates the state in isolation. If their outcomes disagree, the status drops to `UNCERTAIN` and the tighter outcome is adopted.
+8. **Empirical Calibration Loop:** Every evaluated gate result and Captain override is recorded in `.agents/skills/productivity/decision-gates/log.md`. Periodic calibration audits conducted by a `scout` subagent evaluate override rates before any gate is promoted to `enforce`.
+
