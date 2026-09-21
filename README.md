@@ -1,4 +1,4 @@
-# ACON — Agentic Conventions & Control Plane Network
+# Agentic Conventions & Control Plane Network (ACON)
 
 > **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*
 
@@ -64,42 +64,70 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 
 ## 🔄 The End-to-End Fleet Operating Workflow
 
-The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle:
+The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle governed by Machine-Native Decision Gates:
 
 ```mermaid
 flowchart TD
     Captain["👨‍✈️ 1. Captain (The User)"] -->|"Issues goal / raw objective"| FirstMate["🧭 2. Control Plane (First Mate)"]
     
     subgraph Alignment ["Phase I: Front-Loaded Alignment"]
-        FirstMate -->|"9-dimension intent extraction"| PM1["prompt-master Intent Extraction"]
-        PM1 -->|"If forks or ambiguities exist"| Grill["grill-me (1–3 sharp questions)"]
-        Grill -->|"Quick alignment (~30 sec)"| Captain
+        FirstMate -->|"Gate G1: grill-trigger"| G1{"G1 Gate"}
+        G1 -->|"If p >= 0.6 or UNCERTAIN"| Grill["grill-me / oracle (Clarify ~30s)"]
+        G1 -->|"If p <= 0.3 (Clear)"| PM1["prompt-master Intent Extraction"]
+        Grill -->|"Aligned intent"| PM1
     end
     
     subgraph Shaping ["Phase II: Task Shaping & Briefing"]
-        Captain -.->|"Answers trade-offs"| Briefing["Task Decomposition"]
-        Briefing -->|"Calibrates airtight briefs (Template H / M)"| PM2["prompt-master Specialist Briefs"]
-        PM2 -->|"Partitions non-overlapping files (Ship vs Scout)"| Contracts["Task Contracts & Bounds"]
+        PM1 -->|"Gate G2: plan-first"| G2{"G2 Gate"}
+        G2 -->|"REQUIRED"| Plan["writing-plans (docs/plans/)"]
+        Plan -->|"Captain sign-off"| ShapingCore["Task Decomposition"]
+        G2 -->|"NOT_REQUIRED"| ShapingCore
+        ShapingCore -->|"Gate G3: task-shape (SHIP vs SCOUT, Tier 1-3)"| G3["Gate G3"]
+        G3 -->|"Gate G5: skill-route (Crew & Skills)"| G5["Gate G5"]
+        G5 -->|"Draft Task Briefs"| Briefs["Specialist Task Briefs"]
+        Briefs -->|"Gate G4: anti-slop (Pre-Flight Audit)"| G4{"G4 Gate"}
+        G4 -->|"BLOCKED"| FixBrief["Refine Brief / Slices"]
+        FixBrief --> G4
+        G4 -->|"ELIGIBLE"| Contracts["Task Contracts & Bounds"]
     end
     
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
-        Contracts -->|"invoke_subagent"| Crew["Specialist Subagents (Backend, UI, QA, Security, Scout)"]
-        Crew -->|"Lint, compile, test (if required), self-verify"| Crew
+        Contracts -->|"pi-subagents dispatch (Task N)"| Crew["Native Crew (worker, scout, reviewer, oracle)"]
+        Crew -->|"Compile, test, self-verify in .worktrees/"| Crew
         FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
     end
     
     subgraph Synthesis ["Phase IV: Synthesis & Gatekeeping"]
-        Crew -->|"Finished deliverables & diffs"| ControlPlane["Control Plane Synthesis"]
-        ControlPlane -->|"Edits shared entry points & runs integration checks"| ControlPlane
-        ControlPlane -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
+        Crew -->|"Finished deliverables & diffs"| G7{"Gate G7: deliverable-audit"}
+        G7 -->|"REJECT_RETRY"| RetryWorker["worker (Fix regressions/scope)"]
+        RetryWorker --> G7
+        G7 -->|"APPROVE"| ControlPlane["Control Plane Synthesis"]
+        ControlPlane -->|"Gate G6: bearings-triage"| G6["Gate G6"]
+        G6 -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
         Bearings -->|"Captain approval for git commit / destructive ops"| Captain
     end
 ```
 
-1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to lock architecture.
-2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition (`to-spec` / `to-tickets`), strict `SHIP` vs. `SCOUT` task shaping, non-overlapping file boundaries, and calibrated prompt briefs.
-3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via `invoke_subagent`, zero-token reactive waiting (harness yields), and closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks).
-4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Central file integration, anti-slop verification, the 4-section Fleet Bearings digest, and explicit Captain approval for git commits and destructive operations.
+1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and **Gate G1 (`grill-trigger`)**, triggering 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or second-opinion analysis via `oracle` to lock architecture.
+2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition governed by **Gate G2 (`plan-first`)**, strict `SHIP` vs. `SCOUT` classification via **Gate G3 (`task-shape`)**, specialist crew routing via **Gate G5 (`skill-route`)**, non-overlapping file boundaries, and pre-flight validation via **Gate G4 (`anti-slop`)**.
+3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via native `pi-subagents` (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`), isolated `.worktrees/<branch>` execution, zero-token reactive waiting (harness yields), and closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks).
+4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Post-flight universal verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), central file integration, status event triage via **Gate G6 (`bearings-triage`)**, the 4-section Fleet Bearings digest, and explicit Captain approval for git commits and destructive operations.
+
+### 🛡️ Machine-Native Decision Gates (The Jev Protocol)
+
+To eliminate conversational guesswork, sycophancy, and uncalibrated LLM confidence across autonomous missions, ACON embeds **Machine-Native Decision Gates** ([`decision-gates`](.agents/skills/productivity/decision-gates/SKILL.md)).
+
+Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with coarse probabilities out, deterministic lookup table outcome*—the protocol operates with **zero code, external APIs, or runtime dependencies**:
+
+* **G1 (`grill-trigger`)**: Gates Phase I upfront alignment, triggering `grill-me` or `oracle` on ambiguous intent.
+* **G2 (`plan-first`)**: Gates Phase II planning, deterministically mandating implementation plans for architectural or schema changes.
+* **G3 (`task-shape`)**: Governs `SHIP` vs. `SCOUT` task classification and Pre-Dispatch Tiers (1–3).
+* **G4 (`anti-slop`)**: Enforces pre-flight task brief eligibility, strict 3-file bounds, and automated test specifications.
+* **G5 (`skill-route`)**: Routes appropriate specialist roles and modular domain skills from `.agents/INDEX.md`.
+* **G6 (`bearings-triage`)**: Filters status updates and escalates critical blockers to the Captain's Call.
+* **G7 (`deliverable-audit`)**: Universal post-flight verification auditing worker diffs for regressions, scope creep, and simplicity before central synthesis.
+
+Every gate ships in `Mode: advisory`, operates strictly **tighten-only**, and anchors probabilistic claims in verbatim code citations. Detailed documentation and worked cases are available in [`.agents/skills/productivity/decision-gates/SKILL.md`](.agents/skills/productivity/decision-gates/SKILL.md).
 
 ---
 
@@ -192,9 +220,9 @@ acon/
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
     └── skills/                                   # Curated Modular Agent Skills
-        ├── design/                               # 3 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
+        ├── design/                               # 2 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
-        ├── productivity/                         # 13 Skills (adopt-acon, prompt-master, ponytail, grammars, io-control...)
+        ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
 ```
 
@@ -215,7 +243,7 @@ Instead, ACON enforces the **Dynamic Documentation Standard**:
 
 When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 3 Skills + 67 Presets)
+### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets)
 - **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
 - **`impeccable`**: Design Director and visual quality floor engine with 23 lifecycle commands, craft floor quality checks, and mechanical anti-pattern detection.
 - **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
@@ -237,8 +265,9 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
 - **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
 
-### 🧠 3. Productivity (`.agents/skills/productivity/` - 13 Skills)
+### 🧠 3. Productivity (`.agents/skills/productivity/` - 14 Skills)
 - **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces physical catalog deployment, CLAUDE.md symlink to AGENTS.md, Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
+- **`decision-gates`**: Structured Jev probability sheets, 7 typed decision gates (G1–G7), anti-slop audits, deliverable verification, and empirical calibration logging.
 - **`grammars-and-constrained-sampling`**: Formal machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) to eliminate preamble fluff and formatting drift.
 - **`io-verification-control`**: Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification.
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.

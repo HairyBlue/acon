@@ -1,4 +1,4 @@
-# ACON Index — Skill & Rule Lookup Matrix
+# Agentic Conventions & Control Plane Network (ACON) — Index & Lookup Matrix
 
 This index maps developer symptoms, task goals, technology stacks, and engineering workflows to the exact skill or rule in `.agents/` and the root `AGENTS.md` Control Plane constitution.
 
@@ -28,6 +28,8 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Machine grammars & schema locks** | Eliminate conversational token bloat, Token-0 anchoring, zero preamble, YAML schemas, closed enums | [`.agents/skills/productivity/grammars-and-constrained-sampling/SKILL.md`](skills/productivity/grammars-and-constrained-sampling/SKILL.md) |
 | **Dynamic sampling & I/O verification control** | Master 4-stage lifecycle: context slicing, sampling calibration, machine contracts, compiler loops | [`.agents/skills/productivity/io-verification-control/SKILL.md`](skills/productivity/io-verification-control/SKILL.md) |
 | **Decision questionnaire for teammates** | Turn complex design choices into a fillable questionnaire | [`.agents/skills/productivity/to-questionnaire/SKILL.md`](skills/productivity/to-questionnaire/SKILL.md) |
+| **Writing or structuring implementation plans / plan-first gate / docs/plans/** | Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), zero-placeholder specs | [`.agents/skills/productivity/writing-plans/SKILL.md`](skills/productivity/writing-plans/SKILL.md) |
+| **Evaluating decision gates / Jev probability sheets / task shape & slop audit / deliverable verification** | Machine-native decision intelligence, 7 typed decision gates (G1–G7), calibration logging, dual-scout redundancy | [`.agents/skills/productivity/decision-gates/SKILL.md`](skills/productivity/decision-gates/SKILL.md) |
 | **Authoring skills & guidelines for AI** | Writing effective prompt files, skills, and AGENTS.md | [`.agents/skills/productivity/writing-for-agents/SKILL.md`](skills/productivity/writing-for-agents/SKILL.md) |
 | **Technical writing & post-mortems** | Authoring RFCs, architecture decisions, and post-mortems | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md) |
 | **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.agents/skills/productivity/daily-progress-report/SKILL.md`](skills/productivity/daily-progress-report/SKILL.md) |
@@ -51,13 +53,11 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 
 | Category / Directory | Count | Main Entry File |
 | :--- | :--- | :--- |
-| **[`skills/design/`](skills/design/)** | 3 Skills + 67 Presets | Master design orchestrator, craft engineering (`interface-design`), Impeccable Design Director (`impeccable`), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
-
-
+| **[`skills/design/`](skills/design/)** | 2 Skills + 67 Presets | Master design orchestrator, craft engineering (`interface-design`), Impeccable Design Director (`impeccable`), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
 | **[`skills/engineering/`](skills/engineering/)** | 14 Skills | Problem solving, architecture, TDD, debugging, code review, ticket mapping, refactoring, API design, zero-downtime migrations |
-| **[`skills/productivity/`](skills/productivity/)** | 13 Skills | Repository adoption (`adopt-acon`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), machine grammars (`grammars-and-constrained-sampling`), I/O & verification control (`io-verification-control`), anti-overengineering (`ponytail`), handoffs, developer stories |
+| **[`skills/productivity/`](skills/productivity/)** | 14 Skills | Repository adoption (`adopt-acon`), decision gates (`decision-gates`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), machine grammars (`grammars-and-constrained-sampling`), I/O & verification control (`io-verification-control`), anti-overengineering (`ponytail`), bite-sized planning (`writing-plans`), handoffs, developer stories |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (universal engine), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |
 | **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `security-secrets-guard.md`, `git-conventional-commits.md`, `progress-reporting.md`) |
-| **[`schemas/`](schemas/)** | 6 Machine Schemas | Canonical YAML schemas (`scout-report.yaml`, `ship-diff.yaml`, `grill-interview.yaml`, `task-contract.yaml`, `handoff-state.yaml`, `bearings-digest.yaml`) |
+| **[`schemas/`](schemas/)** | 7 Machine Schemas | Canonical YAML schemas (`scout-report.yaml`, `ship-diff.yaml`, `grill-interview.yaml`, `task-contract.yaml`, `handoff-state.yaml`, `bearings-digest.yaml`, `decision-sheet.yaml`) |
 | **[`reference/`](reference/)** | 1 Reference Catalog | Consolidated reference catalogs (`fowler-smells.md`) |
