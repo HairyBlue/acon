@@ -131,8 +131,8 @@ To eliminate integration bugs when tasks are executed by separate subagents, eve
 ```
 
 #### Machine Grammar Pairing: `task-contract.yaml`
-Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and MUST conform to the canonical machine contract defined at [`.agents/schemas/task-contract.yaml`](../../../schemas/task-contract.yaml):
-- **Canonical Schema:** [`.agents/schemas/task-contract.yaml`](../../../schemas/task-contract.yaml)
+Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and MUST conform to the canonical machine contract defined at [`.agents/reference/schemas/task-contract.yaml`](../../../reference/schemas/task-contract.yaml):
+- **Canonical Schema:** [`.agents/reference/schemas/task-contract.yaml`](../../../reference/schemas/task-contract.yaml)
 - **Zero Hand-Waving:** Eliminates conversational ambiguity by strictly enforcing required schema properties (`task_id`, `title`, `eligibility`, `scope`, `consumes`, `produces`, `verification`).
 - **Context-Sliced Subagent Briefs:** Slices the task contract directly into subagent briefs without conversational baggage.
 - **Closed-Loop Verification Contract:** Locks the exact verification command and expected exit code into the machine contract.

@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 36-skill catalog (.agents/skills/) + 67 craft style presets, constitutional rules (.agents/rules/), machine schemas (.agents/schemas/), and reference catalogs (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 36-skill catalog (.agents/skills/) + 67 craft style presets, constitutional rules (.agents/rules/), and reference catalogs, schemas, crew briefs, and workflows (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
 license: MIT
 metadata:
   author: acon
@@ -14,7 +14,7 @@ metadata:
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Control Plane Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), machine schemas (`.agents/schemas/`), and reference catalogs (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), and reference catalogs, machine schemas, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
@@ -42,7 +42,7 @@ Modern software engineering with AI agents faces three fundamental dilemmas:
 │   • AGENTS.md         --> Real physical root constitution file         │
 │   • .agents/skills/   --> Real physical copies of all domain skills    │
 │   • .agents/rules/    --> Real physical copies of constitutional rules │
-│   • .agents/schemas/  --> Real physical copies of machine schemas      │
+│   • .agents/reference/ --> Physical copies of schemas, crew, workflows, catalogs │
 │   • .agents/reference/--> Real physical copies of reference catalogs   │
 │                                                                        │
 │   🚫 STRICTLY EXCLUDED FROM TARGET REPOSITORIES:                       │
@@ -57,7 +57,7 @@ When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
 2. `.agents/skills/` (Domain skills dereferenced into physical directories, including `productivity/decision-gates`)
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
-4. `.agents/schemas/` (Machine schemas dereferenced into physical files, including `decision-sheet.yaml`)
+3. `.agents/reference/` (Reference catalogs, machine schemas in `reference/schemas/` including `decision-sheet.yaml`, crew briefs, and workflows)
 5. `.agents/reference/` (Reference catalogs dereferenced into physical files)
 
 And explicitly forbids copying:
@@ -172,9 +172,7 @@ Before transferring any files, the target repository is inspected:
 ### Phase 3: Pure Physical Copy Deployment
 - Copy `.agents/skills/` physically using `rsync -avL`.
 - Copy `.agents/rules/` physically using `rsync -avL`.
-- Copy `.agents/schemas/` physically using `rsync -avL`.
-- Copy `.agents/reference/` physically using `rsync -avL`.
-- Copy `.agents/crew/` and `.agents/workflows/` physically using `rsync -avL`.
+- Copy `.agents/reference/` (including `schemas/`, `crew/`, `workflows/`, and catalogs) physically using `rsync -avL`.
 - **Strict Boundary Guard:** Explicitly exclude internal control plane scripts (`scripts/`).
 - **Zero Shadow Folders:** Eliminates redundant `.claude/` and `.cursor/` symlink directories. All harnesses link directly to the root `AGENTS.md` and `CLAUDE.md -> AGENTS.md`.
 

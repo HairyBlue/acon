@@ -33,7 +33,7 @@ Traditional multi-agent frameworks rely heavily on conversational prose: agents 
 ### 1.2 The Five Core Invariants
 
 1. **Zero Code Invariant (Pure Markdown Protocol):**  
-   Only the theoretical concept of Jev is borrowed. Every gate, sheet, and log is pure markdown or YAML schema (`.agents/schemas/decision-sheet.yaml`). Do not add Python, Node, shell scripts, SDKs, external APIs, or network calls. Nothing in this protocol is ever "called" or "run" as executable software.
+   Only the theoretical concept of Jev is borrowed. Every gate, sheet, and log is pure markdown or YAML schema (`.agents/reference/schemas/decision-sheet.yaml`). Do not add Python, Node, shell scripts, SDKs, external APIs, or network calls. Nothing in this protocol is ever "called" or "run" as executable software.
 2. **Tighten-Only Invariant:**  
    Gate outcomes may only add governance rigor (mandating an implementation plan, raising dispatch tier, requiring scout reconnaissance, or escalating to the Captain). A gate outcome must **NEVER** drop or relax a requirement imposed by the constitution, compiler/test runner, or Captain.
 3. **Advisory by Default (`Mode: advisory`):**  
@@ -83,7 +83,7 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
 ### 3.1 The Machine Contract (Zero Preamble & Token-0 Anchoring)
 Evaluators must never emit conversational filler (*"Certainly!"*, *"Here is my assessment"*). The first emitted character must be the structural opening `{` of the JSON Decision Sheet.
 
-All decision sheets conform strictly to `.agents/schemas/decision-sheet.yaml`:
+All decision sheets conform strictly to `.agents/reference/schemas/decision-sheet.yaml`:
 ```json
 {
   "gate": "plan-first",

@@ -36,7 +36,7 @@ Each round the user answers reshapes the tree: settled decisions push the fronti
 
 1. **Zero Conversational Chit-Chat:** Never preface a round with conversational pleasantries (*"Thanks for your answers!", "Let's explore the next set of questions..."*). The output opens directly with the question round or interactive prompt.
 2. **Constrained Multiple-Choice Enums:** Every question in the frontier MUST provide 2–4 discrete options with clear trade-offs and an explicit recommended default option.
-3. **Structured Grammar Envelope:** When producing structured interview state or programmatic rounds for interactive CLI wizards (`ask_question`), conform strictly to the canonical [`.agents/schemas/grill-interview.yaml`](../../../schemas/grill-interview.yaml) schema:
+3. **Structured Grammar Envelope:** When producing structured interview state or programmatic rounds for interactive CLI wizards (`ask_question`), conform strictly to the canonical [`.agents/reference/schemas/grill-interview.yaml`](../../../reference/schemas/grill-interview.yaml) schema:
    ```yaml
    round: 1
    frontier_status: ACTIVE

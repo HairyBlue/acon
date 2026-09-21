@@ -2,7 +2,7 @@
 
 This document provides **28 fully worked reference cases** (exactly 4 cases per gate across all 7 gates) illustrating the execution of the ACON Decision Gates protocol. Every case demonstrates:
 1. The verbatim input **State** received by the evaluator.
-2. The schema-locked JSON **Decision Sheet** conforming to `.agents/schemas/decision-sheet.yaml`.
+2. The schema-locked JSON **Decision Sheet** conforming to `.agents/reference/schemas/decision-sheet.yaml`.
 3. The **Self-Lint & Citation Verification Audit** against the 7-point checklist in `sheet-template.md`.
 4. The exact standardized **Result Block** derived from the gate's Outcome Rules table.
 

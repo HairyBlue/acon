@@ -204,19 +204,21 @@ acon/
 └── .agents/                                      # Central Physical Source of Truth (Pure Conventions)
     ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
     ├── README.md                                 # Internal catalog
-    ├── crew/                                     # Specialist Subagent Persona Briefs (scout, worker, reviewer, oracle...)
-    ├── workflows/                                # Repeatable Multi-Agent Workflows (council, review-loop, parallel-review...)
-    ├── schemas/                                  # Canonical Machine-Locked YAML Envelopes (decision-sheet, task-contract...)
     ├── rules/                                    # Non-Negotiable Agent Rules
     │   ├── agent-control-plane.md                # Delegation, Bearings, and task contracts
     │   ├── security-secrets-guard.md             # Zero-leakage policy for credentials and secrets
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
-    └── skills/                                   # Curated Modular Agent Skills
+    ├── skills/                                   # Curated Modular Agent Skills
         ├── design/                               # 2 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
+    └── reference/                                # Reference Catalog, Contracts & Subagent Briefs
+        ├── crew/                                 # Specialist Subagent Persona Briefs (scout, worker, reviewer...)
+        ├── schemas/                              # 7 Canonical Machine Envelopes (decision-sheet, task-contract...)
+        ├── workflows/                            # Repeatable Multi-Agent Workflows (council, review-loop...)
+        └── fowler-smells.md                      # Code smell reference guide
 ```
 
 ---

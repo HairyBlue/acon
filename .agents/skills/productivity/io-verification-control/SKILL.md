@@ -113,13 +113,13 @@ Natural language output from LLMs is inherently unstable. Unconstrained chat res
 - **Execution Speed:** Eliminating conversational preamble saves tokens, avoids context pollution in multi-turn traces, and guarantees immediate downstream machine parsability.
 
 ### C. Schema-Locked Envelopes
-- **Canonical Schemas ([`.agents/schemas/`](../../../schemas/)):** All agent reports, inventories, diffs, and state handoffs must conform strictly to canonical YAML schemas:
-  - [`scout-report.yaml`](../../../schemas/scout-report.yaml): Structured file inventories, risks, findings, and next actions.
-  - [`ship-diff.yaml`](../../../schemas/ship-diff.yaml): File mutation manifests, diff stats, and verification outputs.
-  - [`handoff-state.yaml`](../../../schemas/handoff-state.yaml): Session state compaction (<500 tokens) for clean-slate restarts.
-  - [`task-contract.yaml`](../../../schemas/task-contract.yaml): Atomic task definitions ($\le 3$ files, typed `Consumes`/`Produces`).
-  - [`grill-interview.yaml`](../../../schemas/grill-interview.yaml): Clarifying questions with closed multiple-choice options.
-  - [`bearings-digest.yaml`](../../../schemas/bearings-digest.yaml): Canonical 4-section Fleet Bearings status report.
+- **Canonical Schemas ([`.agents/reference/schemas/`](../../../reference/schemas/)):** All agent reports, inventories, diffs, and state handoffs must conform strictly to canonical YAML schemas:
+  - [`scout-report.yaml`](../../../reference/schemas/scout-report.yaml): Structured file inventories, risks, findings, and next actions.
+  - [`ship-diff.yaml`](../../../reference/schemas/ship-diff.yaml): File mutation manifests, diff stats, and verification outputs.
+  - [`handoff-state.yaml`](../../../reference/schemas/handoff-state.yaml): Session state compaction (<500 tokens) for clean-slate restarts.
+  - [`task-contract.yaml`](../../../reference/schemas/task-contract.yaml): Atomic task definitions ($\le 3$ files, typed `Consumes`/`Produces`).
+  - [`grill-interview.yaml`](../../../reference/schemas/grill-interview.yaml): Clarifying questions with closed multiple-choice options.
+  - [`bearings-digest.yaml`](../../../reference/schemas/bearings-digest.yaml): Canonical 4-section Fleet Bearings status report.
 
 ### D. Closed Enum Constraints
 - **Discrete Sets:** Qualitative prose (*"this looks good"*, *"moderate risk"*) is strictly forbidden. Outcomes, status, and severity must map to closed enums:
@@ -211,7 +211,7 @@ Top-p: 0.95
 Anti-Loop: Zero duplicate questions. Cap round to 1-3 sharp trade-off forks. Zero chat pleasantries.
 
 [Stage 3: Output Control]
-Format: Token-0 anchored YAML adhering strictly to .agents/schemas/grill-interview.yaml.
+Format: Token-0 anchored YAML adhering strictly to .agents/reference/schemas/grill-interview.yaml.
 Constraints: Closed multiple-choice option enums for each trade-off.
 
 [Stage 4: Verification Control]
@@ -251,7 +251,7 @@ Rule: If exit code != 0 after 1 retry, git checkout -- app/Services/UserService.
 
 ## 6. Related Skills & System Governance
 
-- **[`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md):** Canonical schema catalog ([`.agents/schemas/`](../../../schemas/)), Token-0 anchoring mechanics, and closed enum definitions.
+- **[`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md):** Canonical schema catalog ([`.agents/reference/schemas/`](../../../reference/schemas/)), Token-0 anchoring mechanics, and closed enum definitions.
 - **[`ponytail`](../ponytail/SKILL.md):** 7-Rung Decision Ladder (YAGNI, platform natives, minimal working diff).
 - **[`prompt-master`](../prompt-master/SKILL.md):** 9-dimension intent extraction, Template H (Ship) & Template M (Scout).
 - **[`writing-plans`](../writing-plans/SKILL.md):** Plan-First gate, atomic task contracts, and verification commands.

@@ -178,7 +178,7 @@ Whenever the Captain asks *"what is the status?"*, *"give me bearings"*, *"where
 - **The Machine Contract & Zero-Preamble Principle (Token & Velocity Discipline):**  
   To eliminate context bloat, conversational token waste, and formatting drift across the fleet, all communications and subagent dispatches adhere to [`grammars-and-constrained-sampling`](.agents/skills/productivity/grammars-and-constrained-sampling/SKILL.md) and [`io-verification-control`](.agents/skills/productivity/io-verification-control/SKILL.md):
   1. *Token-0 Anchoring & Zero Preamble:* Agents and subagents MUST NEVER emit conversational pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). The very first emitted character must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
-  2. *Schema-Locked Envelopes:* Subagents must report progress, inventories, diffs, and decisions strictly inside the canonical YAML schemas in `.agents/schemas/` (`scout-report.yaml`, `ship-diff.yaml`, `handoff-state.yaml`, `task-contract.yaml`, `decision-sheet.yaml`).
+  2. *Schema-Locked Envelopes:* Subagents must report progress, inventories, diffs, and decisions strictly inside the canonical YAML schemas in `.agents/reference/schemas/` (`scout-report.yaml`, `ship-diff.yaml`, `handoff-state.yaml`, `task-contract.yaml`, `decision-sheet.yaml`).
   3. *Closed Enum Constraints:* Ambiguous qualitative assessments are forbidden; state and outcomes must be constrained to discrete enums (`[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`, `[REQUIRED, NOT_REQUIRED]`, `[SHIP, SCOUT]`, `[ELIGIBLE, BLOCKED]`, `[APPROVE, REJECT_RETRY, ESCALATE_CAPTAIN]`).
   4. *Role-Based Sampling Calibration:* Enforce dynamic temperature calibration per task role: Temp `0.0–0.2` (Top-p `0.9`) for deterministic execution (`SHIP`, security audit, QA, git ops) to guarantee reproducible AST mutations; Temp `0.7–0.8` (Top-p `0.95`) for divergent exploration (`grill-me`, alignment, red-teaming).
   5. *Anti-Loop Repetition Discipline:* Prevent infinite token recursion, repetitive loops, and echo-chamber summaries via prompt directives: emit each entity once, never re-state input context, and cap lists to $\le 5$ key elements.
@@ -220,7 +220,7 @@ Before any task is approved for autonomous execution (`SHIP`), the Control Plane
 
 To eliminate conversational deliberation, LLM overconfidence, and formatting drift across the fleet, ACON enforces **Machine-Native Decision Gates** ([`decision-gates`](.agents/skills/productivity/decision-gates/SKILL.md)). 
 
-Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with probabilities out, deterministic lookup table outcome*—the protocol implements structured governance purely through markdown specifications, schema-locked JSON Decision Sheets ([`.agents/schemas/decision-sheet.yaml`](.agents/schemas/decision-sheet.yaml)), and deterministic outcome tables with **zero external code, scripts, or APIs**.
+Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with probabilities out, deterministic lookup table outcome*—the protocol implements structured governance purely through markdown specifications, schema-locked JSON Decision Sheets ([`.agents/reference/schemas/decision-sheet.yaml`](.agents/reference/schemas/decision-sheet.yaml)), and deterministic outcome tables with **zero external code, scripts, or APIs**.
 
 ### 9.1 The Seven Decision Gates
 

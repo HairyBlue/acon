@@ -116,7 +116,7 @@ ACON's architectural motto is *"Talk to one agent. Ship with a crew."* The fleet
 │               └── G7-deliverable-audit.md   # Post-flight worker diff verification gate
 ```
 
-### 3.2 Formal Decision Sheet Schema (`.agents/schemas/decision-sheet.yaml`)
+### 3.2 Formal Decision Sheet Schema (`.agents/reference/schemas/decision-sheet.yaml`)
 Decision sheets output pure JSON, Token-0 anchored, adhering to:
 ```json
 {
@@ -235,7 +235,7 @@ flowchart TD
 ```
 
 ### Wave 1: Baseline Audit
-- [ ] **T0 SCOUT (Codebase Scout):** Read-only baseline audit. Verify tracking state of `dispatch.sh` and `acon.yaml`. Scan for legacy bridge terms (`acon.yaml`, `dispatch.sh`, `.agents/adapters`, `cross-harness`, `bridge.enabled`, `PyYAML`). Inventory `.agents/adapters/`, `scripts/`, `.agents/schemas/`, and symlinks. Inventory disk skills per category.
+- [ ] **T0 SCOUT (Codebase Scout):** Read-only baseline audit. Verify tracking state of `dispatch.sh` and `acon.yaml`. Scan for legacy bridge terms (`acon.yaml`, `dispatch.sh`, `.agents/adapters`, `cross-harness`, `bridge.enabled`, `PyYAML`). Inventory `.agents/adapters/`, `scripts/`, `.agents/reference/schemas/`, and symlinks. Inventory disk skills per category.
   - *Produces:* Baseline audit report.
 
 ### Captain Gate: Decisions D1 to D6 Sign-off
@@ -246,7 +246,7 @@ flowchart TD
 - [ ] **T3 SHIP (worker):** Git remove verified Category A junk files (`dispatch.sh`, `acon.yaml`, `.agents/adapters/`) and scrub `.gitignore`.
 - [ ] **T4 SHIP (worker):** Author Gates G1 to G3 under `.agents/skills/productivity/decision-gates/gates/`.
 - [ ] **T5 SHIP (worker):** Author Gates G4 to G7 (including `G7-deliverable-audit.md`).
-- [ ] **T6 SHIP (worker):** Author `.agents/schemas/decision-sheet.yaml`, `SKILL.md`, `sheet-template.md`, and initialize `.agents/skills/productivity/decision-gates/log.md`.
+- [ ] **T6 SHIP (worker):** Author `.agents/reference/schemas/decision-sheet.yaml`, `SKILL.md`, `sheet-template.md`, and initialize `.agents/skills/productivity/decision-gates/log.md`.
 
 ### Wave 3: Integration & Examples
 - [ ] **T7 SHIP (worker):** Author `examples.md` with 28+ worked cases (4 per gate) covering boundary conditions and unverified evidence invalidations.
@@ -263,7 +263,7 @@ flowchart TD
 
 ## 6. Captain Decisions (D1–D6)
 
-- **D1 (Dangling References):** If `scripts/adopt.sh` or `.agents/schemas/*` are missing on disk, remove their references now and track re-addition as a follow-up ticket. *(Default: Accept)*
+- **D1 (Dangling References):** If `scripts/adopt.sh` or `.agents/reference/schemas/*` are missing on disk, remove their references now and track re-addition as a follow-up ticket. *(Default: Accept)*
 - **D2 (`adopt-acon` Inclusion):** Include `decision-gates` and `decision-sheet.yaml` as standard portable assets in `adopt-acon`. *(Default: Accept)*
 - **D3 (Canonical Name):** Standardize repository title to **"Agentic Conventions & Control Plane Network"**. *(Default: Accept)*
 - **D4 (Category B Stray Files):** Delete no Category B files without a specific approved list from T0. *(Default: Accept)*
@@ -277,6 +277,6 @@ flowchart TD
 1. All Category A bridge files and references are purged.
 2. Seven Decision Gates (G1–G7) are active in `Mode: advisory`.
 3. Native `pi-subagents` crew roles (`scout`, `worker`, `reviewer`, `oracle`, `evidence-auditor`) are formally bound to ACON lifecycle phases.
-4. Formal schema `.agents/schemas/decision-sheet.yaml` is deployed and verified.
+4. Formal schema `.agents/reference/schemas/decision-sheet.yaml` is deployed and verified.
 5. Double-blind paper testing (T9) achieves 100% agreement across all worked cases.
 6. Zero executable code, external APIs, or dependencies added.

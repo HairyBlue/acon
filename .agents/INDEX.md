@@ -59,5 +59,5 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (universal engine), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |
 | **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `security-secrets-guard.md`, `git-conventional-commits.md`, `progress-reporting.md`) |
-| **[`schemas/`](schemas/)** | 7 Machine Schemas | Canonical YAML schemas (`scout-report.yaml`, `ship-diff.yaml`, `grill-interview.yaml`, `task-contract.yaml`, `handoff-state.yaml`, `bearings-digest.yaml`, `decision-sheet.yaml`) |
+| **[`reference/schemas/`](reference/schemas/)** | 7 Machine Schemas | Canonical YAML schemas (`scout-report.yaml`, `ship-diff.yaml`, `grill-interview.yaml`, `task-contract.yaml`, `handoff-state.yaml`, `bearings-digest.yaml`, `decision-sheet.yaml`) |
 | **[`reference/`](reference/)** | 1 Reference Catalog | Consolidated reference catalogs (`fowler-smells.md`) |

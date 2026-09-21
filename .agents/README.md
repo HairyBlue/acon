@@ -13,15 +13,17 @@ This directory contains repository-wide rules, skills, and the lookup index for 
   - **[`engineering/`](skills/engineering/README.md)** (14 skills): Master orchestrator, TDD, code review, systematic bug diagnosis, domain modeling, codebase design, refactoring, API design, and zero-downtime migrations.
   - **[`productivity/`](skills/productivity/README.md)** (14 skills): Master orchestrator, repository adoption (`adopt-acon`), decision gates (`decision-gates`), 9-dimension intent extraction (`prompt-master`), machine grammars (`grammars-and-constrained-sampling`), I/O & verification control (`io-verification-control`), anti-overengineering (`ponytail`), plan interrogation (`grill-me`), bite-sized planning (`writing-plans`), context compaction (`handoff`), RFC authoring, and progress reporting.
   - **[`security-devops/`](skills/security-devops/README.md)** (6 skills): Master orchestrator, static security audits (21 modules), git guardrails, git worktrees, shell scripting, conventional commits, and pre-commit hooks.
-- **[schemas/](schemas/)**: Canonical YAML machine grammars:
-  - [`scout-report.yaml`](schemas/scout-report.yaml): Structured audit and exploration reports.
-  - [`ship-diff.yaml`](schemas/ship-diff.yaml): Implementation specialist task completion summaries.
-  - [`grill-interview.yaml`](schemas/grill-interview.yaml): Front-loaded alignment interview rounds.
-  - [`task-contract.yaml`](schemas/task-contract.yaml): Implementation plan atomic task boundaries.
-  - [`handoff-state.yaml`](schemas/handoff-state.yaml): Session state compaction and context handoffs.
-  - [`bearings-digest.yaml`](schemas/bearings-digest.yaml): Canonical 4-section Fleet Bearings status report.
-  - [`decision-sheet.yaml`](schemas/decision-sheet.yaml): Machine-native decision gate evaluations and probability sheets.
-- **[reference/](reference/)**: Shared engineering reference catalogs:
+- **[reference/](reference/)**: Shared engineering reference catalogs, subagent briefs, and machine contracts:
+  - **[`crew/`](reference/crew/)**: Specialist subagent persona briefs (`scout.md`, `worker.md`, `reviewer.md`, `oracle.md`, `researcher.md`, `gitops.md`, `ship.md`).
+  - **[`workflows/`](reference/workflows/)**: Repeatable multi-agent orchestration recipes (`council.md`, `implement-then-review.md`, `review-loop.md`, `parallel-review.md`, `oracle-first.md`, `scout-then-plan.md`).
+  - **[`schemas/`](reference/schemas/)**: Canonical YAML machine grammars:
+    - [`scout-report.yaml`](reference/schemas/scout-report.yaml): Structured audit and exploration reports.
+    - [`ship-diff.yaml`](reference/schemas/ship-diff.yaml): Implementation specialist task completion summaries.
+    - [`grill-interview.yaml`](reference/schemas/grill-interview.yaml): Front-loaded alignment interview rounds.
+    - [`task-contract.yaml`](reference/schemas/task-contract.yaml): Implementation plan atomic task boundaries.
+    - [`handoff-state.yaml`](reference/schemas/handoff-state.yaml): Session state compaction and context handoffs.
+    - [`bearings-digest.yaml`](reference/schemas/bearings-digest.yaml): Canonical 4-section Fleet Bearings status report.
+    - [`decision-sheet.yaml`](reference/schemas/decision-sheet.yaml): Machine-native decision gate evaluations and probability sheets.
   - [`fowler-smells.md`](reference/fowler-smells.md): Consolidated Fowler code smells catalog, diagnostics, and refactoring remedies.
 
 

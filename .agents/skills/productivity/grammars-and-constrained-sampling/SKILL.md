@@ -18,8 +18,8 @@ In multi-agent architectures, conversational token bloat drives context degradat
 1. **First-Token Anchoring (Token-0):**  
    Never permit opening pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). Anchor the prompt so the model's first generated token must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
 
-2. **Schema-Locked Envelopes ([`.agents/schemas/`](../../../schemas/)):**  
-   Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Dispatched subagents must return data strictly within designated schema envelopes in [`.agents/schemas/`](../../../schemas/).
+2. **Schema-Locked Envelopes ([`.agents/reference/schemas/`](../../../reference/schemas/)):**  
+   Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Dispatched subagents must return data strictly within designated schema envelopes in [`.agents/reference/schemas/`](../../../reference/schemas/).
 
 3. **Closed Enum Constraints:**  
    Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`). Closed enums eliminate subjective hallucinations and provide deterministic parsing.
@@ -29,18 +29,18 @@ In multi-agent architectures, conversational token bloat drives context degradat
 
 ---
 
-## Canonical Schemas (`.agents/schemas/`)
+## Canonical Schemas (`.agents/reference/schemas/`)
 
-All agent communications, task dispatches, and handoffs map directly to the 6 canonical YAML schemas in [`.agents/schemas/`](../../../schemas/):
+All agent communications, task dispatches, and handoffs map directly to the 6 canonical YAML schemas in [`.agents/reference/schemas/`](../../../reference/schemas/):
 
 | Schema File | Consumer / Scope | Purpose & Enforced Envelopes |
 | :--- | :--- | :--- |
-| [**`scout-report.yaml`**](../../../schemas/scout-report.yaml) | `Codebase Scout` (`SCOUT`) | Structured file inventories, findings, risks, and next actions. |
-| [**`ship-diff.yaml`**](../../../schemas/ship-diff.yaml) | Implementation Specialists (`SHIP`) | Exact file mutation manifest, diff stats, and verification test outputs. |
-| [**`grill-interview.yaml`**](../../../schemas/grill-interview.yaml) | Alignment & Sparring (`grill-me`) | 1–3 high-leverage questions with closed multiple-choice option enums. |
-| [**`task-contract.yaml`**](../../../schemas/task-contract.yaml) | Implementation Plans (`writing-plans`) | Atomic task definitions with $\le 3$ files, typed `Consumes`/`Produces`, and test checks. |
-| [**`handoff-state.yaml`**](../../../schemas/handoff-state.yaml) | Context Compaction (`handoff`) | Compact session state persistence (<500 tokens) for clean-slate resets. |
-| [**`bearings-digest.yaml`**](../../../schemas/bearings-digest.yaml) | Fleet Bearings ([`AGENTS.md §5`](../../../../AGENTS.md)) | 4-section status reporting: Captain's Call, Landed, Underway, Charted Next. |
+| [**`scout-report.yaml`**](../../../reference/schemas/scout-report.yaml) | `Codebase Scout` (`SCOUT`) | Structured file inventories, findings, risks, and next actions. |
+| [**`ship-diff.yaml`**](../../../reference/schemas/ship-diff.yaml) | Implementation Specialists (`SHIP`) | Exact file mutation manifest, diff stats, and verification test outputs. |
+| [**`grill-interview.yaml`**](../../../reference/schemas/grill-interview.yaml) | Alignment & Sparring (`grill-me`) | 1–3 high-leverage questions with closed multiple-choice option enums. |
+| [**`task-contract.yaml`**](../../../reference/schemas/task-contract.yaml) | Implementation Plans (`writing-plans`) | Atomic task definitions with $\le 3$ files, typed `Consumes`/`Produces`, and test checks. |
+| [**`handoff-state.yaml`**](../../../reference/schemas/handoff-state.yaml) | Context Compaction (`handoff`) | Compact session state persistence (<500 tokens) for clean-slate resets. |
+| [**`bearings-digest.yaml`**](../../../reference/schemas/bearings-digest.yaml) | Fleet Bearings ([`AGENTS.md §5`](../../../../AGENTS.md)) | 4-section status reporting: Captain's Call, Landed, Underway, Charted Next. |
 
 ---
 
