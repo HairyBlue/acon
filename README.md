@@ -197,25 +197,10 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 ```
 acon/
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
-├── CLAUDE.md                                     # Symlink -> AGENTS.md
-├── HARNESSES.md                                  # Cross-harness verb translation map (Claude, Cursor, Pi)
+├── CLAUDE.md                                     # Symlink -> AGENTS.md (Single Source of Truth for Claude Code)
 ├── README.md                                     # Human-facing guide and operational instructions
 ├── scripts/                                      # Control Plane automation scripts
 │   └── adopt.sh                                  # Repository adoption & synchronization script
-├── .claude/                                      # Claude Code IDE integration
-│   ├── INDEX.md -> ../.agents/INDEX.md
-│   ├── README.md -> ../.agents/README.md
-│   ├── crew -> ../.agents/crew
-│   ├── workflows -> ../.agents/workflows
-│   ├── rules -> ../.agents/rules
-│   └── skills/                                   # Domain symlinks -> ../../.agents/skills/*
-├── .cursor/                                      # Cursor IDE integration
-│   ├── INDEX.md -> ../.agents/INDEX.md
-│   ├── README.md -> ../.agents/README.md
-│   ├── crew -> ../.agents/crew
-│   ├── workflows -> ../.agents/workflows
-│   ├── rules -> ../.agents/rules
-│   └── skills/                                   # Domain symlinks -> ../../.agents/skills/*
 └── .agents/                                      # Central Physical Source of Truth (Pure Conventions)
     ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
     ├── README.md                                 # Internal catalog

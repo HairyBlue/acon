@@ -172,13 +172,13 @@ Before transferring any files, the target repository is inspected:
 ### Phase 3: Pure Physical Copy Deployment
 - Copy `.agents/skills/` physically using `rsync -avL`.
 - Copy `.agents/rules/` physically using `rsync -avL`.
+- Copy `.agents/schemas/` physically using `rsync -avL`.
+- Copy `.agents/reference/` physically using `rsync -avL`.
+- Copy `.agents/crew/` and `.agents/workflows/` physically using `rsync -avL`.
 - **Strict Boundary Guard:** Explicitly exclude internal control plane scripts (`scripts/`).
+- **Zero Shadow Folders:** Eliminates redundant `.claude/` and `.cursor/` symlink directories. All harnesses link directly to the root `AGENTS.md` and `CLAUDE.md -> AGENTS.md`.
 
-### Phase 4: Optional IDE Folder Setup
-- Skipped by default to keep target repositories clean and lightweight.
-- If `--ide` is explicitly specified, deploys `.cursor/` and `.claude/` with dereferenced physical copies.
-
-### Phase 5: Verification Gate (Fail-Closed)
+### Phase 4: Verification Gate (Fail-Closed)
 The adoption process runs an automated verification gate:
 1. **Zero-Symlink Audit:**
    ```bash
@@ -210,7 +210,6 @@ The automated adoption script is located at `scripts/adopt.sh`.
 | `<TARGET_DIRECTORY>` | Absolute or relative path to the target repository to adopt ACON into. |
 | `-n, --dry-run` | Preview files to be created/updated without modifying the target. |
 | `-f, --force` | Overwrite existing files or re-synthesize `AGENTS.md` without confirmation. |
-| `--ide` | Also deploy `.cursor/` and `.claude/` IDE folders (optional, default: off). |
 | `-h, --help` | Display command usage and examples. |
 
 ### Example Invocations

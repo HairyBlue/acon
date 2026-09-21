@@ -26,7 +26,6 @@ ACON_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 TARGET_ARG=""
 DRY_RUN=0
 FORCE=0
-DEPLOY_IDE=0
 TEMP_DIR=""
 
 # ------------------------------------------------------------------------------
@@ -74,11 +73,10 @@ Arguments:
 Options:
   -n, --dry-run          Preview files to be transferred without making changes
   -f, --force            Overwrite existing files or re-synthesize AGENTS.md
-      --ide              Also deploy .cursor/ and .claude/ IDE folders (optional)
   -h, --help             Show this help message and exit
 
 Invariants Enforced:
-  • Physical Catalog Assets: 0 symlinks in target .agents/ (and IDE folders)
+  • Physical Catalog Assets: 0 symlinks in target .agents/
   • Single Source of Truth: CLAUDE.md symlinks cleanly to AGENTS.md
   • Two-Tier AGENTS.md: Tier 1 (Command Bridge) + Tier 2 (Workshop Manual)
   • Strict Adoption Boundary: Only constitution, skills, rules, schemas, reference deployed
@@ -108,10 +106,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     -f|--force)
       FORCE=1
-      shift
-      ;;
-    --ide)
-      DEPLOY_IDE=1
       shift
       ;;
     -h|--help)
@@ -168,7 +162,6 @@ echo "Target Repository : ${TARGET}"
 echo "Dry Run Mode      : $([[ ${DRY_RUN} -eq 1 ]] && echo "YES (preview only)" || echo "NO (live adoption)")"
 echo "Adoption Scope    : AGENTS.md, .agents/skills/, .agents/rules/, .agents/schemas/, .agents/reference/"
 echo "Excluded Assets   : scripts/ (Strict Boundary Enforced)"
-echo "Deploy IDE Folders: $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "YES (.cursor, .claude)" || echo "NO (default: clean lightweight)")"
 echo "Force Overwrite   : $([[ ${FORCE} -eq 1 ]] && echo "YES" || echo "NO")"
 echo "--------------------------------------------------------------------------------"
 
@@ -373,42 +366,15 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# Phase 4: Optional IDE Folder Setup (.cursor/ & .claude/)
+# Phase 4: Verification Gate (Fail-Closed)
 # ------------------------------------------------------------------------------
-if [[ ${DEPLOY_IDE} -eq 1 ]]; then
-  echo "[PHASE 4] Deploying IDE skill directories (.cursor/ & .claude/)..."
-  if [[ ${DRY_RUN} -eq 0 ]]; then
-    # Clean legacy symlinks in IDE directories
-    if [[ -d "${TARGET}/.cursor" ]]; then
-      find "${TARGET}/.cursor" -maxdepth 2 -type l -delete 2>/dev/null || true
-    fi
-    if [[ -d "${TARGET}/.claude" ]]; then
-      find "${TARGET}/.claude" -maxdepth 2 -type l -delete 2>/dev/null || true
-    fi
-    mkdir -p "${TARGET}/.cursor" "${TARGET}/.claude"
-    rsync -avL --delete "${ACON_ROOT}/.cursor/" "${TARGET}/.cursor/"
-    rsync -avL --delete "${ACON_ROOT}/.claude/" "${TARGET}/.claude/"
-    echo "  ✓ Deployed physical .cursor/ directory"
-    echo "  ✓ Deployed physical .claude/ directory"
-  else
-    echo "  [DRY RUN] Would deploy physical .cursor/ and .claude/ directories"
-  fi
-else
-  echo "[PHASE 4] Skipping IDE folders (.cursor/, .claude/) — keeping target repository lightweight"
-fi
-
-# ------------------------------------------------------------------------------
-# Phase 5: Verification Gate (Fail-Closed)
-# ------------------------------------------------------------------------------
-echo "[PHASE 5] Executing Verification Gate..."
+echo "[PHASE 4] Executing Verification Gate..."
 
 if [[ ${DRY_RUN} -eq 0 ]]; then
   # 1. Invariant Check: Universal Physical Copy (Zero Symlinks)
   echo "  • Auditing symlinks in adopted directories..."
 
-  SYMLINKS_ACON=$(find "${TARGET}/.agents" \
-    $([[ ${DEPLOY_IDE} -eq 1 ]] && echo "${TARGET}/.cursor ${TARGET}/.claude") \
-    -type l 2>/dev/null || true)
+  SYMLINKS_ACON=$(find "${TARGET}/.agents" -type l 2>/dev/null || true)
 
   if [[ -n "${SYMLINKS_ACON}" ]]; then
     echo "[FAIL-CLOSED] Universal Physical Copy Invariant violated!" >&2
