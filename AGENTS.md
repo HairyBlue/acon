@@ -130,6 +130,20 @@ To eliminate context degradation and token bloat during multi-step missions, the
    Every `SHIP` brief MUST incorporate [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) constraints: enforce the 7-Rung Decision Ladder (YAGNI → Codebase Reuse → Stdlib → Platform Natives → Zero New Dependencies → Inline Clarity → Minimum Working Diff) while strictly preserving the Safety Invariant (zero-trust security, runtime schema validation, explicit error handling, semantic accessibility, and 100% test pass rates on existing suites & required business tests). Passing existing regression tests is non-negotiable; authoring *new* test suites is governed strictly by the Pragmatic Testing Standard (§8, Property 8). The Control Plane audits all submitted worker diffs against these constraints during Phase IV synthesis.
 9. **Concurrent Execution Isolation (Worktrees):**  
    When dispatching concurrent `SHIP` specialists on the same repo, enforce workspace isolation using [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) under `.worktrees/<branch>`. Concurrent workers must never share working directories or branches. The Control Plane manages worktree lifecycles and ensures `.worktrees/` is ignored.
+11. **Skill-First Response Mandate (Direct Control Plane Answers):**  
+    Before producing any direct response to a Captain question or task advisory — *even when no subagent is dispatched* — the Control Plane MUST check whether an available skill covers the domain and, if so, load and apply it via the `read` tool before answering.  
+    - **Trigger:** Captain asks a question whose domain maps to any skill listed in the active `<skills>` block (e.g., UI/typography/design → `design`; engineering patterns → `engineering`; security/git → `security-devops`; productivity/planning → `productivity`).  
+    - **Mandate:** Load the skill file (`read` on `SKILL.md`) **before** composing the response. The skill's toolset, workflow, and constraints are the canonical answer frame; generic free-form advice is forbidden when a skill applies.  
+    - **Anti-Pattern (Forbidden):** Answering browser inspection, font auditing, UI analysis, or any other skill-covered domain with a generic information dump without first reading the relevant skill file.  
+    - **Skill Routing Signal Table (non-exhaustive):**  
+
+      | Captain request domain | Primary skill to load |  
+      |---|---|  
+      | UI/UX, typography, design systems, aesthetics | `design` |  
+      | Code architecture, TDD, refactoring, bug diagnosis | `engineering` |  
+      | Security audits, git ops, shell scripts, CI/CD | `security-devops` |  
+      | Planning, handoffs, prompt calibration, anti-slop | `productivity` |  
+
 10. **Plan-First Gate & Context Hygiene (Architectural Impact & Ambiguity Standard):**  
     Authoring an implementation plan via [`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) (saved to `docs/plans/YYYY-MM-DD-<feature>.md`) is governed strictly by **architectural impact, systemic ambiguity, and explicit Captain direction**, rather than raw file counts.
     - **Plan-Required Triggers (MUST author plan in `docs/plans/` & secure Captain sign-off):** (1) Explicit Captain command (`"write a plan"`, `/plan`), (2) From-scratch creation of systems/modules, (3) Large architectural refactors/migrations, (4) Database schema changes & complex queries, (5) Core business logic & invariants (monetary, auth, state machines), (6) High ambiguity / multi-option trade-offs.
