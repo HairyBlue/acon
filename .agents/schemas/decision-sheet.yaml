@@ -1,0 +1,82 @@
+# Schema: decision-sheet.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: DecisionSheet
+description: Canonical machine grammar for ACON Decision Gates evaluation sheets (the Jev concept, no code).
+type: object
+required: [gate, evaluator, stateRef, answers]
+properties:
+  schema:
+    type: string
+    const: "acon/decision-sheet/v1"
+    default: "acon/decision-sheet/v1"
+  gate:
+    type: string
+    enum:
+      - grill-trigger
+      - plan-first
+      - task-shape
+      - anti-slop
+      - skill-route
+      - bearings-triage
+      - deliverable-audit
+  mode:
+    type: string
+    enum: [advisory, enforce]
+    default: advisory
+  evaluator:
+    type: string
+    enum:
+      - scout
+      - worker
+      - reviewer
+      - oracle
+      - evidence-auditor
+      - control-plane
+  stateRef:
+    type: string
+    description: Verifiable summary, reference, or digest of the input state being evaluated.
+  answers:
+    type: object
+    description: Map of declared gate question IDs to typed evaluation records.
+    additionalProperties:
+      type: object
+      required: [evidence]
+      properties:
+        p:
+          description: Probability value (float multiple of 0.1 between 0.0 and 1.0) or choice probability distribution map.
+          oneOf:
+            - type: number
+              minimum: 0.0
+              maximum: 1.0
+            - type: object
+              additionalProperties:
+                type: number
+                minimum: 0.0
+                maximum: 1.0
+        choice:
+          type: string
+          description: Selected option identifier for choice questions.
+        score:
+          type: integer
+          description: Selected level index (0-indexed) for score questions.
+        evidence:
+          type: string
+          maxLength: 120
+          description: Verbatim quote from input state (max 120 chars). Permitted "NONE" only when p <= 0.2.
+  result:
+    type: object
+    description: Derived gate result block generated from Outcome Rules lookup.
+    required: [status, outcome, relaxing, binding]
+    properties:
+      status:
+        type: string
+        enum: [OK, UNCERTAIN, INVALID]
+      outcome:
+        type: string
+        description: Deterministic outcome symbol derived from the gate lookup table.
+      relaxing:
+        type: boolean
+        description: True if the outcome loosens or bypasses a governance requirement (always advisory).
+      binding:
+        type: boolean
+        description: True only when Mode is enforce and the outcome tightens fleet governance.
