@@ -98,7 +98,7 @@ To eliminate context degradation and token bloat during multi-step missions, the
    - **`council-mode`**: Supervisor-mediated multi-agent panel summoned for high-stakes architectural debates or `[HUMAN-CORE]` domain escalations.
    - **Domain Specialization via Modular Skills:** Domain-specific roles operate through `worker`, `scout`, and `reviewer` equipped on demand with skills from `.agents/skills/`:
      - *Backend Specialist*: `worker` equipped with `api-design`, `zero-downtime-migrations`, `domain-modeling`, `refactoring`.
-     - *Frontend UI Specialist*: `worker` equipped with `interface-design`, `impeccable`, and aesthetic presets (`styles/*`).
+     - *Frontend UI Specialist*: `worker` equipped with `interface-design`, `impeccable`, `frontend-conventions`, and aesthetic presets (`styles/*`).
      - *Test & QA Engineer*: `worker` or `reviewer` equipped with `tdd`, `diagnosing-bugs`.
      - *Security & DevOps Auditor*: `reviewer` or `worker` equipped with `security-audit`, `pre-commit`, `shell-scripting`.
      - *Git Ops & Release Specialist*: `worker` equipped with `conventional-commits`, `git-worktrees` (strictly gated behind explicit Captain approval).
@@ -107,6 +107,11 @@ To eliminate context degradation and token bloat during multi-step missions, the
      - *Deterministic Verification:* Verification is performed deterministically by the local compiler and test runner (`npm test`, `pytest`, `cargo test`), eliminating any credit or model dependency.
      - *Graceful Degradation Rule:* If credits are low or on smaller models: apply the graceful degradation rule: (1) micro-tasks $\le 1$ file per task boundary, (2) 100% rigid closed enums (no subjective generation or prose), and (3) hard automated CLI exit code `0` verification gates.
 2. **Equip with Modular Skills on Demand:** Provide specialists with domain skills from [`.agents/skills/`](.agents/skills/) (`design/`, `design/impeccable/`, `engineering/`, `productivity/`, `security-devops/`) in prompt instructions.
+2-bis. **Skill Embedding Mandate (Read & Inline Protocol):** Naming a skill in a worker brief is insufficient. For every skill ID selected by Gate G5 (`skill-route`), the Control Plane MUST:
+   1. **Resolve the path:** Look up the skill ID in `.agents/INDEX.md` to obtain the canonical `SKILL.md` path. If the resolved skill is a suite/router skill (e.g. `engineering`, `productivity`), continue resolving to the specific child skill path (e.g. `engineering/tdd/SKILL.md`) — never embed a router-level SKILL.md.
+   2. **Read the SKILL.md:** Execute a `read` tool call on the resolved path before composing the worker brief.
+   3. **Inline the full content:** Embed the complete SKILL.md content verbatim into the worker brief under a clearly labeled `## Skill: <skill-name>` section. No token cap is applied to skill content — truncating skill instructions degrades output quality and is forbidden.
+   4. **Auto-append mandatory skills:** Per the Constitutional Invariants of G5: `ponytail` is always appended to every worker brief; `git-worktrees` to every concurrent worker brief; `security-audit` to every security task brief.
 3. **Strict Task Shaping (Ship vs. Scout):**  
    - **`SHIP` Tasks:** Concrete code deliverables with explicit file boundaries, compile/lint/test verification (authoring new tests strictly when triggered by the Pragmatic Testing Standard), and diff presentation.
    - **`SCOUT` Tasks:** Strictly read-only investigations or feasibility spikes producing structured markdown reports with findings, trade-offs, and decision inventories.

@@ -19,6 +19,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Refactoring & code smell cleanup** | Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, strangler fig | [`.agents/skills/engineering/refactoring/SKILL.md`](skills/engineering/refactoring/SKILL.md) |
 | **Zero-downtime database migrations** | 5-phase Expand/Contract, concurrent indexing, lock timeouts, batched backfills | [`.agents/skills/engineering/zero-downtime-migrations/SKILL.md`](skills/engineering/zero-downtime-migrations/SKILL.md) |
 | **Rigorous code review (Standards + Spec)** | Two-axis diff review against coding standards and issue specs | [`.agents/skills/engineering/code-review/SKILL.md`](skills/engineering/code-review/SKILL.md) |
+| **Frontend file structure, thin controllers, no custom primitives** | Frontend conventions & service-layer | [`.agents/skills/engineering/frontend-conventions/SKILL.md`](skills/engineering/frontend-conventions/SKILL.md) |
 | **Deep module & clean architecture design** | Designing interfaces with small surfaces and hidden complexity | [`.agents/skills/engineering/codebase-design/SKILL.md`](skills/engineering/codebase-design/SKILL.md), [`.agents/skills/engineering/improve-codebase-architecture/SKILL.md`](skills/engineering/improve-codebase-architecture/SKILL.md) |
 | **Enforce deep modules in TypeScript** | Setting up dependency-cruiser boundary rules | [`.agents/skills/engineering/setup-ts-deep-modules/SKILL.md`](skills/engineering/setup-ts-deep-modules/SKILL.md) |
 | **Hard bug or performance regression** | Root cause elusive, need systematic red-test feedback loop | [`.agents/skills/engineering/diagnosing-bugs/SKILL.md`](skills/engineering/diagnosing-bugs/SKILL.md) |
@@ -54,7 +55,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | Category / Directory | Count | Main Entry File |
 | :--- | :--- | :--- |
 | **[`skills/design/`](skills/design/)** | 2 Skills + 67 Presets | Master design orchestrator, craft engineering (`interface-design`), Impeccable Design Director (`impeccable`), and 67 curated aesthetic style presets (`clean`, `sleek`, `bento`, `ant`, etc.) |
-| **[`skills/engineering/`](skills/engineering/)** | 14 Skills | Problem solving, architecture, TDD, debugging, code review, ticket mapping, refactoring, API design, zero-downtime migrations |
+| **[`skills/engineering/`](skills/engineering/)** | 15 Skills | Problem solving, architecture, TDD, debugging, code review, ticket mapping, refactoring, API design, zero-downtime migrations, frontend-conventions |
 | **[`skills/productivity/`](skills/productivity/)** | 14 Skills | Repository adoption (`adopt-acon`), decision gates (`decision-gates`), interrogation (`grill-me`), 9-dimension prompting (`prompt-master`), machine grammars (`grammars-and-constrained-sampling`), I/O & verification control (`io-verification-control`), anti-overengineering (`ponytail`), bite-sized planning (`writing-plans`), handoffs, developer stories |
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (universal engine), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |

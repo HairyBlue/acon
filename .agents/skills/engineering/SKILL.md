@@ -20,6 +20,7 @@ This skill serves as the primary router and master guide for all core software e
 | **`code-review`** | Two-axis diff review (Standards adherence + Spec conformance) via parallel subagents. | [`code-review/SKILL.md`](code-review/SKILL.md) |
 | **`codebase-design`** | Discipline and vocabulary for designing deep modules with narrow interfaces and clean seams. | [`codebase-design/SKILL.md`](codebase-design/SKILL.md) |
 | **`diagnosing-bugs`** | Systematic bug diagnosis loop: red-test creation $\rightarrow$ minimize $\rightarrow$ hypothesize $\rightarrow$ instrument $\rightarrow$ fix $\rightarrow$ regression-test. | [`diagnosing-bugs/SKILL.md`](diagnosing-bugs/SKILL.md) |
+| **`frontend-conventions`** | Modular file structure (≤300 lines), thin controllers, service-layer logic isolation, and zero reinvention of UI primitives (badges, icons, etc.). Activate for all frontend SHIP tasks. | [`frontend-conventions/SKILL.md`](frontend-conventions/SKILL.md) |
 | **`domain-modeling`** | Ubiquitous language definition, scenario stress-testing, and ADR documentation. | [`domain-modeling/SKILL.md`](domain-modeling/SKILL.md) |
 | **`improve-codebase-architecture`** | Scans codebase for deepening opportunities and presents an actionable improvement report. | [`improve-codebase-architecture/SKILL.md`](improve-codebase-architecture/SKILL.md) |
 | **`prototype`** | Rapid throwaway HTML/UI prototypes to validate state and interaction design before production code. | [`prototype/SKILL.md`](prototype/SKILL.md) |
