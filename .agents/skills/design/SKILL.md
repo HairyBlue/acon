@@ -11,33 +11,35 @@ This suite provides the foundational craft engineering principles needed to make
 
 ---
 
-## Architecture: The Three Pillars of Design
+## Architecture: The Four Pillars of Design
 
 ```
-                     ┌─────────────────────────────────────────────────────────┐
-                     │              Master Design Suite (design)               │
-                     └────────────────────────────┬────────────────────────────┘
-                                                  │
-          ┌───────────────────────────────────────┼───────────────────────────────────────┐
-          ▼                                       ▼                                       ▼
-┌──────────────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────────┐
-│  Pillar 1: Craft Engineering │    │ Pillar 2: Aesthetic Presets  │    │ Pillar 3: Impeccable Engine  │
-│      (interface-design)      │    │           (styles/)          │    │         (impeccable)         │
-├──────────────────────────────┤    ├──────────────────────────────┤    ├──────────────────────────────┤
-│ • 1 Focal Point Per View     │    │ • Clean (minimal, airy)      │    │ • Design Director Lifecycle  │
-│ • Weight > Size Hierarchy    │    │ • Sleek (Linear/SaaS dark)   │    │ • Shape / Init / Critique    │
-│ • 60/30/10 Color Rule        │    │ • Bento (modular cards)      │    │ • Audit / Polish / Harden    │
-│ • Subtle Surface Elevation   │    │ • Editorial (warm serif)     │    │ • Typeset / Colorize / Animate│
-│ • Anti-Slop Verification     │    │ • Ant / Enterprise (dense)   │    │ • Craft Floor Quality Floor  │
-│ • Persistent System Memory   │    │ • 67 Curated Style Presets   │    │ • Mechanical Detector CLI    │
-└──────────────────────────────┘    └──────────────────────────────┘    └──────────────────────────────┘
+                                 ┌─────────────────────────────────────────────────────────┐
+                                 │              Master Design Suite (design)               │
+                                 └────────────────────────────┬────────────────────────────┘
+                                                              │
+         ┌──────────────────────────────┬─────────────────────┴──────────┬──────────────────────────────┐
+         ▼                              ▼                                ▼                              ▼
+┌──────────────────────────┐ ┌──────────────────────────┐ ┌──────────────────────────┐ ┌──────────────────────────┐
+│ Pillar 1: Design Craft   │ │ Pillar 2: Interface Des. │ │ Pillar 3: Style Presets  │ │ Pillar 4: Impeccable     │
+│   Foundation (craft/)    │ │    (interface-design)    │ │        (styles/)         │ │       (impeccable)       │
+├──────────────────────────┤ ├──────────────────────────┤ ├──────────────────────────┤ ├──────────────────────────┤
+│ • Anti-Slop Invariants   │ │ • 1 Focal Point Per View │ │ • Clean (minimal, airy)  │ │ • Design Director Flow   │
+│ • Mandatory 5 States     │ │ • Weight > Size Rule     │ │ • Sleek (Linear/SaaS)    │ │ • Shape / Init / Critique│
+│ • Cognitive UX Laws      │ │ • 60/30/10 Color Rule    │ │ • Bento (modular cards)  │ │ • Audit / Polish / Harden│
+│ • Typography Rhythm      │ │ • Surface Elevation      │ │ • Editorial (warm serif) │ │ • Typeset/Colorize/Motion│
+│ • Spring Motion Physics  │ │ • Persistent Sys Memory  │ │ • Enterprise (dense)     │ │ • Craft Floor Quality    │
+│ • WCAG 2.2 Accessibility │ │ • Anti-Slop Audit        │ │ • 67 Curated Presets     │ │ • Detector CLI           │
+└──────────────────────────┘ └──────────────────────────┘ └──────────────────────────┘ └──────────────────────────┘
 ```
 
-1. **Pillar 1: Foundational Craft Engineering ([`interface-design/`](interface-design/SKILL.md))**  
-   The non-negotiable rules of visual hierarchy, optical sizing, spatial density, depth layering, interaction states, and anti-slop audits.
-2. **Pillar 2: Aesthetic Style Presets ([`styles/`](styles/))**  
-   The visual identities, color tokens, typography pairings, and component rules across 67 curated design systems.
-3. **Pillar 3: The Impeccable Design Director & Engine ([`impeccable/`](impeccable/SKILL.md))**  
+1. **Pillar 1: Design Craft & Anti-Slop Foundation ([`craft/`](craft/))**  
+   The primary bedrock of all UI work (adopted from `referodesign/refero_skill` and `nexu-io/open-design`). Encodes non-negotiable anti-slop invariants, mandatory 5-state interactive surface coverage, cognitive UX laws, typography rhythm contracts, spring physics motion science, WCAG 2.2 accessibility baselines, semantic color tokens, and reference research methodology. Craft rules strictly precede and govern all styling decisions.
+2. **Pillar 2: Foundational Interface Design Engineering ([`interface-design/`](interface-design/SKILL.md))**  
+   Structural visual hierarchy, optical sizing, the single focal point rule, 60/30/10 color distribution, subtle surface elevation, persistent design memory (`system.md`), and anti-slop verification (`design-deslop`).
+3. **Pillar 3: Aesthetic Style Presets ([`styles/`](styles/))**  
+   67 curated aesthetic systems providing intentional visual identity, token palettes, typography pairings, and component treatments (clean, sleek, bento, brutalism, editorial, etc.).
+4. **Pillar 4: The Impeccable Design Director & Engine ([`impeccable/`](impeccable/SKILL.md))**  
    Award-winning design direction, 23 surgical lifecycle sub-commands, mechanical anti-pattern detection CLI (`impeccable detect`), craft floor enforcement (`craft-floor.md`), and live browser steering.
 
 
@@ -128,43 +130,52 @@ For advanced UI/UX execution, full-spectrum product design, and rigorous craft p
 
 ## 🛠️ Mandatory 4-Phase Execution Workflow
 
+> **CRITICAL INVARIANT — Craft Precedes All Styling:**  
+> Before selecting any style preset, writing component code, or applying aesthetic flourishes, the agent **MUST** read and apply the core craft references (`craft/anti-ai-slop.md`, `craft/state-coverage.md`, and relevant domain craft files).  
+> **Craft rules strictly override generic aesthetic presets, framework boilerplates, or library defaults.** An interface styled with a trendy preset but lacking 5-state coverage, optical alignment, or keyboard accessibility is broken UI. Craft invariants are non-negotiable foundations; aesthetic presets are surface styling applied on top.
 
 Whenever building or refactoring frontend interfaces, follow this 4-phase cycle:
 
-### Phase 0 — Reference Research (Required Before Implementation)
+### Phase 0 — Craft Reference Consultation & Research (Required Before Implementation)
 
-Before selecting a style or writing any component:
+Before selecting any style preset or writing any component code:
 
-1. **Identify the research tier:**
+1. **Mandatory Craft References Reading:**
+   The agent MUST execute a `read` call on the core craft references before writing code:
+   - **Always required for ALL UI tasks:**
+     - [`craft/anti-ai-slop.md`](craft/anti-ai-slop.md) — 9 AI tell patterns, 7 cardinal sins, 18-point anti-slop checklist
+     - [`craft/state-coverage.md`](craft/state-coverage.md) — Required 5-state interactive coverage (default, hover, active, focus, disabled/loading)
+   - **Load by task domain:**
+     - Form work & inputs: [`craft/form-validation.md`](craft/form-validation.md), [`craft/accessibility-baseline.md`](craft/accessibility-baseline.md)
+     - Typography & text hierarchy: [`craft/typography.md`](craft/typography.md), [`craft/typography-hierarchy.md`](craft/typography-hierarchy.md)
+     - Transitions & interactions: [`craft/motion.md`](craft/motion.md)
+     - Iconography & symbols: [`craft/icons.md`](craft/icons.md)
+     - Microcopy, actions, errors: [`craft/copywriting.md`](craft/copywriting.md)
+     - Internationalization & RTL: [`craft/rtl-and-bidi.md`](craft/rtl-and-bidi.md)
+     - Information architecture: [`craft/laws-of-ux.md`](craft/laws-of-ux.md)
+   *Rule: Craft rules strictly override generic aesthetic presets or framework boilerplates.*
+
+2. **Identify the research tier:**
    - Tier 1 (Quick visual improvement): Search 3–5 real-world references in the same UI category
    - Tier 2 (New surface/landing page): Search 8–12 references across Styles → Screens → Flows
    - Tier 3 (New product workflow): Full Styles → Screens → Flows sweep, 15+ references
 
-2. **Synthesize into 3 buckets:**
+3. **Synthesize into 3 buckets:**
    - **Visual Direction** — color, type, density, motion character
    - **Product Pattern** — layout, information hierarchy, component conventions
    - **Journey Logic** — how the flow guides the user through the task
 
-3. **Build a Decision Ledger** — every major design choice must be traceable to:
+4. **Build a Decision Ledger** — every major design choice must be traceable to:
    - A reference (real product you researched)
    - A user constraint (stated requirement)
-   - A craft rule (from `craft/` references below)
+   - A craft rule (from `craft/` references above)
 
    If a major choice has no source, do not ship it as a design decision.
 
-4. **Load relevant craft references** based on task domain:
-   - All tasks: `craft/anti-ai-slop.md`, `craft/state-coverage.md`
-   - Form work: `craft/form-validation.md`, `craft/accessibility-baseline.md`
-   - Typography: `craft/typography.md`, `craft/typography-hierarchy.md`
-   - Motion: `craft/motion.md`
-   - Icons: `craft/icons.md`
-   - Copy: `craft/copywriting.md`
-   - RTL/i18n: `craft/rtl-and-bidi.md`
-   - Complex decisions: `craft/laws-of-ux.md`
-
 ### Phase 1: Intent & Style Selection
+*Prerequisite: Phase 0 craft references read and decision ledger established.*
 1. **Identify the Human & Task**: Who is using this? What is their state of mind?
-2. **Select Style Preset**: Choose from the routing matrix above (default to `clean` for productivity apps, `sleek` for developer/SaaS tools, `ant` for data dashboards).
+2. **Select Style Preset**: Choose from the routing matrix above (default to `clean` for productivity apps, `sleek` for developer/SaaS tools, `ant` for data dashboards). Remember: style presets provide aesthetic tokens and palettes, but MUST conform strictly to the craft rules and state requirements established in Phase 0.
 3. **Declare the Single Focal Point**: State out loud what *one* element dominates this view. Demote everything else.
 
 ### Phase 2: Craft Construction
@@ -173,7 +184,7 @@ Before selecting a style or writing any component:
    - **Weight > Size**: Create hierarchy using weight + color opacity rather than font size alone.
    - **60/30/10 Rule**: 60% dominant neutral canvas, 30% secondary structural surface, 10% intentional accent.
    - **Subtle Elevation**: Use whisper-quiet lightness shifts in dark mode, ambient multi-stop drop shadows in light mode. Avoid harsh, heavy 1px gray borders everywhere.
-   - **States for Everything**: Include default, hover, active (`scale(0.97)`), focus ring, and disabled states.
+   - **States for Everything**: Include default, hover, active (`scale(0.97)`), focus ring, and disabled states per `craft/state-coverage.md`.
    - **Concentric Radii**: When nesting containers, ensure `outer_radius = inner_radius + padding`.
 
 ### Phase 3: Anti-Slop Audit (The Deslop Pass)
@@ -188,6 +199,8 @@ Before declaring frontend work complete, run the anti-slop checklist from [`inte
 ---
 
 ## 📚 Craft References
+
+> **Upstream Foundations:** ACON's craft reference library is synthesized from **[referodesign / refero_skill](https://github.com/referodesign/refero_skill)** (research-first methodology, anti-slop patterns, craft guides) and **[nexu-io / open-design](https://github.com/nexu-io/open-design)** (universal craft rules, WCAG/HIG/Material primary research baselines).
 
 The [`craft/`](craft/) directory contains self-contained reference modules for design rules. Load per task domain — not all at once.
 
