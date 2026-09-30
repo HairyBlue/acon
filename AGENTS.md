@@ -98,7 +98,7 @@ To eliminate context degradation and token bloat during multi-step missions, the
    - **`council-mode`**: Supervisor-mediated multi-agent panel summoned for high-stakes architectural debates or `[HUMAN-CORE]` domain escalations.
    - **Domain Specialization via Modular Skills:** Domain-specific roles operate through `worker`, `scout`, and `reviewer` equipped on demand with skills from `.agents/skills/`:
      - *Backend Specialist*: `worker` equipped with `api-design`, `zero-downtime-migrations`, `domain-modeling`, `refactoring`.
-      - *Frontend UI Specialist*: `worker` equipped with `interface-design`, `impeccable`, `frontend-conventions`, aesthetic presets (`styles/*`), and design craft references (`craft/anti-ai-slop.md`, `craft/state-coverage.md`, and domain-specific craft files).
+     - *Frontend UI Specialist*: `worker` equipped first and foremost with design craft references (`craft/` — mandatory `craft/anti-ai-slop.md`, `craft/state-coverage.md`, and relevant domain craft files), which take strict precedence over generic styling or aesthetic presets, followed by `interface-design`, `impeccable`, `frontend-conventions`, and aesthetic presets (`styles/*`).
      - *Test & QA Engineer*: `worker` or `reviewer` equipped with `tdd`, `diagnosing-bugs`.
      - *Security & DevOps Auditor*: `reviewer` or `worker` equipped with `security-audit`, `pre-commit`, `shell-scripting`.
      - *Git Ops & Release Specialist*: `worker` equipped with `conventional-commits`, `git-worktrees` (strictly gated behind explicit Captain approval).
@@ -144,7 +144,7 @@ To eliminate context degradation and token bloat during multi-step missions, the
 
       | Captain request domain | Primary skill to load |  
       |---|---|  
-      | UI/UX, typography, design systems, aesthetics, anti-AI-slop, RTL, form UX | `design` + domain craft refs (anti-ai-slop, state-coverage, typography, etc.) |  
+      | UI/UX, typography, design systems, aesthetics, anti-AI-slop, RTL, form UX | `design` + domain craft references (`craft/anti-ai-slop.md`, `craft/state-coverage.md`, and relevant domain craft files take top precedence) |  
       | Code architecture, TDD, refactoring, bug diagnosis | `engineering` |  
       | Security audits, git ops, shell scripts, CI/CD | `security-devops` |  
       | Planning, handoffs, prompt calibration, anti-slop | `productivity` |  
