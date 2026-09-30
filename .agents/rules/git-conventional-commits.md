@@ -12,9 +12,9 @@ tags: git, commits, branching, workflow, conventional-commits
 Enforce Conventional Commits v1.0.0, pre-flight safety checks, and strict separation of authority for all git mutations.
 
 ## 1. Authority & Execution Policy
-- **Mandatory Captain Authorization:** Agents must **NEVER** execute `git commit` or `git push` without prior explicit approval.
+- **Zero Autonomous Commits/Pushes (Explicit Captain Approval Required):** Agents and workers must **NEVER** execute `git commit` or `git push` autonomously. Conventional commits must only be formatted, staged, and committed when explicitly authorized and commanded by the Captain (e.g. *"commit and push"*, *"proceed with commit"*, *"ship it"*). Completing a task means modifying code, verifying tests/linters, and presenting the deliverable diff in the Bearings digest. All changes remain uncommitted in the working tree/staged awaiting approval.
 - **Worker-Only Git Execution:** Git commits and pushes must NEVER run in the primary command thread. The Control Plane delegates execution to a dedicated `Git Ops & Release Specialist` subagent via `invoke_subagent` to keep the bridge reactive.
-- **Pre-Flight Secrets Check:** Verify that zero `.env` files, API tokens, private keys (`*.pem`, `id_rsa`), or `.worktrees/` folders are staged.
+- **Pre-Flight Secrets Check:** Verify that zero `.env` files, API tokens, private keys (`*.pem`, `id_rsa`), or `.worktrees/` folders are staged before any commit is executed.
 
 ## 2. Conventional Commit Format (v1.0.0)
 
