@@ -210,7 +210,7 @@ acon/
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
     ├── skills/                                   # Curated Modular Agent Skills
-        ├── design/                               # 2 Skills + 67 style presets (interface-design, impeccable & 67 style presets)
+        ├── design/                               # 2 Skills + 67 style presets + 17 craft references (interface-design, impeccable, 67 style presets, 17 craft references)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
@@ -238,9 +238,10 @@ Instead, ACON enforces the **Dynamic Documentation Standard**:
 
 When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets)
+### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets + 17 Craft References)
 - **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
 - **`impeccable`**: Design Director and visual quality floor engine with 23 lifecycle commands, craft floor quality checks, and mechanical anti-pattern detection.
+- **`craft/` (17 Design Craft References)**: Specialized deep-dive modules covering anti-AI-slop heuristics, UX laws, 5-state UI coverage, typography hierarchy & rhythm, WCAG 2.2 accessibility baseline, spring physics motion, semantic color tokens, form validation UX, RTL/BiDi layout, and component craft.
 - **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
   - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/DESIGN.md), [`styles/minimal`](.agents/skills/design/styles/minimal/DESIGN.md), [`styles/spacious`](.agents/skills/design/styles/spacious/DESIGN.md) (ample whitespace, 8pt grid, low cognitive load).
   - **Slick & Modern Tech**: [`styles/sleek`](.agents/skills/design/styles/sleek/DESIGN.md), [`styles/bento`](.agents/skills/design/styles/bento/DESIGN.md), [`styles/shadcn`](.agents/skills/design/styles/shadcn/DESIGN.md), [`styles/modern`](.agents/skills/design/styles/modern/DESIGN.md) (Inter + JetBrains Mono, dark elevation, subtle borders).
@@ -305,6 +306,8 @@ ACON builds upon and draws architectural inspiration from pioneering patterns in
 - **[3stoneBrother / code-audit](https://github.com/3stoneBrother/code-audit)**: Static code security analysis methodology, vulnerability checklists (PHP, JS, Python, C#), taint tracking, and verification techniques.
 - **[marcelorodrigo / agent-skills](https://github.com/marcelorodrigo/agent-skills)**: Curated agent skills ecosystem, engineering workflows, and prompt architecture.
 - **[dietrichgebert / ponytail](https://github.com/dietrichgebert/ponytail)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), and code-level anti-overengineering reviews.
+- **[referodesign / refero_skill](https://github.com/referodesign/refero_skill)**: Research-first design methodology, anti-slop patterns, and craft reference guides for typography, color, motion, icons, copywriting, and visual workflows.
+- **[nexu-io / open-design](https://github.com/nexu-io/open-design)**: Universal craft rules grounded in primary research sources (WCAG, W3C, Material 3, Apple HIG, Baymard Institute) for accessibility, animation discipline, form validation, state coverage, RTL, and UX laws.
 
 > **Heartfelt Acknowledgement:** Immense gratitude to the countless open-source developers, researchers, and community builders whose gists, discussions, and experiments have quietly advanced modern agentic conventions and developer tooling. Even where not cited individually by name, your work and shared knowledge form the collective bedrock of this project. Thank you!
 

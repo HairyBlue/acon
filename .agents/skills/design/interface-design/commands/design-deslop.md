@@ -62,3 +62,53 @@ This filter is half the skill. Generated UI looks generated because it defaulted
 ## Output
 
 Present changes as a markdown table grouped by category, **Before** and **After** columns, one row per fix, cite file + property when it isn't obvious. Put the compositional fixes (Pass 1) first — they matter most. Omit categories where nothing changed. Close with a 1–2 sentence summary, and if Pass 1 surfaced something too structural to fix surgically, say so and point to `/interface-design:design-review`.
+
+---
+
+## Extended AI Tell Reference
+
+Beyond the structural slop caught in Pass 1 and Pass 2, watch for these deeper fingerprints.
+
+### TELL #6 — Left Accent Stripe
+
+A colored vertical bar on the left edge of a card (`border-left: 4px solid <accent>`) added for "visual interest." In shipped products this stripe is reserved for elements that carry meaning: callouts, alerts, active list items, status, priority.
+
+**Fix:** Remove the stripe, or establish what it communicates. If you can't say in one word what the color means — remove it.
+
+### TELL #7 — Reference Averaging
+
+AI models do real research, then destroy it by averaging strong references into the safest middle point. Red flags:
+- Dark canvases become cream.
+- Saturated or acid accents become muted clay/olive.
+- Geometric sans systems become polite serif headlines.
+- Sharp/zero-radius UI becomes soft rounded cards.
+- Distinctive layouts become generic hero + sections.
+
+**Fix:** Identify the primary direction and restore its signature traits. Secondary references may contribute 1–2 specific details but must not dilute the primary direction's conviction.
+
+### TELL #8 — Token Role Drift
+
+Accent colors have one job: signal primary action. Using CTA-only accent colors as backgrounds, decorative fills, or hover states elsewhere is token role drift.
+
+**Hard cap:** At most 2 visible uses of `--accent` per screen. Typical pair: one eyebrow/chip + one primary CTA.
+
+**Fix:** Audit every element using the accent token. Demote all decorative uses to neutrals. Reserve the accent strictly for CTA and one high-value signal (e.g., selected state, active badge).
+
+### TELL #9 — Fake Graphics / Text-Only Collapse
+
+Replacing media (images, charts, illustrations) with text-only layouts "for simplicity." This strips visual weight that the design depends on.
+
+**Fix:** Preserve the media role. If no asset exists yet, use a placeholder with the correct content type — fixed ratio, labeled, art-directed. If the reference lock specifies product screenshots, illustrations, or photography — the media presence is part of the design decision, not optional decoration.
+
+---
+
+## Litmus Tests
+
+Run all five before declaring work complete:
+
+1. **Card Test.** Remove border + shadow + background + radius. Does the interaction still work? If yes → it's not a card, it's a row or section. Remove the card chrome.
+2. **Image Test.** If every image were replaced with a solid rectangle, would the layout still communicate its structure? If no → the design is fragile; image presence is not optional.
+3. **Brand Test.** Could this design belong to 3 different companies without modification? If yes → not differentiated enough.
+4. **Copy Test.** Replace all copy with "Lorem ipsum." Does the hierarchy still hold? If not → hierarchy depends on copy, not composition.
+5. **Editorial Test.** Does this look designed or generated? If it feels generated — run Pass 1 again before shipping.
+

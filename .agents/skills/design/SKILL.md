@@ -126,10 +126,41 @@ For advanced UI/UX execution, full-spectrum product design, and rigorous craft p
 
 ---
 
-## 🛠️ Mandatory 3-Phase Execution Workflow
+## 🛠️ Mandatory 4-Phase Execution Workflow
 
 
-Whenever building or refactoring frontend interfaces, follow this 3-phase cycle:
+Whenever building or refactoring frontend interfaces, follow this 4-phase cycle:
+
+### Phase 0 — Reference Research (Required Before Implementation)
+
+Before selecting a style or writing any component:
+
+1. **Identify the research tier:**
+   - Tier 1 (Quick visual improvement): Search 3–5 real-world references in the same UI category
+   - Tier 2 (New surface/landing page): Search 8–12 references across Styles → Screens → Flows
+   - Tier 3 (New product workflow): Full Styles → Screens → Flows sweep, 15+ references
+
+2. **Synthesize into 3 buckets:**
+   - **Visual Direction** — color, type, density, motion character
+   - **Product Pattern** — layout, information hierarchy, component conventions
+   - **Journey Logic** — how the flow guides the user through the task
+
+3. **Build a Decision Ledger** — every major design choice must be traceable to:
+   - A reference (real product you researched)
+   - A user constraint (stated requirement)
+   - A craft rule (from `craft/` references below)
+
+   If a major choice has no source, do not ship it as a design decision.
+
+4. **Load relevant craft references** based on task domain:
+   - All tasks: `craft/anti-ai-slop.md`, `craft/state-coverage.md`
+   - Form work: `craft/form-validation.md`, `craft/accessibility-baseline.md`
+   - Typography: `craft/typography.md`, `craft/typography-hierarchy.md`
+   - Motion: `craft/motion.md`
+   - Icons: `craft/icons.md`
+   - Copy: `craft/copywriting.md`
+   - RTL/i18n: `craft/rtl-and-bidi.md`
+   - Complex decisions: `craft/laws-of-ux.md`
 
 ### Phase 1: Intent & Style Selection
 1. **Identify the Human & Task**: Who is using this? What is their state of mind?
@@ -137,7 +168,7 @@ Whenever building or refactoring frontend interfaces, follow this 3-phase cycle:
 3. **Declare the Single Focal Point**: State out loud what *one* element dominates this view. Demote everything else.
 
 ### Phase 2: Craft Construction
-1. **Load Tokens**: Read the chosen preset’s `DESIGN.md` for font family, colors, and border radius.
+1. **Load Tokens**: Read the chosen preset's `DESIGN.md` for font family, colors, and border radius.
 2. **Apply Craft Foundations**:
    - **Weight > Size**: Create hierarchy using weight + color opacity rather than font size alone.
    - **60/30/10 Rule**: 60% dominant neutral canvas, 30% secondary structural surface, 10% intentional accent.
@@ -153,3 +184,32 @@ Before declaring frontend work complete, run the anti-slop checklist from [`inte
 - [ ] **No Template Accents**: Did we eliminate generic unmotivated purple/indigo gradients?
 - [ ] **Tabular Numerals**: Are financial, countdown, and metric values set to `tabular-nums`?
 - [ ] **Semantic Inputs**: Are form inputs styled and keyboard-accessible, avoiding hand-rolled `<div onClick>`?
+
+---
+
+## 📚 Craft References
+
+The [`craft/`](craft/) directory contains self-contained reference modules for design rules. Load per task domain — not all at once.
+
+**Always load for any UI task:**
+- [`craft/anti-ai-slop.md`](craft/anti-ai-slop.md) — 9 AI tell patterns, 7 cardinal sins, 18-point checklist
+- [`craft/state-coverage.md`](craft/state-coverage.md) — Required states for every interactive surface
+
+**Load by task domain:**
+
+| File | Domain |
+|---|---|
+| [`craft/color.md`](craft/color.md) | Color systems, tokens, contrast, accent discipline |
+| [`craft/typography.md`](craft/typography.md) | Type scale, leading, weight, tracking, CJK |
+| [`craft/typography-hierarchy.md`](craft/typography-hierarchy.md) | Hierarchy contracts, rhythm, tension |
+| [`craft/typography-hierarchy-editorial.md`](craft/typography-hierarchy-editorial.md) | Editorial type systems, long-form content |
+| [`craft/motion.md`](craft/motion.md) | Animation timing, easing, spring physics, reduced motion |
+| [`craft/icons.md`](craft/icons.md) | Icon sizing, style, optical correction |
+| [`craft/copywriting.md`](craft/copywriting.md) | Microcopy, button labels, errors, hero copy |
+| [`craft/accessibility-baseline.md`](craft/accessibility-baseline.md) | WCAG 2.2, touch targets, focus, labels |
+| [`craft/form-validation.md`](craft/form-validation.md) | Validation timing, error wiring, schema |
+| [`craft/laws-of-ux.md`](craft/laws-of-ux.md) | Cognitive heuristics, composition rules |
+| [`craft/rtl-and-bidi.md`](craft/rtl-and-bidi.md) | RTL layout, bidirectional text, logical properties |
+| [`craft/craft-details.md`](craft/craft-details.md) | Focus states, images, scroll, semantic HTML |
+| [`craft/visual-workflow.md`](craft/visual-workflow.md) | Three Visual Directions, visual QA, severity triage |
+| [`craft/example-workflow.md`](craft/example-workflow.md) | End-to-end design process walkthrough |

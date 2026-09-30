@@ -12,6 +12,7 @@ Master design suite for ACON, combining craft-first interface engineering to era
   - **[`commands/design-deslop.md`](interface-design/commands/design-deslop.md)**: Surgical checklist to remove AI-generated signatures.
   - **[`commands/design-review.md`](interface-design/commands/design-review.md)**: Strict multi-pass craft and hierarchy auditor.
   - **[`reference/system-template.md`](interface-design/reference/system-template.md)**: Design memory template to lock tokens across sessions.
+- **[`craft/`](craft/)**: 17 self-contained design craft references (anti-slop, state coverage, typography, color, motion, accessibility, form validation, RTL, UX laws, copywriting, icons).
 - **[`styles/`](styles/)**: 67 curated aesthetic style presets with tokens and design foundations.
 
 
