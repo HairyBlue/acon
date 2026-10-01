@@ -145,6 +145,7 @@ Before selecting any style preset or writing any component code:
    - **Always required for ALL UI tasks:**
      - [`craft/anti-ai-slop.md`](craft/anti-ai-slop.md) — 9 AI tell patterns, 7 cardinal sins, 18-point anti-slop checklist
      - [`craft/state-coverage.md`](craft/state-coverage.md) — Required 5-state interactive coverage (default, hover, active, focus, disabled/loading)
+     - [`craft/minimalism-discipline.md`](craft/minimalism-discipline.md) — Minimalism default, improvement scope constraint, addition gate
    - **Load by task domain:**
      - Form work & inputs: [`craft/form-validation.md`](craft/form-validation.md), [`craft/accessibility-baseline.md`](craft/accessibility-baseline.md)
      - Typography & text hierarchy: [`craft/typography.md`](craft/typography.md), [`craft/typography-hierarchy.md`](craft/typography-hierarchy.md)
@@ -207,6 +208,7 @@ The [`craft/`](craft/) directory contains self-contained reference modules for d
 **Always load for any UI task:**
 - [`craft/anti-ai-slop.md`](craft/anti-ai-slop.md) — 9 AI tell patterns, 7 cardinal sins, 18-point checklist
 - [`craft/state-coverage.md`](craft/state-coverage.md) — Required states for every interactive surface
+- [`craft/minimalism-discipline.md`](craft/minimalism-discipline.md) — Minimalism default, improvement scope constraint, addition gate
 
 **Load by task domain:**
 
