@@ -1,0 +1,49 @@
+# Schema: review-report.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: ReviewReport
+description: Canonical machine grammar for code and security review reports.
+type: object
+required: [envelope, review, findings, summary]
+properties:
+  envelope:
+    type: object
+    required: [schema_id, version, generated_by, timestamp, task_id]
+    properties:
+      schema_id: { type: string, enum: [review-report] }
+      version: { type: string, enum: ["1.0"] }
+      generated_by: { type: string }
+      timestamp: { type: string }
+      task_id: { type: string }
+  review:
+    type: object
+    required: [reviewer_type, reviewer_model, correlation_warning, verdict, cycles_completed, escalated]
+    properties:
+      reviewer_type: { type: string, enum: [CODE, SECURITY] }
+      reviewer_model: { type: string }
+      correlation_warning: { type: string, enum: [CORRELATED_REVIEW, INDEPENDENT_REVIEW] }
+      verdict: { type: string, enum: [PASS, FAIL] }
+      cycles_completed: { type: integer }
+      escalated: { type: boolean }
+  findings:
+    type: array
+    items:
+      type: object
+      required: [file, line, severity, category, evidence, suggested_fix, resolved]
+      properties:
+        file: { type: string }
+        line: { type: integer }
+        severity: { type: string, enum: [CRITICAL, HIGH, MEDIUM, LOW] }
+        category: { type: string }
+        evidence: { type: string }
+        suggested_fix: { type: string }
+        resolved: { type: boolean }
+  summary:
+    type: object
+    required: [total_findings, critical_count, high_count, medium_count, low_count, blocking]
+    properties:
+      total_findings: { type: integer }
+      critical_count: { type: integer }
+      high_count: { type: integer }
+      medium_count: { type: integer }
+      low_count: { type: integer }
+      blocking: { type: boolean }

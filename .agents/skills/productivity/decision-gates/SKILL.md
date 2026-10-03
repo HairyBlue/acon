@@ -75,6 +75,8 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
 | **G5** | `skill-route` | Phase II Pre-Flight | Control Plane | Selects specialist persona and modular skills from `.agents/INDEX.md`. |
 | **G6** | `bearings-triage` | Fleet Governance | Control Plane | Triages events, errors, and blockers into Bearings digest sections or `CAPTAINS_CALL`. |
 | **G7** | `deliverable-audit` | Phase IV Gatekeeping | Reviewer / Scout | Post-flight universal verification of worker git diffs against Ponytail, scope, and tests. |
+| **G8** | `code-review` | Phase IV Gatekeeping | Code Reviewer | Mandatory after every SHIP task, before commit proposal. Evaluates diff against plan and coding standards. |
+| **G9** | `security-review` | Phase IV Gatekeeping | Security Reviewer | Mandatory after G8 PASS, before commit proposal. Evaluates diff against security standards. |
 
 ---
 

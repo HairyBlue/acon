@@ -16,13 +16,13 @@ In multi-agent architectures, conversational token bloat drives context degradat
 ## The Machine Contract & Zero-Preamble Invariant
 
 1. **First-Token Anchoring (Token-0):**  
-   Never permit opening pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). Anchor the prompt so the model's first generated token must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
+   Never permit opening pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). Where the harness supports first-token anchoring, anchor the prompt so the model's first generated token must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
 
 2. **Schema-Locked Envelopes ([`.agents/reference/schemas/`](../../../reference/schemas/)):**  
-   Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Dispatched subagents must return data strictly within designated schema envelopes in [`.agents/reference/schemas/`](../../../reference/schemas/).
+   Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Where the harness supports grammar-constrained output, dispatched subagents must return data strictly within designated schema envelopes in [`.agents/reference/schemas/`](../../../reference/schemas/).
 
 3. **Closed Enum Constraints:**  
-   Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`). Closed enums eliminate subjective hallucinations and provide deterministic parsing.
+   Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`). Closed enums eliminate subjective hallucinations and, where the harness supports constrained decoding, provide deterministic parsing.
 
 4. **Tool-Bound Execution:**  
    Code edits, file creations, and system mutations must NEVER be emitted as conversational markdown code blocks. Force execution strictly through verified tool calls (`write_to_file`, `replace_file_content`).

@@ -61,8 +61,8 @@ Sampling parameters directly govern the entropy, variance, and tail distribution
 
 #### 1. Deterministic Execution (`0.0–0.2`, `top_p: 0.90`)
 - **Applicable Roles:** `SHIP` (Code Mutation), Code Review, Security Audits ([`security-audit`](../../security-devops/security-audit/SKILL.md)), Test & QA Engineering, Git Ops & Release.
-- **Cognitive Objective:** Pure syntactic precision, reproducible Abstract Syntax Tree (AST) mutations, exact schema adherence, and zero hallucination of non-existent APIs, imports, or files.
-- **Dynamics:** Temperature $\le 0.2$ sharply collapses the logit distribution toward the maximum-likelihood token; `top_p: 0.90` truncates the low-probability tail, preventing speculative token substitutions or creative formatting variations.
+- **Cognitive Objective:** Where the harness supports sampling parameter control, target pure syntactic precision, reproducible Abstract Syntax Tree (AST) mutations, exact schema adherence, and zero hallucination of non-existent APIs, imports, or files.
+- **Dynamics:** Where the harness supports sampling parameter control, temperature $\le 0.2$ sharply collapses the logit distribution toward the maximum-likelihood token; `top_p: 0.90` truncates the low-probability tail, preventing speculative token substitutions or creative formatting variations.
 
 #### 2. Divergent Exploration (`0.7–0.8`, `top_p: 0.95`)
 - **Applicable Roles:** Architecture Ideation, Brainstorming, Red-Teaming & Threat Modeling, Front-Loaded Alignment ([`grill-me`](../grill-me/SKILL.md), [`prompt-master`](../prompt-master/SKILL.md)).
@@ -73,10 +73,10 @@ Sampling parameters directly govern the entropy, variance, and tail distribution
 
 | Specialist Persona / Task Type | Temp | Top-p | Sampling Behavior | Verification Gate |
 | :--- | :--- | :--- | :--- | :--- |
-| **`SHIP` (Code Implementation)** | `0.0–0.2` | `0.90` | Deterministic, exact AST mutations | Local test runner (`npm test`, `pytest`, `cargo test`) / compiler |
+| **`SHIP` (Code Implementation)** | `0.0–0.2` | `0.90` | Where supported: deterministic, exact AST mutations | Local test runner (`npm test`, `pytest`, `cargo test`) / compiler |
 | **`CODE REVIEW & STANDARDS`** | `0.1–0.2` | `0.90` | Strict rule application, zero drift | Linter & typechecker exit code `0` |
-| **`SECURITY AUDIT (OWASP)`** | `0.1–0.2` | `0.90` | Systematic taint analysis, reproducible AST triage | Static analysis checks & automated verification scripts |
-| **`GIT OPS & RELEASE`** | `0.0` | `0.90` | Exact commit message, clean branch operations | Automated git status & pre-commit hook exit code `0` |
+| **`SECURITY AUDIT (OWASP)`** | `0.1–0.2` | `0.90` | Systematic taint analysis, where supported: reproducible AST triage | Static analysis checks & automated verification scripts |
+| **`GIT OPS & RELEASE`** | `0.0` | `0.90` | Where supported: exact commit message, clean branch operations | Automated git status & pre-commit hook exit code `0` |
 | **`SCOUT` (Codebase Archaeology)** | `0.2–0.3` | `0.90` | Factual discovery, bounded file sweeps | Verified file path existence checks |
 | **`GRILL-ME` (Design Interrogation)** | `0.7–0.8` | `0.95` | Divergent trade-off discovery, edge exploration | Closed multiple-choice option validation |
 | **`RED-TEAMING & THREAT MODELING`** | `0.7–0.8` | `0.95` | Adversarial vectors, non-obvious attack paths | Human Captain review & proof-of-concept exploit test |
@@ -105,8 +105,8 @@ Natural language output from LLMs is inherently unstable. Unconstrained chat res
 *(For deep canonical schema definitions, see [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md).)*
 
 ### A. Token-0 Anchoring
-- **First Token Invariant:** The very first emitted character of an agent's response must be structural data (`{`, `---`, or load-bearing markdown).
-- **Anchor Directives:** Anchor the prompt so the model has zero opportunity to emit conversational chatter.
+- **First Token Invariant:** Where the harness supports first-token anchoring, the very first emitted character of an agent's response should be structural data (`{`, `---`, or load-bearing markdown).
+- **Anchor Directives:** Where the harness supports first-token anchoring, anchor the prompt so the model has minimal opportunity to emit conversational chatter.
 
 ### B. Zero Conversational Preamble
 - **Banned Conversational Fluff:** Greetings, pleasantries, and polite preamble are strictly banned (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*, *"I hope this helps"*).
@@ -128,7 +128,7 @@ Natural language output from LLMs is inherently unstable. Unconstrained chat res
   severity: [LOW | MEDIUM | HIGH | CRITICAL]
   verification: [EXIT_0 | FAILED | UNVERIFIED]
   ```
-- **Deterministic Evaluation:** Closed enums enable deterministic parsing and programmatic decision-tree branching without fuzzy heuristic matching.
+- **Deterministic Evaluation:** Where the harness supports constrained decoding, closed enums enable deterministic parsing and programmatic decision-tree branching without fuzzy heuristic matching.
 
 ### E. Tool-Bound Delivery
 - **Zero Chat Code Dumps:** Code edits, file additions, and system mutations must NEVER be emitted as conversational markdown code blocks.

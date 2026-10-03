@@ -1,0 +1,81 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: Quality Report Schema
+type: object
+properties:
+  envelope:
+    type: object
+    properties:
+      schema_id:
+        type: string
+      version:
+        type: string
+      generated_by:
+        type: string
+      timestamp:
+        type: string
+        format: date-time
+      project_root:
+        type: string
+      stack_detected:
+        type: string
+      tools_available:
+        type: array
+        items:
+          type: string
+      tools_missing:
+        type: array
+        items:
+          type: string
+      mode:
+        type: string
+  files:
+    type: array
+    items:
+      type: object
+      properties:
+        path:
+          type: string
+        metrics:
+          type: object
+          properties:
+            cyclomatic_complexity:
+              $ref: "#/$defs/metric"
+            function_length:
+              $ref: "#/$defs/metric"
+            nesting_depth:
+              $ref: "#/$defs/metric"
+            argument_count:
+              $ref: "#/$defs/metric"
+            file_lines:
+              $ref: "#/$defs/metric"
+            duplication_pct:
+              $ref: "#/$defs/metric"
+        ratchet_comparison:
+          type: string
+        overall_status:
+          type: string
+  summary:
+    type: object
+    properties:
+      total_files:
+        type: integer
+      files_pass:
+        type: integer
+      files_warn:
+        type: integer
+      files_fail:
+        type: integer
+      files_regressed:
+        type: integer
+      blocking:
+        type: boolean
+$defs:
+  metric:
+    type: object
+    properties:
+      value:
+        type: number
+      threshold:
+        type: number
+      status:
+        type: string
