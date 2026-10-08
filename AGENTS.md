@@ -27,13 +27,14 @@ The Control Plane orchestrates all multi-agent missions through an airtight 4-ph
 flowchart TD
     Captain["👨‍✈️ 1. Captain (The User)"] -->|"Issues goal / raw objective"| FirstMate["🧭 2. Control Plane (First Mate)"]
     subgraph Alignment ["Phase I: Front-Loaded Alignment"]
-        FirstMate -->|"Gate G1: grill-trigger"| G1{"G1 Gate"}
-        G1 -->|"If p >= 0.6 or UNCERTAIN"| Grill["grill-me / oracle (Clarify ~30s)"]
-        G1 -->|"If p <= 0.3 (Clear)"| PM1["prompt-master Intent Extraction"]
-        Grill -->|"Aligned intent"| PM1
+        FirstMate -->|"Always runs first"| PM1["prompt-master 9-Dimension Intent Extraction"]
+        PM1 -->|"Structured output feeds gate"| G1{"G1 Gate: grill-trigger (Mode: constitutional)"}
+        G1 -->|"ASK — mandatory trigger or signals missing"| Grill["grill-me / oracle (Clarify ~30s)"]
+        G1 -->|"SKIP — all 4 signals present, no mandatory trigger"| TaskShaping["Proceed to Task Shaping"]
+        Grill -->|"Aligned intent"| TaskShaping
     end
     subgraph Shaping ["Phase II: Task Shaping & Briefing"]
-        PM1 -->|"Gate G2: plan-first"| G2{"G2 Gate"}
+        TaskShaping -->|"Gate G2: plan-first"| G2{"G2 Gate"}
         G2 -->|"REQUIRED"| Plan["writing-plans (docs/plans/)"]
         Plan -->|"Captain sign-off"| ShapingCore["Task Decomposition"]
         G2 -->|"NOT_REQUIRED"| ShapingCore
@@ -64,7 +65,7 @@ flowchart TD
 
 ### The 4-Phase Operating Lifecycle
 
-1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Runs [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) 9-dimension intent extraction; evaluates **Gate G1 (`grill-trigger`)** to determine whether to trigger [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or consult `oracle` for 1–3 high-leverage clarifying questions upfront if architectural forks or ambiguities exist (~30s Captain alignment).
+1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) ALWAYS runs first (unconditional 9-dimension intent extraction on every Captain objective). The structured output feeds **Gate G1 (`grill-trigger`)**, now operating in `Mode: constitutional`, which evaluates a mechanical completeness checklist (4 signals: target scope, technology/framework, acceptance criteria, scope boundary). When G1 yields `ASK` — or when any mandatory trigger fires (message < 20 words, greenfield phrasing, `[HUMAN-CORE]` domain, first message in session) — [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) is mandatory and executes 1–3 targeted clarifying questions (~30s Captain alignment). Grill-me is skipped ONLY when all 4 completeness signals are present and no mandatory trigger fires.
 2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Evaluates **Gate G2 (`plan-first`)** to gate plans (`docs/plans/`) on architectural impact and business-logic criticality (see §4 Rule 10). Classifies work via **Gate G3 (`task-shape`)** (`SHIP` vs. `SCOUT`, Tiers 1–3). Deterministically selects crew roles and modular skills via **Gate G5 (`skill-route`)**. Partitions work into non-overlapping file scopes (zero collisions). Validates drafted briefs against **Gate G4 (`anti-slop`)** before flight.
 3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Dispatches targeted child agents via native `pi-subagents` (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`) equipped with modular domain skills from `.agents/skills/`. Operates under zero-token reactive waiting (runtime wakes First Mate on completion/message); manages stuck-worker recovery via supervisor communication. Concurrent `worker` tasks execute in isolated `.worktrees/<branch>`.
 4. **Phase IV: Central Synthesis & Bearings (Control Plane $\rightarrow$ Captain):** Audits worker deliverables through **Gate G7 (`deliverable-audit`)** (checking test exit codes, scope creep, and Ponytail simplicity). Runs mandatory independent Code Review (**Gate G8**) and Security Review (**Gate G9**). Optionally executes Mutation testing for `[HUMAN-CORE]` business logic (referencing `docs/mutation-testing.md`). The Control Plane delegates shared entry point synthesis to a `Synthesis Worker` subagent, evaluates status items through **Gate G6 (`bearings-triage`)**, and renders the 4-section Bearings digest alongside the verified diff. Phase IV strictly concludes with diff presentation and Bearings reporting — `git commit` and `git push` are strictly blocked until the Captain reviews the outcome and explicitly commands or approves the commit/push. Zero autonomous commits or pushes occur upon task completion.
@@ -121,7 +122,7 @@ To eliminate context degradation and token bloat during multi-step missions, the
 4. **Zero-Overlapping File Boundaries (No Collisions):** No two subagents may ever be assigned the same target file. The Control Plane delegates shared entry point synthesis to a `Synthesis Worker` subagent.
 5. **Zero-Token Reactive Waiting:** Do **NOT** poll subagent status in loops. Stop calling tools after launching subagents; the harness runtime automatically wakes the Control Plane upon subagent message or completion.
 6. **Front-Loaded Grill → Autonomous Flight Protocol:**  
-   - **Upfront Alignment:** Activate [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) intent extraction and [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to ask 1–3 high-leverage clarifying questions upfront when forks or ambiguities exist (~30s Captain alignment).
+   - **Mandatory Alignment:** Run [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) 9-dimension intent extraction on every Captain objective. Evaluate Gate G1 (completeness checklist). When G1 yields `ASK` — or when any mandatory trigger fires (message < 20 words, greenfield phrasing, `[HUMAN-CORE]` domain, first message in session) — execute [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to ask 1–3 targeted clarifying questions. Skip grill-me ONLY when all 4 completeness signals are present and no mandatory trigger fires.
    - **Autonomous Flight:** Once answered, the fleet operates autonomously with zero mid-task interruptions to implement and verify changes. However, autonomous flight strictly terminates at code verification and diff delivery — autonomous git commit or push is strictly forbidden.
    - **Intervention by Exception Only:** Re-engage Captain strictly for: (1) destructive commands (`git reset --hard`, `git clean -fd`, dropping tables), (2) missing external credentials/secrets, (3) git mutations (`git commit`, `git push`, branch creation/deletion, tagging), or (4) unresolvable 5-Element escalations.
 7. **Tiered Pre-Dispatch Protocol (Mandatory Calibration Gate):**  
@@ -129,10 +130,10 @@ To eliminate context degradation and token bloat during multi-step missions, the
 
    | Tier | When to Use | Required Steps |
    |------|-------------|----------------|
-   | **Tier 0 — Fast Path** | ≤1 file, ≤10 lines changed, no logic change | Review gate required, skip plan and worktree |
-   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or Plan-First Gate triggers | 9-dimension intent extraction (`prompt-master`), Anti-Slop Audit (§8), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) in `docs/plans/`), Captain sign-off, Template H brief, file boundaries (zero collisions), `ponytail` constraints |
-   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, plan-exempt multi-file tasks (styling, mechanical refactors, CRUD), complex Scout investigations | Core Goal + Constraints (3+ dimensions), Anti-Slop Check (§8), Template M brief, file boundary or investigation scope defined |
-   | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | Clear Objective statement, defined scope boundary (what to inspect/ignore), expected deliverable format |
+   | **Tier 0 — Fast Path** | ≤1 file, ≤10 lines changed, no logic change | G1 completeness check required, review gate required, skip plan and worktree |
+   | **Tier 1 — Full Calibration** | Multi-agent Ship missions, architectural changes, concurrent workers, or Plan-First Gate triggers | 9-dimension intent extraction (`prompt-master`), mandatory grill-me (G1 constitutional gate), Anti-Slop Audit (§8), Plan-First Gate ([`writing-plans`](.agents/skills/productivity/writing-plans/SKILL.md) in `docs/plans/`), Captain sign-off, Template H brief, file boundaries (zero collisions), `ponytail` constraints |
+   | **Tier 2 — Standard Brief** | Single-agent Ship tasks, plan-exempt multi-file tasks (styling, mechanical refactors, CRUD), complex Scout investigations | G1 completeness check required; grill-me mandatory if ≥2 signals missing, Core Goal + Constraints (3+ dimensions), Anti-Slop Check (§8), Template M brief, file boundary or investigation scope defined |
+   | **Tier 3 — Lightweight Dispatch** | Simple single-Scout lookups, quick read-only inspections | G1 completeness check required, clear Objective statement, defined scope boundary (what to inspect/ignore), expected deliverable format |
 
    **Minimum Universal Standard:** Every dispatch at any tier MUST include: (1) clear Objective, (2) defined Scope boundary, and (3) expected Deliverable format.
 8. **Engineering Governance (Ponytail 7-Rung Ladder & Safety Invariant):**  
