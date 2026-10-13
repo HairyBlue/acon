@@ -2,13 +2,19 @@
 
 This index maps developer symptoms, task goals, technology stacks, and engineering workflows to the exact skill or rule in `.agents/` and the root `AGENTS.md` Control Plane constitution.
 
+## Provenance and MIT notice
+
+Capability and optional-learning discovery pointers are informed by Fleet `docs/PHILOSOPHY.md` and `skills/compound-learning/SKILL.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](reference/crew/README.md#provenance-and-mit-notice). No source runtime or new skill is imported.
+
+## End provenance and MIT notice
+
 ---
 
 ## 1. Quick Symptom & Task Lookup
 
 | Symptom / Task Goal | Likely Cause / Area | Recommended Skill or Rule |
 | :--- | :--- | :--- |
-| **Agent Orchestration & Control Plane** | Multi-agent coordination, specialist dispatch, Ship vs. Scout, Bearings status | [`AGENTS.md`](../AGENTS.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md) |
+| **Agent Orchestration & Control Plane** | Capability discovery and authorized routing before delegated SHIP; reading conventions alone does not establish execution support. Missing required capabilities mean BLOCKED | [`AGENTS.md`](../AGENTS.md), [`.agents/rules/agent-control-plane.md`](rules/agent-control-plane.md), [portable fleet reference](reference/crew/README.md) |
 | **Relentless plan / design interrogation** | Plan has unresolved branches, ambiguities, or missing edge cases | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md) |
 | **Grill plan while generating ADRs & domain docs** | Need to sharpen domain terms while interrogating a design | [`.agents/skills/productivity/grill-me/SKILL.md`](skills/productivity/grill-me/SKILL.md), [`.agents/skills/engineering/domain-modeling/SKILL.md`](skills/engineering/domain-modeling/SKILL.md) |
 | **Turn conversation into a formal spec** | Architecture settled, need an actionable specification | [`.agents/skills/engineering/to-spec/SKILL.md`](skills/engineering/to-spec/SKILL.md) |
@@ -32,7 +38,7 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **Writing or structuring implementation plans / plan-first gate / docs/plans/** | Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), zero-placeholder specs | [`.agents/skills/productivity/writing-plans/SKILL.md`](skills/productivity/writing-plans/SKILL.md) |
 | **Evaluating decision gates / Jev probability sheets / task shape & slop audit / deliverable verification** | Machine-native decision intelligence, 7 typed decision gates (G1–G7), calibration logging, dual-scout redundancy | [`.agents/skills/productivity/decision-gates/SKILL.md`](skills/productivity/decision-gates/SKILL.md) |
 | **Authoring skills & guidelines for AI** | Writing effective prompt files, skills, and AGENTS.md | [`.agents/skills/productivity/writing-for-agents/SKILL.md`](skills/productivity/writing-for-agents/SKILL.md) |
-| **Technical writing & post-mortems** | Authoring RFCs, architecture decisions, and post-mortems | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md) |
+| **Technical writing & post-mortems / optional durable learning** | RFCs, architecture decisions, post-mortems; for reusable lessons, propose evidence-grounded, deduplicated text in-session first. Persist only after separate Captain approval of exact text/path/scope and assigned-worker verification; transient handoff is not durable learning | [`.agents/skills/productivity/technical-writing-for-engineers/SKILL.md`](skills/productivity/technical-writing-for-engineers/SKILL.md), [portable learning acceptance](reference/crew/README.md#acceptance-scenarios) |
 | **Daily progress report / Notion summary** | Daily summary from Git commits & conversation history | [`.agents/skills/productivity/daily-progress-report/SKILL.md`](skills/productivity/daily-progress-report/SKILL.md) |
 | **Developer stories & portfolio case studies** | Anti-slop technical narratives, builder journeys, dispatches, CASI framework | [`.agents/skills/productivity/developer-story/SKILL.md`](skills/productivity/developer-story/SKILL.md) |
 | **Anti-overengineering & YAGNI code razor** | Stop AI bloat, 7-Rung Decision Ladder, helper elimination, debt ledger | [`.agents/skills/productivity/ponytail/SKILL.md`](skills/productivity/ponytail/SKILL.md) |
@@ -68,5 +74,5 @@ This index maps developer symptoms, task goals, technology stacks, and engineeri
 | **[`skills/security-devops/`](skills/security-devops/)** | 6 Skills | Security audit (universal engine), git guardrails, git worktrees, shell scripting, conventional commits, pre-commit |
 | **[`scripts/`](../scripts/adopt.sh)** | 1 Automation Script | Repository adoption & synchronization script (`scripts/adopt.sh`) |
 | **[`rules/`](rules/)** | 4 Global Rules | [`.agents/rules/`](rules/) (`agent-control-plane.md`, `security-secrets-guard.md`, `git-conventional-commits.md`, `progress-reporting.md`) |
-| **[`reference/schemas/`](reference/schemas/)** | 7 Machine Schemas | Canonical YAML schemas (`scout-report.yaml`, `ship-diff.yaml`, `grill-interview.yaml`, `task-contract.yaml`, `handoff-state.yaml`, `bearings-digest.yaml`, `decision-sheet.yaml`) |
+| **[`reference/schemas/`](reference/schemas/)** | 8 Markdown contract specifications | Normative readable field/rule tables: [ScoutReport](reference/schemas/scout-report.md), [ShipDiff](reference/schemas/ship-diff.md), [GrillInterview](reference/schemas/grill-interview.md), [TaskContract](reference/schemas/task-contract.md), [HandoffState](reference/schemas/handoff-state.md), [BearingsDigest](reference/schemas/bearings-digest.md), [DecisionSheet](reference/schemas/decision-sheet.md), and [ReviewReport](reference/schemas/review-report.md). Markdown documents are normative documentation, not executable validation schemas. |
 | **[`reference/`](reference/)** | 1 Reference Catalog | Consolidated reference catalogs (`fowler-smells.md`) |

@@ -54,20 +54,22 @@ Silently extract these 9 dimensions before writing any prompt. Missing critical 
 
 ## 3. Five Durable Behavioral Archetypes (Model-Agnostic)
 
-Every AI tool and foundation model maps to one of five durable behavioral archetypes:
+Use task and evidenced capabilities to select an archetype, not a provider/model hierarchy. For ACON fleet tasks, the [portable fleet contract](../../../reference/crew/README.md) governs installed-harness discovery, authorization and unsupported modes; profiles are prompting guidance, not runtime support claims.
 
-### 1. Reasoning-Native Engines (*o3, o4-mini, DeepSeek-R1, Qwen3 thinking mode*)
+### 1. Reasoning-Capable Engines
 - **Zero Conversational Filler & Zero Scaffolding:** NEVER add "think step by step", chain-of-thought instructions, or meta-scaffolding—scaffolding actively degrades internal search.
 - **Constraint-First:** State clear objectives, strict constraints, and binary acceptance criteria. Keep system prompts under 200 words. Default to zero-shot before adding few-shot examples.
 - **Thinking Tag Suppression:** When raw data or code is required, explicitly command: *"Output only the final answer; do not emit <think> tags or reasoning traces."*
 
-### 2. Autonomous Coding Agents & IDEs (*Claude Code, Codex CLI, Cursor, Windsurf, Cline, Antigravity, Subagents*)
+### 2. Bounded Coding Agents & IDE Assistants
 - **Execution Envelope:** Mandate `Starting State` + `Target State` + `Strict Path Scopes` + `Forbidden Actions` + `Stop Conditions` + `Checkpoints`.
 - **Circuit Breakers:** Add explicit human review gates: *"Stop and ask before deleting files, adding dependencies, or modifying database schemas."*
-- **Minimal Working Diff:** Enforce code minimalism via [`ponytail`](../ponytail/SKILL.md) and lock deliverables to canonical schemas ([`ship-diff.yaml`](../../../schemas/ship-diff.yaml), [`scout-report.yaml`](../../../schemas/scout-report.yaml)).
-- **Session Strategy:** Choose strategy intentionally: `New session` (fresh), `Continue` (retain history), `Subagent` (bounded delegation), or `Compact first` (anchor decisions).
+- **Minimal Working Diff:** Enforce code minimalism via [`ponytail`](../ponytail/SKILL.md) and lock deliverables to canonical schemas ([`ship-diff.md`](../../../reference/schemas/ship-diff.md), [`scout-report.md`](../../../reference/schemas/scout-report.md)). Carry exact requirement assertions/revisions and applicable parity inventory from the [TaskContract](../../../reference/schemas/task-contract.md); completion needs current evidence, not a prose claim.
+- **Installed-Harness Evidence:** Required delegation, isolated contexts/workspaces, supervision/communication, terminal completion delivery and separate read-only review must be `AVAILABLE`; `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`. Firstmate delegates inspection and implementation; it never executes on the primary thread. Sequential isolated roles may replace concurrency, never independent G8/G9 or writer/reviewer separation.
+- **Authorized Routing:** For each role, including reviewers, propose an available Captain-permitted choice and supported effort, and obtain approval before launch. Temporary role choices require explicit approval, available-choice evidence, expiry and a time/cost ceiling. Recheck authorization and availability at dispatch, resume and completion; pause expired/unavailable work, resuming only under a still-valid explicitly approved fallback. Discovery grants no spending authority; do not probe or launch before permitted discovery, choice approval and quota/time/cost notice.
+- **Session Strategy:** Fresh context, continuation, bounded delegation and compaction are choices only when supported by installed-harness evidence. Preserve decisions, scope, assertions and evidence; do not prescribe named session APIs or assume delivery. Shared model identity requires `CORRELATED_REVIEW`, not shared reviewer context.
 
-### 3. Instruct & Structured LLMs (*Claude 5, GPT-5.6, Gemini 3, Qwen 2.5*)
+### 3. Instruction & Structured-Output Engines
 - **Structural Envelopes:** Use descriptive XML/JSON tags (`<context>`, `<task>`, `<constraints>`, `<output_format>`). For long documents, place source data before the instruction prompt.
 - **Grounding & Role Calibration:** Define domain expert identity; bind factual claims to source data (*"Cite only verified sources; write [uncertain] if uncertain"*); include 2–5 diverse few-shot examples for format stability.
 
@@ -124,9 +126,15 @@ Load specialized platform profiles and pattern guides selectively when the task 
 
 | Reference File | Scope & Activation Trigger |
 | :--- | :--- |
-| [`references/platforms/coding-agents.md`](references/platforms/coding-agents.md) | Agent profiles for Claude Code, Cursor, Windsurf, Cline, Codex CLI, Antigravity IDE, Copilot, Devin, Browser Agents |
-| [`references/platforms/frontier-llms.md`](references/platforms/frontier-llms.md) | Profiles for Claude 5, GPT-5.6, Grok 4.6, Gemini 3, DeepSeek-R1, Qwen, Ollama, MiniMax + Dynamic Documentation Note |
+| [`references/platforms/coding-agents.md`](references/platforms/coding-agents.md) | Task/capability profiles for bounded editing, IDE assistance and runtime observation; check actual installed-harness support |
+| [`references/platforms/frontier-llms.md`](references/platforms/frontier-llms.md) | Reasoning, structured-output and context profiles; actual model/effort translation belongs solely to the installed harness |
 | [`references/platforms/multimodal-creative.md`](references/platforms/multimodal-creative.md) | Syntax for Midjourney, DALL-E 3, Stable Diffusion, ComfyUI, 3D (Meshy/Rodin/Unity), Video (Sora/Runway/Kling), Voice |
 | [`references/platforms/workflow-automation.md`](references/platforms/workflow-automation.md) | Pipeline specifications for Zapier, Make, n8n, and webhook integration recipes |
-| [`references/templates.md`](references/templates.md) | 13 full production templates (Templates A–M) including Ship diff and Scout investigation envelopes |
+| [`references/templates.md`](references/templates.md) | 13 full production templates (Templates A–M), including File-Scope, Ship and [Bounded Agent Task Brief](references/templates.md#template-m--bounded-agent-task-brief) envelopes for assigned roles |
 | [`references/patterns.md`](references/patterns.md) | 37 credit-killing anti-patterns, diagnostic matrix, and prompt fixing catalog |
+
+## Provenance and MIT notice
+
+Neutral fleet routing is an ACON reconciliation informed by Fleet `docs/PHILOSOPHY.md` and `.pi/agents/model-profiles.yaml` (ideas only), revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime configuration or persona is imported.
+
+## End provenance and MIT notice

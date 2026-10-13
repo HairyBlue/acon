@@ -2,26 +2,17 @@
 
 <br/>
 
-A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention. No re-prompting your way to an answer you should have gotten on attempt one.
+A prompt-engineering skill for task-specific, bounded prompts. It makes objectives, context, constraints and verification explicit without assuming runtime support from a tool or model name.
 
-**Works with:** Claude, ChatGPT, Codex, Grok, Gemini, o1/o3, MiniMax, Cursor, Claude Code, GitHub Copilot, Windsurf, Bolt, v0, Lovable, Devin, Perplexity, Midjourney, DALL-E, Stable Diffusion, ComfyUI, Sora, Runway, ElevenLabs, Zapier, Make, and any AI tool you throw at it.
+**Prompting domains:** reasoning, structured output, bounded coding, search, multimodal generation and workflow automation. Actual support must be evidenced in the target system.
 
 ---
 
-## 🚀 Installation
+## Fleet prerequisites
 
-### RECOMMENDED - Claude.ai (browser)
+Use the active installed harness's evidenced skill-loading capabilities; this document supplies no installer, adapter or session recipe. For ACON tasks, follow the [portable fleet contract](../../../reference/crew/README.md): required delegation, isolated contexts/workspaces, supervision/communication, terminal completion delivery and separate read-only review must be `AVAILABLE`. `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`, not primary-thread execution.
 
-1. Download this repo as a ZIP
-2. Go to **claude.ai → Sidebar → Customize → Skills → Upload a Skill**
-
-
-### OR Clone directly into Claude Code skills directory (Not Suggested)
-
-```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/nidhinjs/prompt-master.git ~/.claude/skills/prompt-master
-```
+Firstmate delegates inspection and implementation to bounded workers. Supported sequential isolated roles may replace concurrency, never mandatory independent G8/G9. Default `INHERIT` means the current Captain-authorized harness/model; temporary lead/coder selection needs task-bound approval, available-choice evidence, expiry and a time/cost ceiling. Reviewer remains the authorized default. Check authorization/availability at dispatch, resume and completion; expired/unavailable work pauses until a still-valid explicitly approved default fallback permits resumption. Discovery grants no spending authority. Shared model identity requires `CORRELATED_REVIEW` while retaining separate read-only reviewer contexts.
 
 ## 🔥 The Problem This Solves
 
@@ -41,18 +32,18 @@ Most "prompt generators" make prompts longer. This skill makes them sharper.
 
 ## 🎯 Usage
 
-In Claude, you can invoke the skill naturally:
+Ask for a prompt with a confirmed target and its evidenced capabilities:
 
 ```
-Write me a prompt for Cursor to refactor my auth module
-```
-
-```
-I need a prompt for Claude Code to build a REST API — ask me what you need to know
+Write a prompt for my authorized coding worker to refactor only the assigned module
 ```
 
 ```
-Here's a bad prompt I wrote for GPT-4o, fix it: [paste prompt]
+I need a bounded coding-agent prompt for a REST API — ask me what you need to know
+```
+
+```
+Here's a bad prompt for a structured-output engine, fix it: [paste prompt]
 ```
 
 ```
@@ -67,13 +58,7 @@ I have a reference image — help me write a prompt to edit just the head angle
 Break this prompt down and adapt it for Stable Diffusion
 ```
 
-Or explicitly invoke it:
-
-```
-/prompt-master
-
-I want to ask Claude Code to build a todo app with React and Supabase
-```
+Where installed-harness evidence supports explicit skill invocation, select `prompt-master` and provide the task, scope and acceptance criteria. Fresh context, continuation, bounded delegation and compaction are capability choices, not named API requirements.
 
 ---
 
@@ -114,7 +99,7 @@ negative: blurry, low quality, watermark, cartoon, anime, extra limbs
 
 ### User Input
 ```
-Build a claude code prompt for a landing page for a business 
+Build a bounded coding-worker prompt for a landing page for a business
 dashboard that looks and feels exactly like notion - smooth animations, 
 clean ui
 ```
@@ -188,44 +173,27 @@ Done When:
 - Hover states work on all interactive elements
 - Opens in browser with zero console errors
 ```
-**🎯 Target:** Claude Code · **💰 Tokens:** Medium (~380) · **💡 Strategy:** Every vague Notion aesthetic cue translated into exact hex values and pixel specs — Claude Code cannot guess wrong. Animations defined with exact timing, method, and trigger so there is no interpretation needed.
+**🎯 Target:** Authorized coding worker · **💰 Tokens:** Medium (~380) · **💡 Strategy:** Aesthetic cues translated into exact values and specs. For ACON, carry the assigned scope and requirement evidence with Template M; observed behavior and mandatory independent G8/G9 remain necessary.
 
 ---
 
 ## 🤝 Works With Any AI Tool
 
-Prompt Master includes specific profiles for 20+ tools. For anything not on the list, it uses a **Universal Fingerprint**: 4 questions that let it write a quality prompt for any AI system it has never seen before.
+Select [coding-agent](references/platforms/coding-agents.md) or [reasoning/structured-output](references/platforms/frontier-llms.md) profiles by task and observed capability, not a fixed brand/model default. For an unfamiliar system, confirm its input, output, context and action limits; a profile is not a support certification.
 
 <details>
-<summary><h3> Click to view all 30+ tool profiles </h3></summary>
+<summary><h3> Task and capability profiles </h3></summary>
 
-| Tool | Category | What Prompt Master Fixes |
+| Task / Capability | Category | What Prompt Master Fixes |
 |------|----------|--------------------------|
-| **Claude 5 / current Claude** | Reasoning and agentic LLM | Model-aware effort, scope, XML structure, and delegation control |
-| **ChatGPT / GPT-5.6** | Reasoning and agentic LLM | Sol/Terra/Luna routing, lean contracts, autonomy and effort control |
-| **Codex** | Coding agent | File scope, approval boundaries, verification, bounded subagents |
-| **Grok 4.6** | Reasoning and agentic LLM | Search grounding, reasoning effort, tools, caching, and stop conditions |
-| **Gemini 2.x** | Reasoning LLM | Grounding anchors, citation rules, format locks |
-| **o3 / o4-mini** | Thinking LLM | Short clean instructions only — never adds CoT (they think internally) |
-| **Ollama** | Local LLM | Asks which model is loaded, includes system prompt for Modelfile |
-| **Qwen 2.5 / Qwen3** | Open-weight LLM | Chat template format, thinking vs non-thinking mode detection |
-| **Local models (Llama, Mistral)** | Open-weight LLM | Shorter prompts, simpler structure, no complex nesting |
-| **DeepSeek-R1** | Reasoning LLM | Short clean instructions, strips CoT, suppresses thinking output if needed |
-| **MiniMax (M3 / M2.7)** | Reasoning LLM | Temperature clamping, thinking tag control, structured output optimization |
-| **Claude Code** | Agentic AI | Stop conditions, file scope, checkpoint output |
-| **Cursor / Windsurf** | IDE AI | File path, function name, do-not-touch list, sequential prompt guidance |
-| **Cline (formerly Claude Dev)** | Agentic IDE | File scope, approval gates, stop conditions, task breakdown |
-| **GitHub Copilot** | Autocomplete AI | Exact function contract as docstring |
-| **Antigravity** | Agentic IDE | Task-based prompting, Artifact verification, autonomy level |
-| **Bolt / v0 / Lovable** | Full-stack generator | Stack spec, version, what NOT to scaffold |
-| **Figma Make** | Full-stack generator | Component name references, frame-to-code scope |
-| **Google Stitch** | Full-stack generator | Interface goal over implementation, Material Design 3 spec |
-| **Devin / SWE-agent** | Autonomous agent | Starting state, target state, stop conditions |
-| **Manus** | Autonomous agent | Task outcome focus, permission scope, memory anchors |
-| **OpenAI Computer Use** | Computer-use agent | Screen state, allowed apps, stop before irreversible actions |
-| **Perplexity Computer** | Computer-use agent | Artifact-first prompting, scoped permissions, verification steps |
-| **OpenClaw** | Computer-use agent | Conversational precision, persistent memory, security constraints |
-| **Perplexity / SearchGPT** | Search AI | Mode spec: search vs analyze vs compare |
+| **Reasoning-capable engine** | Reasoning | Concise constraints, auditable evidence, no private reasoning requests |
+| **Structured-output engine** | Instruction following | Grounding, schema envelopes, representative examples |
+| **Context-limited engine** | Bounded context | Focused inputs, simple structure, explicit carry-forward state |
+| **Assigned coding worker** | Repository editing | Exact file scope, approval boundaries, verification, stop conditions |
+| **IDE assistant / autocomplete** | Code assistance | Function contracts, do-not-touch lists, bounded changes |
+| **Interface / full-stack generator** | Code generation | Confirmed stack/version, reference components, what NOT to scaffold |
+| **Runtime / computer-use observer** | Runtime evidence | Observed state, scoped permissions, saved artifacts; no assumed tooling |
+| **Search / research engine** | Grounded research | Search vs analyze vs compare, verified citations, uncertainty |
 | **Midjourney** | Image AI | Comma-separated descriptors, parameters, negative prompts |
 | **DALL-E 3** | Image AI | Prose description, text exclusion — edit vs generate detection |
 | **Stable Diffusion** | Image AI | Weight syntax `(word:1.3)`, CFG guidance, mandatory negative prompt |
@@ -258,13 +226,13 @@ Prompt Master picks the right architecture for every task automatically and rout
 | **CRISPE** (Capacity, Role, Insight, Statement, Personality, Experiment) | Creative work, brand voice, iterative content |
 | **Auditable Reasoning** | Checkable math, logic, debugging, and analysis without hidden reasoning requests |
 | **Few-Shot** | Consistent structured output, pattern replication |
-| **File-Scope Template** | Cursor, Windsurf, Copilot — any code editing AI |
-| **ReAct + Stop Conditions** | Claude Code, Devin, AutoGPT — any autonomous agent |
+| **File-Scope Template** | Bounded code edits with exact path and section ownership |
+| **ReAct + Stop Conditions** | Assigned Ship worker with evidenced execution and review capabilities |
 | **Visual Descriptor** | Midjourney, DALL-E, Stable Diffusion, Sora — generation |
 | **Reference Image Editing** | Editing an existing image — detects edit vs generate automatically |
 | **ComfyUI** | Node-based image workflows — positive/negative split per checkpoint |
 | **Prompt Decompiler** | Breaking down, adapting, simplifying, or splitting existing prompts |
-| **Current Claude Task Brief** | Complex, multi-step, or agentic tasks on current Claude models |
+| **[Bounded Agent Task Brief](references/templates.md#template-m--bounded-agent-task-brief)** | Scoped tasks for any assigned role under installed-harness and evidence contracts |
 
 </details>
 
@@ -278,7 +246,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 |-----------|-------------|
 | **Role Assignment** | Assigns a specific expert identity to calibrate depth and vocabulary |
 | **Few-Shot Examples** | Adds 2-5 examples when format consistency matters more than instructions |
-| **XML Structural Tags** | Wraps sections in XML for Claude-based tools that parse it reliably |
+| **XML Structural Tags** | Wraps sections where the target system demonstrably supports that structure |
 | **Grounding Anchors** | Adds anti-hallucination rules for factual and citation tasks |
 | **Auditable Reasoning** | Requests conclusions, assumptions, evidence, and verification without hidden reasoning |
 
@@ -342,7 +310,7 @@ Prompt Master only uses techniques with reliable, bounded effects. Methods known
 | 21 | **No stack constraints** | "build a React component" | "React 18, TypeScript strict, no external libraries, Tailwind only" |
 | 22 | **No stop condition for agents** | "build the whole feature" | Explicit stop conditions + checkpoint after each step |
 | 23 | **No file path for IDE AI** | "update the login function" | "Update `handleLogin()` in `src/pages/Login.tsx` only" |
-| 24 | **Wrong template for tool** | GPT-style prose used in Cursor | Adapted to File-Scope Template with path + scope |
+| 24 | **Wrong template for tool** | Generic prose used for a bounded editing task | Adapted to File-Scope Template with path + scope |
 | 25 | **Pasting entire codebase** | Full repo context every prompt | Scoped to relevant function and file only |
 
 </details>
@@ -395,7 +363,11 @@ This is the single biggest fix for long sessions. Most wasted re-prompts come fr
 
 ---
 
-## ℹ️ Version History
+## Historical source notes (non-normative)
+
+Retained upstream release notes are provenance only, not active routing, defaults, setup requirements or support claims.
+
+### ℹ️ Version History
 
 - **1.8.0** — Current-model refresh. Added Claude Fable 5, Opus 5, Sonnet 5, GPT-5.6 Sol/Terra/Luna, Codex, and Grok 4.6 routing. Replaced hidden chain-of-thought requests with auditable reasoning and generalized the Claude task brief for current adaptive-thinking models.
 - **1.7.0** — Opus 4.8 compatibility. Made Claude 4.x routing version-aware: durable advice generalized across 4.6/4.7/4.8, added Opus 4.8 (current default) profile, kept Opus 4.7 labeled. De-hardcoded the effort-level note (now harness-managed). Template M and pattern 36 cover 4.7 and 4.8. Fixed a stray fragment in patterns.md.
@@ -407,7 +379,15 @@ This is the single biggest fix for long sessions. Most wasted re-prompts come fr
 - **1.1.0** — Expanded tool coverage, added memory block system, 35 credit killing patterns
 - **1.0.0** — Initial release
 
+## End historical source notes
+
 ---
+
+## Provenance and MIT notice
+
+Neutral fleet routing is an ACON reconciliation informed by Fleet `docs/PHILOSOPHY.md` and `.pi/agents/model-profiles.yaml` (ideas only), revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime configuration or persona is imported.
+
+## End provenance and MIT notice
 
 ## 📄 License
 

@@ -32,8 +32,8 @@ Traditional multi-agent frameworks rely heavily on conversational prose: agents 
 
 ### 1.2 The Five Core Invariants
 
-1. **Zero Code Invariant (Pure Markdown Protocol):**  
-   Only the theoretical concept of Jev is borrowed. Every gate, sheet, and log is pure markdown or YAML schema (`.agents/reference/schemas/decision-sheet.yaml`). Do not add Python, Node, shell scripts, SDKs, external APIs, or network calls. Nothing in this protocol is ever "called" or "run" as executable software.
+1. **Zero Code Invariant (Readable Markdown Protocol):**
+   Only the theoretical concept of Jev is borrowed. Every gate, sheet, and log is documented in readable Markdown tables and rules, including the canonical [DecisionSheet contract](../../../reference/schemas/decision-sheet.md). These documents guide decisions; they are not executable schemas or validators. Do not add Python, Node, shell scripts, SDKs, external APIs, or network calls. Nothing in this protocol is ever "called" or "run" as executable software.
 2. **Tighten-Only Invariant:**  
    Gate outcomes may only add governance rigor (mandating an implementation plan, raising dispatch tier, requiring scout reconnaissance, or escalating to the Captain). A gate outcome must **NEVER** drop or relax a requirement imposed by the constitution, compiler/test runner, or Captain.
 3. **Advisory by Default (`Mode: advisory`):**  
@@ -59,7 +59,7 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
        │                    ├───► G4: anti-slop     (Task brief valid? Bounds <= 3 files?)
        │                    └───► G5: skill-route   (Specialist persona & modular skills?)
        ▼
-  (Phase III: Crew Flight) ─────► Autonomous worker(s) in isolated .worktrees/
+  (Phase III: Crew Flight) ─────► Bounded work in isolated child-or-peer sessions
        │
   (Phase IV: Gatekeeping) ──────► G7: deliverable-audit (Diff clean? Ponytail compliant? Tests passed?)
        │
@@ -82,10 +82,12 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
 
 ## 3. How Evaluators Produce Decision Sheets
 
+Host-neutral assignment is conditional on task-local evidence: discovery requires prior Captain approval of permitted CLIs/subscriptions and quota/time/cost notice; discovery grants no spending or launch authority. For every role, including `reviewer`, propose an available Captain-permitted model and supported effort and obtain Captain approval before launch. Do not assume a fixed catalog, settings/runtime, adapter, or capability. `UNKNOWN` required capability is fail-closed `BLOCKED`. Record task/session identity, role/model/effort authorization, evidence location, state, and terminal completion; receipt is not completion. Keep at most four live crew panes per tab excluding the orchestrator. Any nested helper requires explicit bounded authority and cannot exceed scope, role, budget, pane cap, or substitute for independent review.
+
 ### 3.1 The Machine Contract (Zero Preamble & Token-0 Anchoring)
 Evaluators must never emit conversational filler (*"Certainly!"*, *"Here is my assessment"*). The first emitted character must be the structural opening `{` of the JSON Decision Sheet.
 
-All decision sheets conform strictly to `.agents/reference/schemas/decision-sheet.yaml`:
+Decision sheets follow the readable Markdown [DecisionSheet contract](../../../reference/schemas/decision-sheet.md); it is a normative human-readable specification, not executable validation:
 ```json
 {
   "gate": "plan-first",
@@ -108,8 +110,8 @@ To eliminate hallucinated certainty without model retraining:
 
 ### 3.3 Evaluator Role Partitioning
 - **Intake Gates (G1, G2, G3):** Evaluated directly on the Command Bridge by the Control Plane during mission intake and task decomposition.
-- **Inspection Gates (G4, G7):** Evaluated by specialist subagents (`scout` or `reviewer`) to uphold the Control Plane Zero-Archaeology Mandate.
-- **Redundant Dual Sheets:** Evaluated by two independent `scout` subagents dispatched in parallel.
+- **Inspection Gates (G4, G7):** Evaluated by separately assigned isolated child-or-peer sessions (`scout` or `reviewer`) to uphold the Control Plane Zero-Archaeology Mandate. The primary orchestrator never executes or explores.
+- **Redundant Dual Sheets:** Evaluated by two independent `scout` sessions only when the Captain-approved host and role choices support that work; do not infer launch or isolation capability.
 
 ---
 
@@ -188,8 +190,8 @@ planRequired: REQUIRED | relaxing: no | binding: no | schemaChange p=0.9
 
 For high-stakes missions—specifically **Tier 1 multi-agent missions**, database schema mutations, and `[HUMAN-CORE]` domain tasks—the Control Plane employs **Dual-Blind Redundancy**:
 
-1. **Parallel Dispatch:** The Control Plane launches two independent `scout` subagents (`Scout-A` and `Scout-B`).
-2. **Context Isolation:** Each Scout receives the identical state and gate specification. Neither Scout sees the other's prompt, existence, or output.
+1. **Authorized Assignment:** After discovery and Captain approval of permitted choices, available model/effort and quota/time/cost notice, the Control Plane may assign two independent `scout` child-or-peer sessions (`Scout-A` and `Scout-B`) if the approved host evidences support.
+2. **Context Isolation:** Each Scout receives the identical state and gate specification in a separate read-only context. Neither Scout sees the other's prompt, existence, or output. Record actual role/model identities and authorization/availability evidence; same-model review is `CORRELATED_REVIEW`.
 3. **Independent Resolution:** Each Scout generates a self-linted Decision Sheet and derives an outcome.
 4. **Reconciliation Protocol:**
    - For each rule, compare outcomes against the gate's declared `Tight Order`.
@@ -213,7 +215,7 @@ The Decision Log is strictly updated by the mission's **Phase IV closing worker*
 ```
 
 ### 7.3 Calibration Review Procedure
-When the Captain requests an audit (*"review the gates"* or *"check calibration"*), the Control Plane dispatches a `scout` subagent to analyze `.agents/skills/productivity/decision-gates/log.md`:
+When the Captain requests an audit (*"review the gates"* or *"check calibration"*), the Control Plane may assign an authorized, separately isolated `scout` child-or-peer session to analyze `.agents/skills/productivity/decision-gates/log.md`; first obtain Captain approval for the permitted role choice and evidence host capability. Record session identity and terminal completion evidence.
 1. **Sample Adequacy:** If a gate has $< 30$ logged entries, the Scout reports: `"Sample size too small for statistical calibration (<30 rows)."`
 2. **Error Rate Computations:**
    - **Tightening Override Rate:** Percentage of tightening outcomes overridden by the Captain (indicating false alarms or over-conservatism).

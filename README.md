@@ -4,7 +4,7 @@
 
 **ACON** is an autonomous multi-agent orchestration distro and skill network. It transforms your primary AI coding assistant into an **Agent Control Plane** (the *First Mate*), delegating complex implementation, audits, and spikes to specialized subagents (*Crewmates*) while serving you, the **Captain**.
 
-No external bash daemons or runtime terminal multiplexers required—ACON operates natively within AI agent harnesses using tool-level delegation (`invoke_subagent`, `manage_subagents`, `send_message`).
+ACON supplies conventions, not a runtime integration. Reading `AGENTS.md` / `CLAUDE.md` does not establish delegated SHIP compatibility. The [portable fleet reference](.agents/reference/crew/README.md) defines capability discovery, authorized role routing and unsupported modes for the active installed harness.
 
 ---
 
@@ -15,7 +15,7 @@ No external bash daemons or runtime terminal multiplexers required—ACON operat
    git clone https://github.com/HairyBlue/acon.git
    ```
 
-2. **Open the ACON repo** with your AI coding assistant (AGY, Claude Code, Cursor, etc.)
+2. **Open the ACON repo** with your AI coding assistant.
 
 3. **Tell your agent** where your project is:
    > "Adopt ACON into my project at ~/my-project"
@@ -24,7 +24,8 @@ No external bash daemons or runtime terminal multiplexers required—ACON operat
 
 ### Requirements
 
-- An AI coding assistant (AGY, Claude Code, Cursor, or any tool that reads `AGENTS.md` / `CLAUDE.md`)
+- A reader of `AGENTS.md` / `CLAUDE.md` can consume the conventions; delegated execution additionally requires evidenced child delegation, isolated contexts, applicable workspace isolation, supervision/communication, terminal completion delivery and separate read-only review.
+- One current Captain-authorized model/subscription is sufficient when those capabilities are available. Demonstrated sequential isolated roles may replace concurrency, never independent review. A required `UNAVAILABLE` or `UNKNOWN` capability means `BLOCKED`; seek a Captain-approved supported operating-mode change, not primary-thread implementation or weaker review.
 - Standard Unix utilities (`bash`, `rsync`) for `./scripts/adopt.sh`
 
 ---
@@ -41,7 +42,7 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 │  • Zero-Execution & Zero-Archaeology Mandate (Single-Turn Dispatch)     │
 │  • Task Shaping: SHIP (code/tests) vs. SCOUT (read-only spikes)         │
 │  • Mutually Exclusive File Scopes (Zero Write Collisions)               │
-│  • Zero-Token Reactive Waiting (No Busy-Polling Loops)                  │
+│  • Evidenced Supervision & Completion (No Assumed Scheduling)           │
 │  • On-Demand Fleet Bearings Status Reporting                            │
 └────────────────────────────────────┬────────────────────────────────────┘
                                      │
@@ -92,16 +93,17 @@ flowchart TD
     end
     
     subgraph Flight ["Phase III: Autonomous Crew Flight"]
-        Contracts -->|"pi-subagents dispatch (Task N)"| Crew["Native Crew (worker, scout, reviewer, oracle)"]
-        Crew -->|"Compile, test, self-verify in .worktrees/"| Crew
-        FirstMate -.->|"Zero-token reactive waiting (Harness yields)"| Crew
+        Contracts -->|"Capability-verified delegation (Task N)"| Crew["Isolated Crew (worker, scout, reviewer, oracle)"]
+        Crew -->|"Compile, test, self-verify in assigned workspace"| Crew
+        FirstMate -.->|"Evidenced supervision and completion delivery"| Crew
     end
     
     subgraph Synthesis ["Phase IV: Synthesis & Gatekeeping"]
         Crew -->|"Finished deliverables & diffs"| G7{"Gate G7: deliverable-audit"}
         G7 -->|"REJECT_RETRY"| RetryWorker["worker (Fix regressions/scope)"]
         RetryWorker --> G7
-        G7 -->|"APPROVE"| ControlPlane["Control Plane Synthesis"]
+        G7 -->|"APPROVE"| G89["Gate G8 (Code Review) & G9 (Security Review)"]
+        G89 -->|"APPROVE"| ControlPlane["Control Plane Synthesis"]
         ControlPlane -->|"Gate G6: bearings-triage"| G6["Gate G6"]
         G6 -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
         Bearings -->|"Captain approval for git commit / destructive ops"| Captain
@@ -110,8 +112,8 @@ flowchart TD
 
 1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and **Gate G1 (`grill-trigger`)**, triggering 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or second-opinion analysis via `oracle` to lock architecture.
 2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition governed by **Gate G2 (`plan-first`)**, strict `SHIP` vs. `SCOUT` classification via **Gate G3 (`task-shape`)**, specialist crew routing via **Gate G5 (`skill-route`)**, non-overlapping file boundaries, and pre-flight validation via **Gate G4 (`anti-slop`)**.
-3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Specialist dispatch via native `pi-subagents` (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`), isolated `.worktrees/<branch>` execution, zero-token reactive waiting (harness yields), and closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks).
-4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Post-flight universal verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), central file integration, status event triage via **Gate G6 (`bearings-triage`)**, and presentation of verified diffs in the 4-section Fleet Bearings digest. Git commit and push are strictly blocked until the Captain reviews outcomes and explicitly authorizes them (zero autonomous git mutations).
+3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Delegate bounded specialist tasks through evidenced capabilities of the active installed harness (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`), preserving isolated contexts and exclusive assigned workspaces. Concurrent writers require authorized isolated `.worktrees/<branch>` execution; demonstrated sequential isolated roles are permitted. Supervision/communication and terminal completion delivery must be evidenced; receipt is not completion and no automatic scheduling or polling is assumed. Use closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks); missing required capabilities mean `BLOCKED` under the [portable contract](.agents/reference/crew/README.md#unsupported-modes).
+4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Post-flight universal verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), delegated central file integration, and mandatory independent **G8 (Code Review)** and **G9 (Security Review)** in separate read-only reviewer contexts precede any commit proposal. Record actual writer/reviewer identities; shared model identity requires `CORRELATED_REVIEW`, never writer-session review. Missing required review evidence means `BLOCKED`. Triage status via **Gate G6 (`bearings-triage`)** and present verified diffs in the 4-section Fleet Bearings digest. Git commit and push are strictly blocked until the Captain reviews outcomes and explicitly authorizes them (zero autonomous git mutations).
 
 ### 🛡️ Machine-Native Decision Gates (The Jev Protocol)
 
@@ -126,6 +128,7 @@ Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with c
 * **G5 (`skill-route`)**: Routes appropriate specialist roles and modular domain skills from `.agents/INDEX.md`.
 * **G6 (`bearings-triage`)**: Filters status updates and escalates critical blockers to the Captain's Call.
 * **G7 (`deliverable-audit`)**: Universal post-flight verification auditing worker diffs for regressions, scope creep, and simplicity before central synthesis.
+* **G8 (Code Review)** and **G9 (Security Review)**: Mandatory independent post-SHIP reviews, preserving separate read-only contexts and Captain authority.
 
 Every gate ships in `Mode: advisory`, operates strictly **tighten-only**, and anchors probabilistic claims in verbatim code citations. Detailed documentation and worked cases are available in [`.agents/skills/productivity/decision-gates/SKILL.md`](.agents/skills/productivity/decision-gates/SKILL.md).
 
@@ -197,7 +200,7 @@ The Control Plane renders the canonical **4-section Bearings digest**:
 ```
 acon/
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
-├── CLAUDE.md                                     # Symlink -> AGENTS.md (Single Source of Truth for Claude Code)
+├── CLAUDE.md                                     # Existing compatibility entry point -> same AGENTS.md constitution; not a runtime requirement
 ├── README.md                                     # Human-facing guide and operational instructions
 ├── scripts/                                      # Control Plane automation scripts
 │   └── adopt.sh                                  # Repository adoption & synchronization script
@@ -216,12 +219,25 @@ acon/
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
     └── reference/                                # Reference Catalog, Contracts & Subagent Briefs
         ├── crew/                                 # Specialist Subagent Persona Briefs (scout, worker, reviewer...)
-        ├── schemas/                              # 7 Canonical Machine Envelopes (decision-sheet, task-contract...)
+        ├── schemas/                              # 8 normative Markdown contract specifications (not executable validators)
         ├── workflows/                            # Repeatable Multi-Agent Workflows (council, review-loop...)
         └── fowler-smells.md                      # Code smell reference guide
 ```
 
 ---
+
+### Contract specifications
+
+The eight canonical Markdown contract specifications document required fields, types, enums, bounds, and conditional rules in readable tables. They are normative documentation, not executable validation schemas:
+
+- [ScoutReport](.agents/reference/schemas/scout-report.md)
+- [ShipDiff](.agents/reference/schemas/ship-diff.md)
+- [GrillInterview](.agents/reference/schemas/grill-interview.md)
+- [TaskContract](.agents/reference/schemas/task-contract.md)
+- [HandoffState](.agents/reference/schemas/handoff-state.md)
+- [BearingsDigest](.agents/reference/schemas/bearings-digest.md)
+- [DecisionSheet](.agents/reference/schemas/decision-sheet.md)
+- [ReviewReport](.agents/reference/schemas/review-report.md)
 
 ## 📖 Dynamic Documentation Standard
 
@@ -274,7 +290,7 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 - **`developer-story`**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
 - **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
 - **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.
-- **`technical-writing-for-engineers`**: Technical RFCs, architecture decisions, and post-mortems.
+- **[`technical-writing-for-engineers`](.agents/skills/productivity/technical-writing-for-engineers/SKILL.md)**: Technical RFCs, architecture decisions, and post-mortems; also the existing skill entry for optional durable-learning proposals. Propose evidence-grounded, deduplicated lessons in-session first; persistence requires separate Captain approval of exact text/path/scope and an assigned worker. Transient `handoff` is not durable learning.
 - **`daily-progress-report`**: Work summary and Notion publishing via MCP.
 
 ### 🔒 4. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
@@ -292,6 +308,12 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
 Refer to **[`.agents/INDEX.md`](.agents/INDEX.md)** for a fast symptom, task, and skill lookup matrix.
 
 ---
+
+## Provenance and MIT notice
+
+Capability/discovery and optional-learning wording is informed by Fleet `docs/PHILOSOPHY.md`, `.pi/agents/model-profiles.yaml` (ideas only) and `skills/compound-learning/SKILL.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](.agents/reference/crew/README.md#provenance-and-mit-notice). No source runtime configuration is adopted.
+
+## End provenance and MIT notice
 
 ## 📚 References & Prior Art
 

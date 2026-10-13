@@ -2,6 +2,10 @@
 
 Full template library for Prompt Master. Read the relevant template when the user's task type matches. Do not load all templates at once — only the one you need.
 
+For ACON tasks, G/H/M consume the [portable fleet contract](../../../../reference/crew/README.md) and assigned [TaskContract](../../../../reference/schemas/task-contract.md). Required delegation, isolated contexts/workspaces, supervision/communication, terminal completion delivery and separate read-only review must be `AVAILABLE`; `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`. Firstmate delegates inspection and implementation; it never executes on the primary thread. Supported sequential isolated roles may replace concurrency, never independent G8/G9 or writer/reviewer separation. Receipt is not completion.
+
+For each role, including reviewers, propose an available Captain-permitted choice and supported effort, and obtain approval before launch. Temporary role choices require explicit approval, available-choice evidence, expiry and a time/cost ceiling. Recheck authorization and availability at dispatch, resume and completion; pause expired/unavailable work and resume only under a still-valid explicitly approved fallback. Do not probe or launch before permitted discovery, choice approval and quota/time/cost notice; discovery grants no spending authority. Actual shared model identity requires `CORRELATED_REVIEW` while retaining separate read-only contexts.
+
 ## Table of Contents
 
 | Template | Best For |
@@ -12,13 +16,13 @@ Full template library for Prompt Master. Read the relevant template when the use
 | [D — CRISPE](#template-d--crispe) | Creative work, brand voice |
 | [E — Auditable Reasoning](#template-e--auditable-reasoning) | Logic, math, analysis, debugging |
 | [F — Few-Shot](#template-f--few-shot) | Consistent structured output, pattern replication |
-| [G — File-Scope](#template-g--file-scope) | Cursor, Windsurf, Copilot — code editing AI |
-| [H — ReAct + Stop Conditions](#template-h--react--stop-conditions) | Claude Code, Devin — autonomous agents |
+| [G — File-Scope](#template-g--file-scope) | Assigned code edits with exact path and section ownership |
+| [H — ReAct + Stop Conditions](#template-h--react--stop-conditions) | Bounded Ship worker with evidenced execution and review capabilities |
 | [I — Visual Descriptor](#template-i--visual-descriptor) | Midjourney, DALL-E, Stable Diffusion, Sora |
 | [J — Reference Image Editing](#template-j--reference-image-editing) | Editing an existing image with a reference |
 | [K — ComfyUI](#template-k--comfyui) | ComfyUI node-based image workflows |
 | [L — Prompt Decompiler](#template-l--prompt-decompiler) | Breaking down, adapting, or splitting existing prompts |
-| [M — Current Claude Task Brief](#template-m--current-claude-task-brief) | Complex, multi-step, or agentic task on current Claude models |
+| [M — Bounded Agent Task Brief](#template-m--bounded-agent-task-brief) | Scoped task for any assigned role with current requirement evidence |
 
 ---
 
@@ -176,14 +180,14 @@ Now apply this exact pattern to: [actual input]
 **Rules:**
 - 2 to 5 examples is the sweet spot. More rarely helps and wastes tokens.
 - Examples must include edge cases, not just easy cases.
-- Use XML tags to wrap examples — Claude parses XML reliably.
+- Use XML tags to wrap examples when the target system demonstrably supports that structure.
 - If you have been re-prompting for the same formatting correction twice, switch to few-shot instead of rewriting instructions.
 
 ---
 
 ## Template G — File-Scope
 
-*Use for Cursor, Windsurf, GitHub Copilot, and any AI that edits code inside a codebase. The most common failure mode here is editing the wrong file or breaking existing logic — this template prevents both.*
+*Use for an assigned coding worker or IDE assistant with evidenced editing capabilities. Exact file and section ownership bounds the change; verification and independent review remain required for ACON tasks.*
 
 ```
 File: [exact/path/to/file.ext]
@@ -206,6 +210,8 @@ Constraints:
 
 Done When:
 [Exact condition that confirms the change worked correctly]
+[TaskContract requirement IDs, exact assertions/revisions, applicable parity inventory and proof commands]
+Report current evidence and unproven results; a changed file alone is not proof.
 ```
 
 ---
@@ -213,7 +219,7 @@ Done When:
 <a id="template-h--react--stop-conditions"></a>
 ## Template H — ReAct + Stop Conditions (Ship)
 
-*Use for Claude Code, Devin, AutoGPT, and any AI that takes autonomous actions (Ship deliverables). Runaway loops and scope explosion are the biggest credit killers in agentic workflows — stop conditions and grammar envelopes are not optional.*
+*Use for a bounded Ship worker under installed-harness capability and authorization evidence. Stop conditions, assigned path ownership and current proof bound execution; no template grants additional authority.*
 
 ```
 Objective:
@@ -226,14 +232,13 @@ Target State:
 [What should exist when the agent is done]
 
 Allowed Actions:
-- [Specific action the agent may take]
-- Install only packages listed in [requirements.txt / package.json]
+- [Explicitly authorized inspection, edits and verification in exact assigned paths]
 
 Forbidden Actions:
 - Do NOT modify files outside [directory/scope]
-- Do NOT run the dev server or deploy
-- Do NOT push to git
-- Do NOT delete files without showing a diff first
+- Do NOT run the dev server or deploy unless explicitly authorized
+- Do NOT stage, commit, push, create branches or mutate remotes without explicit Captain approval
+- Do NOT delete files, install dependencies or change schemas without explicit Captain approval
 - Do NOT make architecture decisions without human approval
 
 Code Minimalism & Diff Constraints:
@@ -248,13 +253,18 @@ Pause and ask for human review when:
 - The task requires changes outside the stated scope
 
 Checkpoints:
-After each major step, output: ✅ [what was completed]
+Report changed state or verification results at assigned checkpoints; distinguish receipt from completion.
+
+Requirement Evidence:
+Carry exact TaskContract requirement IDs, assertions/revisions and applicable parity inventory.
+Record current assertion_evidence, command exits and artifact locators; missing or stale proof is UNPROVEN, not completion.
 
 Grammar Envelope (Constrained Sampling):
-Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the canonical [ship-diff.yaml](../../../../schemas/ship-diff.yaml) schema:
+Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the canonical [ship-diff.md](../../../../reference/schemas/ship-diff.md) contract:
 - Zero Conversational Preamble (forbid "Sure!", "Here is...", pleasantries; start directly with the YAML envelope).
-- Schema-locked output must validate against [ship-diff.yaml](../../../../schemas/ship-diff.yaml).
+- Schema-locked output must follow [ship-diff.md](../../../../reference/schemas/ship-diff.md).
 - Zero markdown prose or filler outside the envelope.
+- Mandatory independent G8/G9 follow worker verification; self-verification cannot replace them.
 ```
 
 ---
@@ -401,10 +411,12 @@ Run these in order. Each output feeds the next.
 ```
 ---
 
+<!-- Legacy fragment retained only for link compatibility, not runtime selection. -->
 <a id="template-m--current-claude-task-brief"></a>
-## Template M — Current Claude Task Brief (Scout / Agentic)
+<a id="template-m--bounded-agent-task-brief"></a>
+## Template M — Bounded Agent Task Brief
 
-*Use for complex, multi-step, or agentic tasks (including Scout investigations) on current Claude models—Claude.ai, API, or Claude Code. It front-loads the outcome, context, scope, action boundaries, and machine grammar envelopes while avoiding obsolete manual-thinking scaffolding.*
+*Use for any assigned role's scoped task. Front-load outcome, context, scope, action boundaries and evidence without private-reasoning requests. Scout/Oracle/reviewer tasks remain read-only; only an assigned writer may implement within its exclusive paths.*
 
 ```
 ## Objective
@@ -426,34 +438,45 @@ Run these in order. Each output feeds the next.
 - Enforce [ponytail](../../ponytail/SKILL.md) minimalism: prefer minimum working diff, eliminate dead code, and avoid speculative architecture.
 
 ## Acceptance Criteria
-- [ ] [Binary check 1]
-- [ ] [Binary check 2]
-- [ ] [Binary check 3]
+[Exact TaskContract requirement IDs, assertion text, revisions and proof kinds]
+[Applicable parity inventory or explicit non-applicability reason]
+[Verification commands, expected exits and required artifact locators]
 
 ## Action Boundaries
-- Proceed with reversible, in-scope inspection, edits, and validation.
-- Stop and ask before destructive or irreversible actions, external writes, purchases, material scope expansion, or decisions that require user-only input.
+- Assigned role: [role]; read-only or writer authority: [explicit permission].
+- Proceed only with authorized in-scope inspection and validation; edits require assigned writer authority.
+- Stop and ask before destructive actions, dependency installation, schema changes, staging/commits/pushes/branches, external writes, purchases, material scope expansion or Captain-only decisions.
+- Required unavailable/unknown capabilities mean BLOCKED; no fabricated tools, primary execution or writer-context independent review.
 
 ## Progress Evidence
 For long-running work, report progress only when it changes or when a checkpoint is reached. Ground every completion claim in a tool result, changed artifact, or verification output.
 
 ## Grammar Envelope (Constrained Sampling)
-Enforce grammars-and-constrained-sampling. For Scout investigations or structured findings, deliver output strictly conforming to the canonical [scout-report.yaml](../../../../schemas/scout-report.yaml) schema:
+Enforce grammars-and-constrained-sampling and the assigned role's canonical output schema.
+Use [scout-report.md](../../../../reference/schemas/scout-report.md) for Scout findings,
+[ship-diff.md](../../../../reference/schemas/ship-diff.md) for writer deliverables, or the explicitly assigned review/council/gate envelope.
 - Zero Conversational Preamble (start directly with the schema envelope).
-- Schema-locked deliverable must strictly conform to [scout-report.yaml](../../../../schemas/scout-report.yaml).
-- Zero conversational padding or pleasantries outside the YAML block.
+- Preserve requirement revisions and current evidence; missing, failed or stale proof is not completion.
+- Zero conversational padding or pleasantries outside the envelope.
+- Independent G8/G9 remain mandatory after SHIP; writer self-review is not independent acceptance.
 ```
 
-**Effort** — configure in the API or harness rather than requesting private reasoning in the prompt. Start with the model default, lower it for routine scoped work, and raise it only when task difficulty warrants the cost.
+**Effort** — specify abstract intent `none | low | medium | high | max` only when supported and authorized. The installed harness owns actual model/effort translation; task difficulty or a profile grants no spending or switching authority.
 
-**Claude Code only — add Session Strategy block when relevant:**
+**Context strategy — add only when supported by installed-harness evidence:**
 ```
 ## Session Strategy
-[Pick one:]
-- New session — unrelated to prior context, start fresh
-- Continue — prior context still needed
-- Subagent — delegate only [independent, sizeable workstream], with a bounded deliverable
-- Compact first — compact around [decisions, constraints, and current state], then begin
+[Select an evidenced capability, not a named session API:]
+- Fresh context — unrelated to prior work; supply the current task contract
+- Continuation — prior context still needed; recheck assertions and evidence
+- Bounded delegation — supervisor-assigned isolated task with exclusive scope and terminal completion evidence
+- Compaction — retain decisions, constraints, requirement revisions, parity inventory and current proof before continuing
 ```
 
-**When to use:** Current Claude models on any surface when the task is complex, multi-file, ambiguous, or agentic. Not needed for simple one-shot tasks.
+**When to use:** A scoped investigation, implementation or review that needs explicit context, authority and proof. Do not expand scope or assume runtime support from task complexity.
+
+## Provenance and MIT notice
+
+Neutral fleet templates are an ACON reconciliation informed by Fleet `docs/PHILOSOPHY.md` and `.pi/agents/model-profiles.yaml` (ideas only), revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime configuration or persona is imported.
+
+## End provenance and MIT notice

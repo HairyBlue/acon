@@ -1,6 +1,6 @@
 ---
 name: grammars-and-constrained-sampling
-description: Machine contracts, Token-0 anchoring, zero-preamble enforcement, closed enums, and schema-locked YAML envelopes.
+description: Machine contracts, Token-0 anchoring, zero-preamble guidance, closed enums, and readable Markdown contract references.
 ---
 
 # Machine Contracts & Grammar Envelopes (`grammars-and-constrained-sampling`)
@@ -18,29 +18,33 @@ In multi-agent architectures, conversational token bloat drives context degradat
 1. **First-Token Anchoring (Token-0):**  
    Never permit opening pleasantries (*"Sure!"*, *"Certainly!"*, *"Here is what I found"*). Where the harness supports first-token anchoring, anchor the prompt so the model's first generated token must be the structural opening of data or schema (`{`, `---`, or load-bearing markdown).
 
-2. **Schema-Locked Envelopes ([`.agents/reference/schemas/`](../../../reference/schemas/)):**  
-   Replace free-form status narratives and chat essays with strict machine-parseable YAML/JSON schemas. Where the harness supports grammar-constrained output, dispatched subagents must return data strictly within designated schema envelopes in [`.agents/reference/schemas/`](../../../reference/schemas/).
+2. **Readable Contract Envelopes ([`.agents/reference/schemas/`](../../../reference/schemas/)):**
+   Replace free-form status narratives and chat essays with structured reports guided by the canonical readable Markdown contracts. These documents specify normative fields and rules; they are not executable schemas or runtime validation.
 
 3. **Closed Enum Constraints:**  
    Never solicit open-ended qualitative evaluations. Constrain status, severity, and decision fields to discrete, exhaustive sets (e.g. `[CRITICAL, HIGH, MEDIUM, LOW]`, `[SUCCESS, BLOCKED, FAILED]`). Closed enums eliminate subjective hallucinations and, where the harness supports constrained decoding, provide deterministic parsing.
 
-4. **Tool-Bound Execution:**  
-   Code edits, file creations, and system mutations must NEVER be emitted as conversational markdown code blocks. Force execution strictly through verified tool calls (`write_to_file`, `replace_file_content`).
+4. **Tool-Bound Execution:**
+   The assigned worker performs authorized code edits, file creations and system mutations only through verified mutation capability supplied by the active installed harness, within its exclusive file scope. Conversational code blocks are not an execution substitute. If required mutation capability is `UNAVAILABLE` or `UNKNOWN`, record `BLOCKED`; do not invent a tool or implement on the primary thread. Verify the resulting change with the task's explicit deterministic checks.
+
+This verified-mutation wording is an ACON capability reconciliation informed by Fleet `docs/PHILOSOPHY.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`; see the [portable capability contract](../../../reference/crew/README.md#capability-discovery) and [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime is imported.
 
 ---
 
 ## Canonical Schemas (`.agents/reference/schemas/`)
 
-All agent communications, task dispatches, and handoffs map directly to the 6 canonical YAML schemas in [`.agents/reference/schemas/`](../../../reference/schemas/):
+Agent communications, task dispatches, and handoffs are guided by the eight canonical readable Markdown contract specifications in [`.agents/reference/schemas/`](../../../reference/schemas/):
 
-| Schema File | Consumer / Scope | Purpose & Enforced Envelopes |
+| Markdown Contract | Consumer / Scope | Purpose & Normative Guidance |
 | :--- | :--- | :--- |
-| [**`scout-report.yaml`**](../../../reference/schemas/scout-report.yaml) | `Codebase Scout` (`SCOUT`) | Structured file inventories, findings, risks, and next actions. |
-| [**`ship-diff.yaml`**](../../../reference/schemas/ship-diff.yaml) | Implementation Specialists (`SHIP`) | Exact file mutation manifest, diff stats, and verification test outputs. |
-| [**`grill-interview.yaml`**](../../../reference/schemas/grill-interview.yaml) | Alignment & Sparring (`grill-me`) | 1–3 high-leverage questions with closed multiple-choice option enums. |
-| [**`task-contract.yaml`**](../../../reference/schemas/task-contract.yaml) | Implementation Plans (`writing-plans`) | Atomic task definitions with $\le 3$ files, typed `Consumes`/`Produces`, and test checks. |
-| [**`handoff-state.yaml`**](../../../reference/schemas/handoff-state.yaml) | Context Compaction (`handoff`) | Compact session state persistence (<500 tokens) for clean-slate resets. |
-| [**`bearings-digest.yaml`**](../../../reference/schemas/bearings-digest.yaml) | Fleet Bearings ([`AGENTS.md §5`](../../../../AGENTS.md)) | 4-section status reporting: Captain's Call, Landed, Underway, Charted Next. |
+| [**`scout-report.md`**](../../../reference/schemas/scout-report.md) | `Codebase Scout` (`SCOUT`) | Structured file inventories, findings, risks, and next actions. |
+| [**`ship-diff.md`**](../../../reference/schemas/ship-diff.md) | Implementation Specialists (`SHIP`) | Exact file mutation manifest, diff stats, and verification test outputs. |
+| [**`grill-interview.md`**](../../../reference/schemas/grill-interview.md) | Alignment & Sparring (`grill-me`) | 1–3 high-leverage questions with closed multiple-choice option enums. |
+| [**`task-contract.md`**](../../../reference/schemas/task-contract.md) | Implementation Plans (`writing-plans`) | Atomic task definitions with $\le 3$ files, typed `Consumes`/`Produces`, and test checks. |
+| [**`handoff-state.md`**](../../../reference/schemas/handoff-state.md) | Context Compaction (`handoff`) | Compact session state persistence (<500 tokens) for clean-slate resets. |
+| [**`bearings-digest.md`**](../../../reference/schemas/bearings-digest.md) | Fleet Bearings ([`AGENTS.md §5`](../../../../AGENTS.md)) | 4-section status reporting: Captain's Call, Landed, Underway, Charted Next. |
+| [**`decision-sheet.md`**](../../../reference/schemas/decision-sheet.md) | Decision gates | Gate outcomes, evidence and tighten-only rules. |
+| [**`review-report.md`**](../../../reference/schemas/review-report.md) | Independent G8/G9 review | Findings, identities, context separation and correlation. |
 
 ---
 
@@ -57,7 +61,7 @@ Please inspect the auth controllers and give me a concise summary of your findin
 ✅ **Constrained Prompt (First-Token Anchored & Schema-Locked):**
 ```text
 Audit auth session handlers in app/Http/. Do not emit conversational preambles or greetings.
-First emitted character MUST be the opening triple-dash (---) of this YAML envelope:
+First emitted character MUST be the opening triple-dash (---) of this structured report:
 ---
 status: [SUCCESS | BLOCKED]
 files_inspected: [list of paths]
@@ -74,7 +78,7 @@ Let me know if you think this migration is risky and what the status of the test
 
 ✅ **Constrained Prompt (Enum-Locked & Schema-Bound):**
 ```text
-Deliver migration assessment strictly adhering to these closed enums and YAML structure:
+Deliver migration assessment following these closed enums and structured report guidance:
 ---
 risk_level: [LOW | MEDIUM | HIGH | CRITICAL]
 test_status: [ALL_PASS | FAILING | UNVERIFIED]
@@ -91,9 +95,10 @@ Write a function that parses bearer tokens from HTTP authorization headers and s
 
 ✅ **Constrained Prompt (Tool-Bound):**
 ```text
-Implement `extractBearerToken(header: string): string | null` in `src/auth/token.ts`.
-Do not output code blocks in chat. Execute edits directly using `replace_file_content`.
-Verify immediately using `npm test -- src/auth/token.test.ts`.
+As the assigned worker, implement `extractBearerToken(header: string): string | null` in your authorized file `src/auth/token.ts`.
+Execute edits only through verified mutation capability supplied by the active installed harness; code blocks in chat are not a substitute.
+If the required capability is UNAVAILABLE or UNKNOWN, report BLOCKED; do not invent a tool or implement on the primary thread.
+Verify immediately using `npm test -- src/auth/token.test.ts` and report its output and exit code.
 ```
 
 ---

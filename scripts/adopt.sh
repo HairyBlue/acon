@@ -53,7 +53,7 @@ Usage: adopt.sh [OPTIONS] <TARGET_DIRECTORY>
 
 Universal lightweight adoption, bootstrap, and synchronization suite for
 transferring ACON's Control Plane constitution, domain skills catalog,
-constitutional rules, machine schemas, and reference catalogs into any
+constitutional rules, Markdown schema specifications, and reference catalogs into any
 new or existing repository.
 
 Strict Adoption Standard:
@@ -393,8 +393,8 @@ if [[ ${DRY_RUN} -eq 0 ]]; then
   SKILL_COUNT=$(find "${TARGET}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
   echo "  ✓ Catalog Verified: ${SKILL_COUNT} active skills installed"
   if [[ -d "${TARGET}/.agents/reference/schemas" ]]; then
-    SCHEMA_COUNT=$(find "${TARGET}/.agents/reference/schemas" -name "*.yaml" | wc -l | tr -d ' ')
-    echo "  ✓ Schemas Verified: ${SCHEMA_COUNT} canonical schemas installed"
+    SCHEMA_COUNT=$(find "${TARGET}/.agents/reference/schemas" -maxdepth 1 -type f -name "*.md" | wc -l | tr -d ' ')
+    echo "  ✓ Schemas Verified: ${SCHEMA_COUNT} canonical Markdown specs installed"
   fi
   if [[ -d "${TARGET}/.agents/reference" ]]; then
     REF_COUNT=$(find "${TARGET}/.agents/reference" -name "*.md" | wc -l | tr -d ' ')
@@ -408,7 +408,7 @@ fi
 # Completion Digest
 # ------------------------------------------------------------------------------
 SKILL_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/skills" -name "SKILL.md" | wc -l | tr -d ' ')
-SCHEMA_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/reference/schemas" -name "*.yaml" 2>/dev/null | wc -l | tr -d ' ')
+SCHEMA_COUNT_DISPLAY=$(find "${ACON_ROOT}/.agents/reference/schemas" -maxdepth 1 -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
 echo "================================================================================"
 echo "⚓ ACON Adoption Complete: Target repository is shipshape!"
 echo "================================================================================"

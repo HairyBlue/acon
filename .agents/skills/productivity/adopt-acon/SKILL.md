@@ -14,7 +14,7 @@ metadata:
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Control Plane Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), and reference catalogs, machine schemas, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), and reference catalogs, readable contract specifications, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
@@ -42,7 +42,7 @@ Modern software engineering with AI agents faces three fundamental dilemmas:
 │   • AGENTS.md         --> Real physical root constitution file         │
 │   • .agents/skills/   --> Real physical copies of all domain skills    │
 │   • .agents/rules/    --> Real physical copies of constitutional rules │
-│   • .agents/reference/ --> Physical copies of schemas, crew, workflows, catalogs │
+│   • .agents/reference/ --> Physical copies of contract specifications, crew, workflows, catalogs │
 │   • .agents/reference/--> Real physical copies of reference catalogs   │
 │                                                                        │
 │   🚫 STRICTLY EXCLUDED FROM TARGET REPOSITORIES:                       │
@@ -57,7 +57,7 @@ When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
 2. `.agents/skills/` (Domain skills dereferenced into physical directories, including `productivity/decision-gates`)
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
-3. `.agents/reference/` (Reference catalogs, machine schemas in `reference/schemas/` including `decision-sheet.yaml`, crew briefs, and workflows)
+3. `.agents/reference/` (Reference catalogs, readable contract specifications in `reference/schemas/` including `decision-sheet.md`, crew briefs, and workflows)
 5. `.agents/reference/` (Reference catalogs dereferenced into physical files)
 
 And explicitly forbids copying:
@@ -68,7 +68,7 @@ And explicitly forbids copying:
 1. **Cross-Platform Portability (Windows & WSL):** Windows filesystems handle symlinks poorly, requiring developer mode or administrative elevation. Git checkouts on Windows often convert symlinks into useless plaintext files containing relative paths.
 2. **Containerization & Cloud Sandboxes:** Docker containers and Kubernetes runner pods mount only the current workspace. Dangling symlinks pointing outside the workspace (or circular relative links) result in silent `ENOENT` (file not found) crashes inside agents.
 3. **Git Worktree Isolation:** When agents spawn isolated worktrees (`git worktree add`), relative symlinks like `../../.agents/skills` break or traverse into parent directories unexpectedly.
-4. **IDE Parsing Independence:** Cursor, Claude Code CLI, Antigravity, and VS Code indexed agents parse physical directories reliably, whereas symlinked trees frequently suffer from missed file watches, duplicate indexing loops, or indexing skips.
+4. **IDE Parsing Independence:** Physical directories avoid dependence on symlink traversal, but do not guarantee parsing, indexing or file-watch support. Verify the active reader's observed capabilities for the installed paths; use the [portable fleet contract](../../../reference/crew/README.md) for execution capabilities rather than treating file adoption as runtime compatibility certification.
 
 ---
 
@@ -111,7 +111,7 @@ The Command Bridge contains the complete, uncompromised ACON constitution:
 - **Foreign Boundary Trigger:** Automatic delegation when inspecting external paths.
 - **Task Contracts (`SHIP` vs. `SCOUT`):** Rigid boundary enforcement and verifiable test passes.
 - **4-Section Bearings Digest:** Standardized status reporting.
-- **Decision Gates Protocol:** Structured evaluation gates (`decision-gates`) and schema envelopes (`decision-sheet.yaml`) governing intake, shaping, and post-flight verification.
+- **Decision Gates Protocol:** Structured evaluation gates (`decision-gates`) and the readable normative [decision-sheet.md](../../../reference/schemas/decision-sheet.md) contract governing intake, shaping, and post-flight verification; the Markdown contract is not executable schema validation.
 - **Exclusive Captain Authority:** Destructive actions and git commits require human authorization.
 
 ### Tier 2: The Workshop Manual (Bottom)
@@ -167,14 +167,14 @@ Before transferring any files, the target repository is inspected:
   - Add explicit cross-reference in Section 3 linking to the Local Workshop Manual.
 - If target repository has no `AGENTS.md`:
   - Copy ACON's `AGENTS.md` directly.
-- **Claude Code Single Source of Truth:** `CLAUDE.md` is installed as a relative symlink to `AGENTS.md` (`CLAUDE.md -> AGENTS.md`), preventing rule divergence.
+- **Single Source of Truth & Compatibility Paths:** The physical root `AGENTS.md` remains canonical. `CLAUDE.md` is installed as a relative symlink to `AGENTS.md` (`CLAUDE.md -> AGENTS.md`), preventing duplicate rule content. Whether an active reader discovers either entry point and resolves the symlink requires observed capability evidence, not a branded runtime requirement.
 
 ### Phase 3: Pure Physical Copy Deployment
 - Copy `.agents/skills/` physically using `rsync -avL`.
 - Copy `.agents/rules/` physically using `rsync -avL`.
 - Copy `.agents/reference/` (including `schemas/`, `crew/`, `workflows/`, and catalogs) physically using `rsync -avL`.
 - **Strict Boundary Guard:** Explicitly exclude internal control plane scripts (`scripts/`).
-- **Zero Shadow Folders:** Eliminates redundant `.claude/` and `.cursor/` symlink directories. All harnesses link directly to the root `AGENTS.md` and `CLAUDE.md -> AGENTS.md`.
+- **Zero Shadow Folders:** Eliminates redundant `.claude/` and `.cursor/` symlink directories. The existing compatibility paths are the root `AGENTS.md` and `CLAUDE.md -> AGENTS.md`; reader support must be observed, not assumed for every harness.
 
 ### Phase 4: Verification Gate (Fail-Closed)
 The adoption process runs an automated verification gate:
@@ -234,3 +234,9 @@ When verifying an adopted repository, complete this checklist:
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.
 - [ ] **Catalog Integrity:** All active skills exist physically under `$TARGET/.agents/skills/`.
 - [ ] **Zero Execution on Bridge:** Primary agent in target repository acts strictly as Control Plane, delegating all code edits and multi-file archaeology to subagents.
+
+## Provenance and MIT notice
+
+Compatibility prose is an ACON reconciliation informed by Fleet `docs/PHILOSOPHY.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). Adoption paths, physical-copy/symlink behavior, commands and existing scripts are unchanged; no source runtime is adopted.
+
+## End provenance and MIT notice

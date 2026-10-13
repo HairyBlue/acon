@@ -130,12 +130,12 @@ To eliminate integration bugs when tasks are executed by separate subagents, eve
   ```
 ```
 
-#### Machine Grammar Pairing: `task-contract.yaml`
-Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and MUST conform to the canonical machine contract defined at [`.agents/reference/schemas/task-contract.yaml`](../../../reference/schemas/task-contract.yaml):
-- **Canonical Schema:** [`.agents/reference/schemas/task-contract.yaml`](../../../reference/schemas/task-contract.yaml)
+#### Readable Contract Pairing: `task-contract.md`
+Every task defined in an implementation plan pairs with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) and MUST follow the canonical readable contract defined at [`.agents/reference/schemas/task-contract.md`](../../../reference/schemas/task-contract.md):
+- **Canonical Contract:** [`.agents/reference/schemas/task-contract.md`](../../../reference/schemas/task-contract.md)
 - **Zero Hand-Waving:** Eliminates conversational ambiguity by strictly enforcing required schema properties (`task_id`, `title`, `eligibility`, `scope`, `consumes`, `produces`, `verification`).
 - **Context-Sliced Subagent Briefs:** Slices the task contract directly into subagent briefs without conversational baggage.
-- **Closed-Loop Verification Contract:** Locks the exact verification command and expected exit code into the machine contract.
+- **Closed-Loop Verification Contract:** Locks the exact verification command and expected exit code into the readable contract.
 
 ### The Verification & TDD Cycle (Pragmatic Testing Standard)
 Every code task in the plan must specify its closed-loop verification steps. Task test requirements are governed strictly by the **Pragmatic Testing Standard** documented in [`.agents/skills/engineering/tdd/SKILL.md`](../../engineering/tdd/SKILL.md) and [`AGENTS.md §8`](../../../../AGENTS.md#8-anti-slop-task-eligibility-standard-pre-flight-audit-checklist):
@@ -157,7 +157,7 @@ ACON solves context degradation through **Externalized Disk State**, **Context H
 
 ```mermaid
 flowchart TD
-    Req["Captain Requirement"] --> Plan["Control Plane writes plan<br>(docs/plans/YYYY-MM-DD-feature.md)"]
+    Req["Captain Requirement"] --> Plan["Assigned planning worker writes plan<br>(docs/plans/YYYY-MM-DD-feature.md)"]
     Plan --> SignOff{"Captain Sign-off"}
     SignOff -->|Approved| Handoff["Trigger handoff skill<br>(Compact summary <3k tokens)"]
     Handoff --> Reset["Session Reset / Fresh State"]
@@ -171,7 +171,7 @@ flowchart TD
 ### Externalized Disk State
 The plan file `docs/plans/YYYY-MM-DD-<feature-name>.md` lives in the repository on disk.
 - It survives agent session restarts, process crashes, and harness context limits.
-- When an execution worker completes a task, the task's checkbox is updated to `- [x]` in the file.
+- After terminal completion, verification and required review are accepted, an assigned worker with explicit plan-file write scope updates the task's checkbox to `- [x]`.
 - Any agent joining the project can immediately view the exact baseline and remaining work by inspecting the plan file.
 
 ### Session Resets via `handoff`
@@ -181,7 +181,7 @@ When the planning phase concludes and the Captain signs off on the plan:
 3. The new session loads with zero conversational baggage, reads `docs/plans/YYYY-MM-DD-<feature-name>.md`, and immediately begins autonomous crew flight.
 
 ### Subagent Context Slicing (The Slicing Rule)
-When the Control Plane dispatches a specialist worker via `invoke_subagent`:
+When the Control Plane delegates a specialist task through evidenced capabilities of the active installed harness, follow the [portable fleet contract](../../../reference/crew/README.md) for isolated context, exclusive scope, supervision and terminal completion evidence. Any required capability that is `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`; never substitute primary-thread execution. For each specialist brief:
 - **NEVER dump the entire 500-line plan or the multi-turn conversation history into the subagent brief.**
 - **Slice ONLY Task N:** The prompt brief for Worker N must contain strictly:
   1. The objective of Task N.
@@ -330,7 +330,7 @@ When a task triggers the Plan-First Gate under the Architectural Impact & Ambigu
 1. **Intake & Intent Extraction:**  
    Run `prompt-master` 9-dimension extraction. If forks or ambiguities exist, trigger `grill-me` for quick alignment.
 2. **Read-Only Codebase Scouting:**  
-   Dispatch a `Codebase Scout` via `invoke_subagent` to locate existing patterns, utility functions, test conventions, and integration seams. Never guess file contents or function signatures.
+   When codebase investigation is required, delegate a bounded `Codebase Scout` task in the first turn through evidenced installed-harness capabilities to locate existing patterns, utility functions, test conventions, and integration seams. Follow the [portable fleet contract](../../../reference/crew/README.md); missing or unknown required delegation capabilities mean `BLOCKED`, not primary-thread exploration. Never guess file contents or function signatures.
 3. **Draft Implementation Plan:**  
    Write the complete plan using the template above, enforcing the Ponytail ladder, interface contracts, and complete code blocks. Save to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 4. **Self-Audit against Mandates:**  
@@ -347,4 +347,10 @@ When a task triggers the Plan-First Gate under the Architectural Impact & Ambigu
 6. **Handoff & Context Reset (Optional but Recommended for Large Missions):**  
    If the conversation is long (>20k tokens), execute `handoff` and start a fresh session targeting `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 7. **Task Slicing & Autonomous Dispatch:**  
-   Slice Task 1 into a subagent brief (`invoke_subagent`). When Task 1 reports complete and passes verification, mark `- [x]` in the plan file, and proceed to Task 2.
+   Slice Task 1 into an exclusive, bounded specialist brief and delegate through evidenced installed-harness capabilities under the [portable fleet contract](../../../reference/crew/README.md). Require terminal completion evidence and deterministic verification, with mandatory independent G8/G9 review before acceptance. An assigned worker with explicit plan-file write scope records accepted progress as `- [x]` before Task 2 proceeds; the Control Plane never edits the plan on the primary thread. Missing or unknown required capabilities mean `BLOCKED`.
+
+## Provenance and MIT notice
+
+Bounded-delegation wording is an ACON reconciliation informed by Fleet `docs/PHILOSOPHY.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime or persona selection is adopted.
+
+## End provenance and MIT notice

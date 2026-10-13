@@ -1,23 +1,27 @@
-# Platform Catalog: Frontier LLMs & Foundational Models
+# Capability Profiles: Reasoning and Foundation Models
 
-Reference profiles and model-specific prompting parameters across major frontier and open-weight foundation models.
+Durable prompting profiles for reasoning, structured output, long-context and multimodal tasks. These profiles express task needs, not fixed providers, model IDs, API payloads or guaranteed tooling.
+
+The [portable fleet contract](../../../../../reference/crew/README.md) owns capability discovery, authorized role routing and unsupported modes. In ACON, Firstmate delegates inspection and execution to bounded workers and retains synthesis; a model's apparent competence never permits primary-thread implementation.
+
+This capability reconciliation is informed by Fleet `docs/PHILOSOPHY.md` and `.pi/agents/model-profiles.yaml` (ideas only), revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`; see the [local provenance and full MIT notice](../../../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime, provider payload or fixed model hierarchy is adopted.
 
 ---
 
 ## 0. Dynamic Documentation & Model Recency Gate
 
 > [!IMPORTANT]
-> Model names, API parameters, reasoning controls, and picker options evolve rapidly. When prompting for frontier LLMs:
-> 1. **Check Official Provider Documentation:** When browsing or retrieval tools are available, verify current model slugs, context windows, and supported controls in provider documentation rather than relying on static memory.
-> 2. **Differentiate Consumer vs API Surfaces:** Consumer chat apps (ChatGPT, Claude.ai, Grok.com) expose different sliders, tools, and picker tiers than API/developer endpoints. Do not translate UI labels directly into API parameters.
-> 3. **Prefer Durable Family Patterns:** Favor durable architectural behaviors (e.g., XML envelopes, few-shot grounding, explicit stop conditions) over brittle assumptions about specific model defaults.
-> 4. **Acknowledge Unverified Models:** If official documentation cannot be confirmed, state that model-specific nuances are unverified and apply the nearest durable family archetype. Never hallucinate model slugs, pricing, or token limits.
+> Model availability, controls and context limits evolve rapidly:
+> 1. **Check Installed Capabilities:** Record task-local discovery and authorization evidence. Official version-matched documentation, when retrieval is available, may explain a control; it does not prove installed support or grant access.
+> 2. **Separate Surfaces:** Interactive UI labels are not API parameters. The active installed harness alone owns actual tool, model, effort and sampling translation; this catalog supplies no parameter matrix or adapter.
+> 3. **Prefer Durable Patterns:** Use clear context/task/output envelopes, grounded examples and explicit stop conditions rather than assumed family defaults.
+> 4. **Keep Unknowns Explicit:** Never invent identities, context limits, pricing or tools. Required `UNAVAILABLE` or `UNKNOWN` capabilities mean `BLOCKED`, not permission to use another model, execute on the primary thread or weaken review.
 
 ---
 
-## 1. Claude (claude.ai, Claude API, Claude 5 Family)
+## 1. Context-Rich Task Briefs
 
-Claude models excel at nuanced reasoning, complex instruction following, agentic tool workflows, and long-context processing.
+Use explicit structure for nuanced instructions, multi-step work and reference-heavy tasks without assuming family-specific competence.
 
 - **Durable Core Behaviors:**
   - Be explicit, direct, and outcome-oriented. Explain *why* a constraint exists when judgment is required.
@@ -25,120 +29,101 @@ Claude models excel at nuanced reasoning, complex instruction following, agentic
   - For long documents, place reference texts and data before the instruction query; wrap documents with metadata in XML containers.
   - Prefer positive directives detailing the target result over exhaustive negative prohibitions.
   - Never ask for hidden reasoning traces or verbatim chain-of-thought. Request conclusions, assumptions, evidence, and validation checks.
-  - Calibrate adaptive thinking via the `effort` control in API harnesses rather than injecting manual thinking token budgets.
-- **Model Tiers:**
-  - **Claude Opus (e.g., Opus 5):** Recommended starting point for complex agentic coding, deep refactoring, and enterprise reasoning. Opus self-verifies effectively; avoid redundant verifier subagents for routine tasks. Add: *"Deliver what was asked. Do not add features, refactors, or abstractions beyond the task."*
-  - **Claude Fable (e.g., Fable 5):** Specialized for high-capability, long-horizon autonomous tasks. Provide exhaustive outcome specifications and action boundaries. Require all progress updates to cite actual tool execution results.
-  - **Claude Sonnet (e.g., Sonnet 5):** Frontier intelligence paired with high throughput. Interprets instructions literally, especially at lower effort. State clearly when a rule applies globally across every section.
-  - **Claude Haiku:** Fast, economical engine for high-volume extraction, tagging, and routine classification.
-  - **Claude 4.8 / Legacy Models:** Compatible with front-loaded explicit structure. For models 4.7+, prefer effort controls over fixed token budgets.
-- **Templates:** Use [Template M](../templates.md#template-m--current-claude-task-brief) for agentic and multi-step briefs.
+  - Express abstract effort `none | low | medium | high | max` only when supported by discovered capabilities. It is intent, not a fixed token budget, enforced task-tier mapping or reproducibility guarantee.
+- **Scope and Evidence:** Add: *"Deliver what was asked. Do not add features, refactors, or abstractions beyond the task."* Require progress claims to cite actual tool results, not private reasoning. State when a constraint applies globally.
+- **Review Boundary:** Self-verification never replaces mandatory independent G8/G9 after SHIP and before a commit proposal. Record actual writer/reviewer identities and separate read-only context evidence; shared identity requires `CORRELATED_REVIEW`. Missing/unknown required identity, authorization, availability or review isolation is `BLOCKED`, not a passing gate.
+- **Templates:** Use [Template M — Bounded Agent Task Brief](../templates.md#template-m--bounded-agent-task-brief) for agentic and multi-step briefs.
 
 ---
 
-## 2. OpenAI / ChatGPT / GPT-5.6 Family
+## 2. Authorized Role and Effort Selection
 
-OpenAI models feature strong intent inference, broad ecosystem tool integration, and configurable reasoning effort.
+Task requirements guide role assignment; availability alone never authorizes a choice or additional spending.
 
 - **Durable Structure:** Structure prompts into four lean blocks: `Goal`, `Context`, `Constraints`, and `Done`. State instructions once with high signal.
-- **Model Tiers:**
-  - **GPT-5.6 Sol (`gpt-5.6-sol` / `gpt-5.6`):** Flagship capability for complex problem-solving, architectural design, and subtle reasoning.
-  - **GPT-5.6 Terra (`gpt-5.6-terra`):** Balanced workhorse for everyday developer workflows and content generation.
-  - **GPT-5.6 Luna (`gpt-5.6-luna`):** High-speed, cost-efficient model for structured extraction, transformation, and high-volume tasks.
-- **Autonomy & Boundaries:** GPT-5.6 infers context readily. Clearly define autonomy limits: permit safe local inspection and edits; require explicit human confirmation for external network writes, deletions, and scope expansions.
-- **Reasoning Controls:**
-  - Choose the lowest reasoning effort that meets the quality threshold.
-  - In the API, use `reasoning.mode: "pro"` or multi-agent Responses beta only when verified quality gains justify added latency.
-  - Control output length via output contracts and `text.verbosity`, not by asking for less reasoning.
-  - Request conclusions, assumptions, and verification evidence instead of hidden reasoning.
+- **Default:** Abstract `INHERIT` means the current Captain-authorized harness/model for all roles, not necessarily the writer's model. One subscription suffices when required capabilities are available; there is no required provider hierarchy.
+- **Role Needs:** `MAIN_LEAD` retains constraints, decomposes and synthesizes evidence; `HEAVY_CODER` needs repository/tool competence and compiler/test-backed editing; `REVIEWER` assesses standards in an independent read-only context on the current authorized default.
+- **Temporary Selection:** Only `MAIN_LEAD` and `HEAVY_CODER` may use `AUTHORIZED_TEMPORARY`: task-bound Captain approval, an available choice, explicit expiry and time/cost ceiling are required. Recheck authorization/availability at dispatch, resume and before accepting completion. On expiry record `AUTHORIZATION_EXPIRED` and pause `BLOCKED`; unavailable choices also stop work. Resume only under a still-valid separately approved `APPROVED_DEFAULT` fallback, recording it and rechecking capabilities/acceptance. No silent switching, purchases or automatic extensions.
+- **Autonomy & Boundaries:** Define exclusive paths, allowed actions and approval gates. Destructive actions, new dependencies, git mutations and external writes require applicable explicit Captain authorization; a profile cannot broaden worker permissions.
+- **Output Controls:** Specify output length and format in the task contract. Request conclusions, assumptions and verification evidence instead of hidden reasoning; actual parameter translation stays with the installed harness.
 
 ---
 
-## 3. Reasoning-Native Engines (o3, o4-mini)
+## 3. Reasoning-Oriented Tasks
 
-Specialized models that perform extensive internal reasoning before emitting output tokens.
+State the problem, input invariants and acceptance criteria without inferring quality from a reasoning label.
 
-- **Zero Scaffolding:** NEVER provide "think step by step", chain-of-thought prompts, or pseudo-reasoning templates. Scaffolding interferes with internal search and actively degrades output quality.
+- **Evidence over Traces:** Do not request private chain-of-thought or pseudo-reasoning transcripts. Require conclusions, assumptions, falsifiers and observable checks; extra reasoning does not establish correctness.
 - **Zero Conversational Filler:** Deliver short, clean, declarative instructions. Focus purely on constraints, input invariants, and acceptance criteria.
-- **Zero-Shot Priority:** Rely on zero-shot formulations first. Introduce few-shot examples only when output format is highly idiosyncratic.
-- **Brevity Rule:** Keep system instructions concise (<200 words). Overly long system prompts degrade reasoning performance.
+- **Examples:** Start with clear requirements; add grounded examples when they clarify output or edge cases. Examples do not replace the complete constraint set.
+- **Brevity Rule:** Keep instructions concise without omitting applicable guardrails, skill content or acceptance evidence. No universal word-count or model-performance guarantee applies.
 
 ---
 
-## 4. Grok / Grok 4.6 / xAI
+## 4. Retrieval-Grounded Tasks
 
-Multimodal frontier model with native function calling, web search, X search, and code execution.
+Search, image handling and code execution are separate capabilities; none is guaranteed by the underlying model.
 
-- **Model Slug & Capabilities:** Use `grok-4.6` for general chat, coding, and agentic workflows. Supports text, image, search tools, and code interpreters.
 - **Prompt Structure:** Outcome-focused framework: `Goal`, `Context/Input`, `Constraints`, `Tools/Permissions`, and `Done`.
-- **Reasoning Calibration:** Select reasoning effort intentionally: `low` for low-latency tasks, `medium` for balanced workloads, `high` (default) for complex logic, and `xhigh` for deep analysis. Grok 4.6 reasoning cannot be disabled; never prompt for chain-of-thought.
-- **Search & Realtime Grounding:** For real-time factual questions, explicitly require Web Search or X Search with citations:
-  > *"Use Web Search to verify current figures. Provide inline markdown citations for all factual claims."*
-- **Agent Loops & Caching:** Define clear stop conditions and compaction checkpoints. Recommend `prompt_cache_key` on the Responses API or `x-grok-conv-id` on Chat Completions for stable prompt caching. Keep fixed instructions front-loaded.
+- **Realtime Grounding:** For current facts, specify retrieval/citation requirements and source boundaries. Record source dates, locators and unresolved conflicts; if required retrieval is unavailable or unknown, report `BLOCKED` rather than fabricate current figures.
+- **Session Boundaries:** Define stop conditions and evidence checkpoints. Caching, continuation and compaction depend on discovered host capabilities, not prescribed API headers or guaranteed persistent sessions. Acknowledgment is not terminal completion.
 
 ---
 
-## 5. Gemini 2.x / Gemini 3 Pro (Google)
+## 5. Long-Context and Multimodal Tasks
 
-Frontier long-context and multimodal powerhouse supporting massive token contexts and media analysis.
+Verify supported context and input modalities from installed-host evidence; do not assume unlimited repository or media ingestion.
 
-- **Context Exploitation:** Leverage large context windows (1M–2M+ tokens) by providing full source codebases, technical manuals, or video transcripts. Place reference material before task instructions.
-- **Citation & Hallucination Guard:** Gemini models can drift into fabricated citations when context is thin. Always inject:
-  > *"Cite only sources you are certain of. If uncertain, write [uncertain]. Base your response strictly on the provided context; do not extrapolate."*
-- **Format Locking:** Gemini can stray from rigid structural outputs. Enforce format compliance with explicit schema blocks and a labeled example.
-
----
-
-## 6. DeepSeek-R1
-
-Open-weight and hosted reasoning-native model with transparent thinking tags.
-
-- **Reasoning-Native Rule:** Do NOT add chain-of-thought instructions or reasoning prompts. Deliver concise objectives and acceptance criteria.
-- **Thinking Tag Suppression:** By default, DeepSeek-R1 emits reasoning within `<think>` tags. When pure data or clean output is needed, instruct:
-  > *"Output only the final answer. Do not include <think> tags or internal reasoning."*
+- **Context Selection:** Provide the smallest relevant reference slice, file anchors and task query. Keep exclusive scope and required skill injection; large context never authorizes whole-codebase archaeology.
+- **Citation & Hallucination Guard:** Bind claims to supplied or authorized retrieved evidence. Distinguish confirmed facts, uncertainty and missing evidence rather than invent citations.
+- **Format Locking:** Supply the output schema and, when useful, a labeled example. Validate the resulting artifact; a format instruction is not proof of compliance.
 
 ---
 
-## 7. Qwen 2.5 & Qwen 3 (Alibaba)
+## 6. Clean Evidence Output
 
-Instruction-tuned and reasoning models with exceptional multilingual, structured data, and code proficiency.
+Keep conclusions and public verification separate from private reasoning, regardless of deployment.
 
-- **Qwen 2.5 (Instruct variants):**
-  - Excels at structured JSON generation and strict schema compliance.
-  - Provide a clear system prompt defining the technical role and domain.
-  - Keep prompts tightly scoped; concise prompts outperform heavily nested ones.
-- **Qwen 3 (Thinking Mode vs Standard):**
-  - **Thinking Mode (`/think` or `enable_thinking=True`):** Treat identically to o3/DeepSeek-R1—minimalist instructions, zero CoT scaffolding, strict done conditions.
-  - **Non-Thinking Mode:** Treat like Qwen 2.5 Instruct—structured schema, role assignment, and explicit formatting envelopes.
+- **Task Envelope:** Deliver concise objectives, allowed actions and acceptance criteria.
+- **Output Boundary:** For pure data, request only the contracted artifact. Do not assume a tag, prompt or runtime option exposes, suppresses or preserves internal reasoning; the installed host owns its output handling.
 
 ---
 
-## 8. Ollama & Local Models
+## 7. Structured and Multilingual Tasks
 
-Local model runtimes hosting open-weight models on user hardware.
+Output fidelity must be observed rather than assumed from a model family or mode toggle.
 
-- **Pre-Flight Model Identification:** Always determine the active model (e.g., Llama 3, Qwen 2.5-Coder, Mistral, DeepSeek) before crafting prompts. Local models vary widely in context size and instruction fidelity.
-- **System Prompt Lever:** The system prompt is the most impactful control in local models. Format prompts so the system directive can be embedded directly in a `Modelfile`.
-- **Flat Hierarchies:** Avoid deeply nested or multi-tier instructions. Local models lose coherence with recursive rules; use flat, numbered constraints.
-- **Sampling Temperature:** Recommend `temperature 0.1` for deterministic code/JSON extraction, and `0.7–0.8` for creative prose.
+- **Contract:** Specify the assigned role, language, input boundary, required keys and closed enums.
+- **Validation:** Use applicable schema/compiler checks and named evidence. A correctly shaped result can still be factually wrong; preserve semantic acceptance criteria.
+- **Controls:** Do not inject family-specific thinking toggles. Supported abstract effort belongs to capability evidence and actual translation to the installed harness.
 
 ---
 
-## 9. Llama / Mistral / General Open-Weight LLMs
+## 8. Constrained-Context Deployments
 
-Open-weight foundation models deployed via vLLM, Hugging Face TGI, or cloud inference.
+Local or remote deployment does not change authority, evidence or independent review requirements.
 
-- **Directness & Role Calibrations:** Provide clear, explicit role definitions in the system prompt. Instruction following is less forgiving than frontier closed models.
-- **Simplicity:** Keep prompts under 500 words when possible. Use plain markdown headers and bullet points.
+- **Pre-Flight:** Record the actual authorized choice and supported capabilities without credentials. Context size, tool support and instruction fidelity must not be guessed.
+- **Bounded Slices:** Use smaller verified tasks when competence is unknown on an otherwise supported harness; no task slice lowers acceptance or full skill-injection requirements.
+- **Flat Hierarchies:** Prefer clear numbered constraints when that improves readability, preserving every binding rule.
+- **Sampling:** No universal temperature or determinism prescription applies. Verify results with deterministic checks; installed-host controls do not guarantee reproducibility.
+
+---
+
+## 9. Deployment-Neutral Prompting
+
+Deployment labels neither prove capability nor select a provider/model.
+
+- **Directness & Role Calibrations:** Provide the existing assigned role's mandate, lens, scope/non-goals and required output; do not invent new personas or tool permissions.
+- **Simplicity:** Use plain Markdown headers and bullet points, concise without removing constraints.
 - **Grounding:** Bind responses directly to provided input data to mitigate hallucination.
 
 ---
 
-## 10. MiniMax (M3 / M2.7)
+## 10. Compatibility and Completion Boundaries
 
-OpenAI-compatible models with long context support (up to 1M tokens) and fast generation variants.
+Reading a prompt or accepting an API shape does not certify delegated SHIP compatibility.
 
-- **OpenAI Compatibility:** Prompts developed for GPT models transfer with minimal modification. Include tool definitions directly as OpenAI-style schemas.
-- **Speed Variants:** Recommend `M2.7-highspeed` for latency-sensitive tasks.
-- **Temperature Guardrail:** MiniMax APIs strictly enforce temperature between `0` and `1` (inclusive); values exceeding 1 cause API errors.
-- **Reasoning Control:** If reasoning tokens appear in `<think>` tags, instruct: *"Output only the final answer without reasoning tags."*
+- **Required Support:** Evidence delegation, isolated contexts, applicable workspace isolation, supervision/communication, terminal completion and separate read-only review under the canonical contract. Receipt is not completion; no automatic wake, polling or scheduling is assumed.
+- **Sequential Execution:** Lack of concurrency alone permits supported sequential isolated roles, never writer-context independent review.
+- **Unsupported Modes:** Remain `BLOCKED` until a Captain-approved execution-host change or separately assigned manual worker/reviewer handoff demonstrates required capabilities while preserving Firstmate separation, exclusive scope and G8/G9. No optional/required adapter, invented tooling, primary execution or weaker review fills the gap.

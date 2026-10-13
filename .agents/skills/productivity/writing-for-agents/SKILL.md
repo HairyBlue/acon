@@ -42,6 +42,19 @@ Push too little down and the top bloats; push too much and you hide material the
 
 **Sprawl** is the failure mode here: a document simply too long, even when every line is live and unique. Attention thins across the excess, and every extra line is one more to keep relevant. The cure is the ladder: disclose reference behind pointers, and split by branch or sequence so each path carries only what it needs.
 
+## Persona, procedure and runtime
+
+Classify each piece of agent-facing content before choosing its home:
+
+- [ ] **Persona:** keep the mandate (authority and purpose), lens (what the role notices), scope/non-goals and output (required artifact/fields) terse. When authoring an implementation role, consult the existing [Worker](../../../reference/crew/worker.md); for an evaluation role, consult the existing [Oracle](../../../reference/crew/oracle.md). These references do not authorize persona selection or imports.
+- [ ] **Task skill:** put the procedure (ordered actions), guardrails and evidence/completion criteria here. Refer to canonical contracts rather than copying procedural detail into each persona.
+- [ ] **Detail reference:** place definitions or branch-specific detail behind a conditional context pointer; name the condition that requires reading it.
+- [ ] **Runtime:** leave tools, permissions, model selection and scheduling to discovered installed-harness capabilities and Captain authorization, not persona frontmatter. Follow the [portable fleet contract](../../../reference/crew/README.md#capability-discovery); a required capability that is `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`, not a fabricated tool or primary-thread implementation.
+
+Progressive disclosure does not weaken [full-skill injection (AGENTS.md §4 Rule 2-bis)](../../../../AGENTS.md): for every selected dispatch skill, resolve its concrete path, read it and embed its complete content verbatim in the worker brief. A pointer or summary is not a substitute.
+
+The four-layer distinction adapts Fleet `skills/designing-agents/SKILL.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`; see the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). No source runtime or persona is imported.
+
 ## Steps and completion criteria
 
 Every step ends on a **completion criterion**, the condition that tells the agent the work is done. Two properties make it a lever:

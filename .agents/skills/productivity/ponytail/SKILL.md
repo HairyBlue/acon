@@ -317,7 +317,9 @@ export async function getUserProfile(userId: string) {
 
 ## 5. Control Plane Subagent Brief Injection
 
-When the First Mate (Control Plane) shapes and dispatches specialist tasks (`invoke_subagent`), it injects the Ponytail protocol directly into the subagent prompt briefs.
+When the First Mate (Control Plane) shapes bounded tasks for delegated workers, it injects the Ponytail protocol directly into their briefs. Delegation uses evidenced capabilities of the active installed harness under the [portable fleet contract](../../../reference/crew/README.md#capability-discovery), not a required dispatcher. Missing or unknown required capabilities mean `BLOCKED`; they never permit primary-thread execution or weaker review.
+
+This delegation reconciliation is informed by Fleet `docs/PHILOSOPHY.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`; see the [local provenance and full MIT notice](../../../reference/crew/README.md#provenance-and-mit-notice). This attribution applies to the reconciliation, not the existing Ponytail philosophy; no source runtime is adopted.
 
 ### Prompt-Master Brief Snippet (Template H / Ship Contract)
 

@@ -13,7 +13,7 @@ Enforce Conventional Commits v1.0.0, pre-flight safety checks, and strict separa
 
 ## 1. Authority & Execution Policy
 - **Zero Autonomous Commits/Pushes (Explicit Captain Approval Required):** Agents and workers must **NEVER** execute `git commit` or `git push` autonomously. Conventional commits must only be formatted, staged, and committed when explicitly authorized and commanded by the Captain (e.g. *"commit and push"*, *"proceed with commit"*, *"ship it"*). Completing a task means modifying code, verifying tests/linters, and presenting the deliverable diff in the Bearings digest. All changes remain uncommitted in the working tree/staged awaiting approval.
-- **Worker-Only Git Execution:** Git commits and pushes must NEVER run in the primary command thread. The Control Plane delegates execution to a dedicated `Git Ops & Release Specialist` subagent via `invoke_subagent` to keep the bridge reactive.
+- **Worker-Only Git Execution:** Git commits and pushes must NEVER run in the primary command thread. After separate, explicit Captain authorization for the exact operations, the Control Plane delegates bounded execution to a dedicated `Git Ops & Release Specialist` through evidenced capabilities of the active installed harness. Follow the [portable fleet contract](../reference/crew/README.md) for delegation, isolation, supervision and terminal completion evidence; any required capability that is `UNAVAILABLE` or `UNKNOWN` means `BLOCKED`, never primary-thread execution.
 - **Pre-Flight Secrets Check:** Verify that zero `.env` files, API tokens, private keys (`*.pem`, `id_rsa`), or `.worktrees/` folders are staged before any commit is executed.
 
 ## 2. Conventional Commit Format (v1.0.0)
@@ -50,3 +50,9 @@ Append an exclamation mark before the colon: `feat(api)!: break legacy endpoint 
 - **Solo Workflow:** Direct commits to `main`/`master` are permitted when authorized by the Captain.
 - **Feature Branches:** Use `<type>/<short-description>` (e.g. `feat/user-avatar`, `fix/null-pointer`).
 - **Concurrent Isolation:** Use `.worktrees/<branch>` when running parallel workers against the same repository.
+
+## Provenance and MIT notice
+
+Delegated-git wording is an ACON authority reconciliation informed by Fleet `docs/PHILOSOPHY.md`, revision `0af843fa2c92413ea16c50e50bd8a9e24f1d1995`. See the [local provenance and full MIT notice](../reference/crew/README.md#provenance-and-mit-notice). No source runtime or additional git authority is adopted.
+
+## End provenance and MIT notice
