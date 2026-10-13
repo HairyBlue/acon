@@ -216,7 +216,7 @@ acon/
         ├── design/                               # 2 Skills + 67 style presets + 17 craft references (interface-design, impeccable, 67 style presets, 17 craft references)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
-        └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, pre-commit...)
+        └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, setup-pre-commit...)
     └── reference/                                # Reference Catalog, Contracts & Subagent Briefs
         ├── crew/                                 # Specialist Subagent Persona Briefs (scout, worker, reviewer...)
         ├── schemas/                              # 8 normative Markdown contract specifications (not executable validators)
