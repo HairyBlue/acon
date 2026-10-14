@@ -57,7 +57,13 @@ Each round the user answers reshapes the tree: settled decisions push the fronti
 
 ---
 
-Finding _facts_ is the assigned worker's job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), the primary orchestrator does not explore or execute. It may assign a bounded, separately isolated child-or-peer scout only after the Captain approves permitted host/role choices and the relevant capability evidence is available; unknown capability is `BLOCKED`. Keep the remaining decision frontier distinct, and do not assume a running exploration or report delivery. The _decisions_ are the user's: put each to them and wait.
+Finding _facts_ is the assigned worker's job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), the ORCHESTRATOR does not explore or execute project work.
+
+Terminal/agent-CLI ORCHESTRATORS use separately opened persona-equipped peers, never native subagents, including after peer failure. Desktop/IDE surfaces unable to open pane-plus-agent-CLI peers may use isolated native subagents only when every required capability is evidenced AVAILABLE and the exact assignment is separately approved. Route by actual surface and task-local evidence, never brand; UNKNOWN is BLOCKED.
+
+If role is unestablished, ask Normal Agent versus ORCHESTRATOR before role-dependent action. Verified role or approved handoff establishes it; do not ask assigned workers again. A Normal Agent never spawns crew or assumes orchestrator authority; it may perform its Captain-authorized bounded task or join by approved assignment.
+
+Keep the remaining decision frontier distinct, and do not assume a running exploration or report delivery. The _decisions_ are the user's: put each to them and wait.
 
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
 

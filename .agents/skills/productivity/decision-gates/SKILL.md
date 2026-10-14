@@ -59,7 +59,7 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
        │                    ├───► G4: anti-slop     (Task brief valid? Bounds <= 3 files?)
        │                    └───► G5: skill-route   (Specialist persona & modular skills?)
        ▼
-  (Phase III: Crew Flight) ─────► Bounded work in isolated child-or-peer sessions
+  (Phase III: Crew Flight) ─────► Bounded work through the canonical surface-specific route
        │
   (Phase IV: Gatekeeping) ──────► G7: deliverable-audit (Diff clean? Ponytail compliant? Tests passed?)
        │
@@ -81,6 +81,10 @@ The protocol defines seven canonical decision gates distributed across the 4-pha
 ---
 
 ## 3. How Evaluators Produce Decision Sheets
+
+Terminal/agent-CLI ORCHESTRATORS use separately opened persona-equipped peers, never native subagents, including after peer failure. Desktop/IDE surfaces unable to open pane-plus-agent-CLI peers may use isolated native subagents only when every required capability is evidenced AVAILABLE and the exact assignment is separately approved. Route by actual surface and task-local evidence, never brand; UNKNOWN is BLOCKED.
+
+If role is unestablished, ask Normal Agent versus ORCHESTRATOR before role-dependent action. Verified role or approved handoff establishes it; do not ask assigned workers again. A Normal Agent never spawns crew or assumes orchestrator authority; it may perform its Captain-authorized bounded task or join by approved assignment.
 
 Host-neutral assignment is conditional on task-local evidence: discovery requires prior Captain approval of permitted CLIs/subscriptions and quota/time/cost notice; discovery grants no spending or launch authority. For every role, including `reviewer`, propose an available Captain-permitted model and supported effort and obtain Captain approval before launch. Do not assume a fixed catalog, settings/runtime, adapter, or capability. `UNKNOWN` required capability is fail-closed `BLOCKED`. Record task/session identity, role/model/effort authorization, evidence location, state, and terminal completion; receipt is not completion. Keep at most four live crew panes per tab excluding the orchestrator. Any nested helper requires explicit bounded authority and cannot exceed scope, role, budget, pane cap, or substitute for independent review.
 
@@ -110,7 +114,7 @@ To eliminate hallucinated certainty without model retraining:
 
 ### 3.3 Evaluator Role Partitioning
 - **Intake Gates (G1, G2, G3):** Evaluated directly on the Command Bridge by the Control Plane during mission intake and task decomposition.
-- **Inspection Gates (G4, G7):** Evaluated by separately assigned isolated child-or-peer sessions (`scout` or `reviewer`) to uphold the Control Plane Zero-Archaeology Mandate. The primary orchestrator never executes or explores.
+- **Inspection Gates (G4, G7):** Evaluated by separately assigned isolated `scout` or `reviewer` roles through the canonical surface route to uphold the Control Plane Zero-Archaeology Mandate. The ORCHESTRATOR never executes project work or explores the project.
 - **Redundant Dual Sheets:** Evaluated by two independent `scout` sessions only when the Captain-approved host and role choices support that work; do not infer launch or isolation capability.
 
 ---
@@ -190,7 +194,7 @@ planRequired: REQUIRED | relaxing: no | binding: no | schemaChange p=0.9
 
 For high-stakes missions—specifically **Tier 1 multi-agent missions**, database schema mutations, and `[HUMAN-CORE]` domain tasks—the Control Plane employs **Dual-Blind Redundancy**:
 
-1. **Authorized Assignment:** After discovery and Captain approval of permitted choices, available model/effort and quota/time/cost notice, the Control Plane may assign two independent `scout` child-or-peer sessions (`Scout-A` and `Scout-B`) if the approved host evidences support.
+1. **Authorized Assignment:** After discovery and Captain approval of permitted choices, available model/effort and quota/time/cost notice, the ORCHESTRATOR may assign two independent `scout` sessions (`Scout-A` and `Scout-B`) through the canonical surface route if the approved host evidences support.
 2. **Context Isolation:** Each Scout receives the identical state and gate specification in a separate read-only context. Neither Scout sees the other's prompt, existence, or output. Record actual role/model identities and authorization/availability evidence; same-model review is `CORRELATED_REVIEW`.
 3. **Independent Resolution:** Each Scout generates a self-linted Decision Sheet and derives an outcome.
 4. **Reconciliation Protocol:**
@@ -215,7 +219,7 @@ The Decision Log is strictly updated by the mission's **Phase IV closing worker*
 ```
 
 ### 7.3 Calibration Review Procedure
-When the Captain requests an audit (*"review the gates"* or *"check calibration"*), the Control Plane may assign an authorized, separately isolated `scout` child-or-peer session to analyze `.agents/skills/productivity/decision-gates/log.md`; first obtain Captain approval for the permitted role choice and evidence host capability. Record session identity and terminal completion evidence.
+When the Captain requests an audit (*"review the gates"* or *"check calibration"*), the ORCHESTRATOR may assign an authorized, separately isolated `scout` session through the canonical surface route to analyze `.agents/skills/productivity/decision-gates/log.md`; first obtain Captain approval for the permitted role choice and evidence host capability. Record session identity and terminal completion evidence.
 1. **Sample Adequacy:** If a gate has $< 30$ logged entries, the Scout reports: `"Sample size too small for statistical calibration (<30 rows)."`
 2. **Error Rate Computations:**
    - **Tightening Override Rate:** Percentage of tightening outcomes overridden by the Captain (indicating false alarms or over-conservatism).

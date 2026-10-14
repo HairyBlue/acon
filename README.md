@@ -2,7 +2,7 @@
 
 > **Firstmate Architectural Standard:** *"Talk to one agent. Ship with a crew."*
 
-**ACON** is an autonomous multi-agent orchestration distro and skill network. It transforms your primary AI coding assistant into an **Agent Control Plane** (the *First Mate*), delegating complex implementation, audits, and spikes to specialized subagents (*Crewmates*) while serving you, the **Captain**.
+**ACON** is an agent-conventions and multi-agent orchestration guide. When the Captain establishes an agent as **ORCHESTRATOR**, that agent acts as the **Agent Control Plane** (the *First Mate*) and may delegate bounded work to specialized crewmates. A **Normal Agent** performs only its Captain-authorized bounded task and does not spawn crew or assume orchestration authority.
 
 ACON supplies conventions, not a runtime integration. Reading `AGENTS.md` / `CLAUDE.md` does not establish delegated SHIP compatibility. The [portable fleet reference](.agents/reference/crew/README.md) defines capability discovery, authorized role routing and unsupported modes for the active installed harness.
 
@@ -65,7 +65,7 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 
 ## 🔄 The End-to-End Fleet Operating Workflow
 
-The Control Plane orchestrates all multi-agent missions through an airtight 4-phase lifecycle governed by Machine-Native Decision Gates:
+An agent acting as **ORCHESTRATOR** coordinates authorized multi-agent missions through this 4-phase lifecycle, governed by Machine-Native Decision Gates:
 
 ```mermaid
 flowchart TD
@@ -110,10 +110,18 @@ flowchart TD
     end
 ```
 
-1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ Control Plane):** Intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and **Gate G1 (`grill-trigger`)**, triggering 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or second-opinion analysis via `oracle` to lock architecture.
-2. **Phase II: Task Shaping & Calibrated Briefing (Control Plane):** Task decomposition governed by **Gate G2 (`plan-first`)**, strict `SHIP` vs. `SCOUT` classification via **Gate G3 (`task-shape`)**, specialist crew routing via **Gate G5 (`skill-route`)**, non-overlapping file boundaries, and pre-flight validation via **Gate G4 (`anti-slop`)**.
-3. **Phase III: Autonomous Crew Flight (Control Plane $\rightarrow$ Crew):** Delegate bounded specialist tasks through evidenced capabilities of the active installed harness (`worker`, `scout`, `reviewer`, `oracle`, `evidence-auditor`), preserving isolated contexts and exclusive assigned workspaces. Concurrent writers require authorized isolated `.worktrees/<branch>` execution; demonstrated sequential isolated roles are permitted. Supervision/communication and terminal completion delivery must be evidenced; receipt is not completion and no automatic scheduling or polling is assumed. Use closed-loop self-verification (tests for business logic; lint/build for test-exempt tasks); missing required capabilities mean `BLOCKED` under the [portable contract](.agents/reference/crew/README.md#unsupported-modes).
-4. **Phase IV: Central Synthesis & Gatekeeping (Control Plane $\rightarrow$ Captain):** Post-flight universal verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), delegated central file integration, and mandatory independent **G8 (Code Review)** and **G9 (Security Review)** in separate read-only reviewer contexts precede any commit proposal. Record actual writer/reviewer identities; shared model identity requires `CORRELATED_REVIEW`, never writer-session review. Missing required review evidence means `BLOCKED`. Triage status via **Gate G6 (`bearings-triage`)** and present verified diffs in the 4-section Fleet Bearings digest. Git commit and push are strictly blocked until the Captain reviews outcomes and explicitly authorizes them (zero autonomous git mutations).
+1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ ORCHESTRATOR):** The ORCHESTRATOR performs intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and **Gate G1 (`grill-trigger`)**, triggering 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or second-opinion analysis via `oracle` to clarify architecture.
+2. **Phase II: Task Shaping & Calibrated Briefing (ORCHESTRATOR):** The ORCHESTRATOR shapes authorized work through **Gate G2 (`plan-first`)**, `SHIP` vs. `SCOUT` classification via **Gate G3 (`task-shape`)**, specialist routing via **Gate G5 (`skill-route`)**, non-overlapping file boundaries, and pre-flight validation via **Gate G4 (`anti-slop`)**.
+3. **Phase III: Autonomous Crew Flight (ORCHESTRATOR $\rightarrow$ Crew):** Only an authorized ORCHESTRATOR dispatches crew. Route by the actual execution surface, never brand. Terminal/agent-CLI orchestrators use separately opened, persona-equipped peers only, including after peer failure. A desktop/IDE surface unable to open pane-plus-agent-CLI peers may use isolated native subagents only when every required capability is evidenced `AVAILABLE` and the exact assignment is separately approved; `UNKNOWN` is `BLOCKED`. Preserve bounded scope, isolation, approved ceilings, supervision and completion evidence. See the [canonical surface route and manual ledger lifecycle](.agents/reference/crew/README.md#host-neutral-orchestration).
+4. **Phase IV: Central Synthesis & Gatekeeping (ORCHESTRATOR $\rightarrow$ Captain):** The ORCHESTRATOR coordinates post-flight verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), delegated central file integration, and mandatory independent **G8 (Code Review)** and **G9 (Security Review)** in separate read-only reviewer contexts precede any commit proposal. Record actual writer/reviewer identities; shared model identity requires `CORRELATED_REVIEW`, never writer-session review. Missing required review evidence means `BLOCKED`. Triage status via **Gate G6 (`bearings-triage`)** and present verified diffs in the 4-section Fleet Bearings digest. Git commit and push are strictly blocked until the Captain reviews outcomes and explicitly authorizes them (zero autonomous git mutations).
+
+### Terminal fleet lifecycle (normative detail)
+
+If acting role is unknown, ask whether you are a Normal Agent or ORCHESTRATOR before role-dependent action; verified role or approved crew handoff establishes it. A Normal Agent performs only its Captain-authorized bounded task and never spawns crew. The user manually opens/resumes the ORCHESTRATOR; ledger data does not launch it.
+
+For terminal orchestration, use only the local, ignored `.acon/sessions.json` and exact sibling `.acon/sessions.json.tmp`. Before launch or resume, safely initialize the existing minimal schema when absent, validate it against the active workspace, and reconcile owned live conversations. The ORCHESTRATOR owns ledger writes; one bounded delegated writer may perform one exact update only while the ORCHESTRATOR suspends its own writes, validates the result, and resumes sole ownership. Never allow concurrent writers. Register each verified launch/join before another; unknown or unreachable identities remain pending, and entries are removed only after confirmed authorized retirement. Never duplicate an uncertain conversation. Adopt an existing normal-agent session only with explicit Captain opt-in and verified identity, workspace, role/persona and model/effort; preserve the live conversation and change role/model only with consent and supported controls.
+
+Move only a verified owned joining session, and only when supported and approved: keep the ORCHESTRATOR alone on the left and distribute fleet panes on the right within approved ceilings, ownership, readability and host-attested geometry. If safe movement or layout support is unknown, preserve the current layout and pause/queue. These instructions are a documentation contract, not automation, runtime or host-compatibility certification. The [portable fleet reference](.agents/reference/crew/README.md#host-neutral-orchestration) is canonical for routing; its [manual ledger lifecycle](.agents/reference/crew/README.md#manual-orchestrator-session-ledger) governs safe I/O and roster operations. Captain spend/Git authority and independent G8/G9 reviews remain required.
 
 ### 🛡️ Machine-Native Decision Gates (The Jev Protocol)
 
@@ -144,10 +152,10 @@ Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
           into backend service and feature tests, and dispatch specialists."
 ```
 
-* The Control Plane activates the Foreign Boundary Trigger and immediately dispatches a `Codebase Scout` subagent in turn 1 to inspect `/path/to/billing-app`.
-* Based on the scout's findings, it shapes tasks and spawns a `Backend Specialist` and a `Test Engineer` targeting only the specific billing directories.
-* The specialists read `/path/to/billing-app/CLAUDE.md` to follow the project's local coding conventions and test runners.
-* The Control Plane synthesizes results, verifies integration, and briefs you.
+* The Control Plane scopes any required investigation and obtains launch approval before assigning a `Codebase Scout` through the route supported by the actual execution surface.
+* After the findings, it shapes bounded specialist tasks and proceeds only when required capabilities and approvals are in place.
+* Specialists follow the target project's local instructions and verification commands.
+* The Control Plane synthesizes results and briefs you; a capability gap blocks execution rather than authorizing fallback.
 
 ---
 
