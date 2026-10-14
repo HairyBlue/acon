@@ -19,3 +19,7 @@ __pycache__/
 .venv/
 env/
 venv/
+
+# Local manually managed orchestrator ledger and atomic-write temp
+/.acon/sessions.json
+/.acon/sessions.json.tmp

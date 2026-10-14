@@ -151,6 +151,29 @@ if [[ "${TARGET}" == "/" ]]; then
   exit 1
 fi
 
+IGNORE_FILE="${TARGET}/.gitignore"
+if [[ -L "${IGNORE_FILE}" ]]; then
+  echo "[ERROR] Refusing symlink target .gitignore: ${IGNORE_FILE}" >&2
+  exit 1
+fi
+if [[ -e "${IGNORE_FILE}" && ! -f "${IGNORE_FILE}" ]]; then
+  echo "[ERROR] Target .gitignore exists but is not a regular file: ${IGNORE_FILE}" >&2
+  exit 1
+fi
+if [[ ${DRY_RUN} -eq 0 ]]; then
+  [[ -e "${IGNORE_FILE}" ]] || : > "${IGNORE_FILE}"
+  for pattern in '/.acon/sessions.json' '/.acon/sessions.json.tmp'; do
+    if ! grep -Fqx -- "${pattern}" "${IGNORE_FILE}"; then
+      if [[ -s "${IGNORE_FILE}" && "$(tail -c 1 "${IGNORE_FILE}" | wc -l)" -eq 0 ]]; then
+        printf '\n' >> "${IGNORE_FILE}"
+      fi
+      printf '%s\n' "${pattern}" >> "${IGNORE_FILE}"
+    fi
+  done
+else
+  echo "  [DRY RUN] Manifest item: preserve target .gitignore; ensure /.acon/sessions.json and /.acon/sessions.json.tmp are ignored"
+fi
+
 TEMP_DIR="$(mktemp -d -t acon-adopt-XXXXXX)"
 
 echo "================================================================================"

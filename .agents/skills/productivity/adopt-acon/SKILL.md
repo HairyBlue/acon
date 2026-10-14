@@ -106,8 +106,8 @@ flowchart TD
 ### Tier 1: The Command Bridge (Top)
 The Command Bridge contains the complete, uncompromised ACON constitution:
 - **First Mate Liaison Model:** One Captain, one primary assistant.
-- **Zero-Execution & Zero-Archaeology Mandate:** Control Plane delegates work; never performs multi-step inspection or code edits in the main thread.
-- **Single-Turn Dispatch Invariant:** Dispatches `Codebase Scout` on turn 1 for codebase exploration.
+- **Delegation Boundary:** The Control Plane delegates project investigation, edits, builds/tests and git operations; bounded host/harness bootstrap is permitted by the current ACON constitution and is not project exploration.
+- **Approval-First Dispatch:** Scope a bounded `Codebase Scout` when project exploration is needed, but obtain any missing launch approval before dispatch. Bounded runtime bootstrap does not authorize project inspection or execution.
 - **Foreign Boundary Trigger:** Automatic delegation when inspecting external paths.
 - **Task Contracts (`SHIP` vs. `SCOUT`):** Rigid boundary enforcement and verifiable test passes.
 - **4-Section Bearings Digest:** Standardized status reporting.
@@ -223,6 +223,10 @@ The automated adoption script is located at `scripts/adopt.sh`.
 ```
 
 ---
+
+### Pane-pool policy and local session boundary
+
+The user manually opens/resumes the ORCHESTRATOR; ACON never launches it from JSON. The portable session policy lives in the shared crew reference. Preserve target `.gitignore` contents and append only `/.acon/sessions.json` and `/.acon/sessions.json.tmp` when absent; reject a symlink `.gitignore` (including dangling links) before target writes. Repeated adoption must not duplicate either exact line. Verify both exact patterns occur once and existing local ignore entries remain intact. Never blanket-ignore `.acon/`, replace local ignores, or copy a source ledger, live session IDs, provider state, credentials, or internal scripts. The ledger is data, not consent. Existing Captain authorization, launch/skill preflight, task/message rules, workspace/worktree/reviewer isolation, compatibility paths, and G8/G9 remain binding. Documented host support is not smoke-tested behavior.
 
 ## 6. Adoption Checklist & Quality Invariants
 
