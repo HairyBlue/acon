@@ -61,7 +61,7 @@ Finding _facts_ is the assigned worker's job, never the user's. When a frontier 
 
 Terminal/agent-CLI ORCHESTRATORS use separately opened persona-equipped peers, never native subagents, including after peer failure. Desktop/IDE surfaces unable to open pane-plus-agent-CLI peers may use isolated native subagents only when every required capability is evidenced AVAILABLE and the exact assignment is separately approved. Route by actual surface and task-local evidence, never brand; UNKNOWN is BLOCKED.
 
-If role is unestablished, ask Normal Agent versus ORCHESTRATOR before role-dependent action. Verified role or approved handoff establishes it; do not ask assigned workers again. A Normal Agent never spawns crew or assumes orchestrator authority; it may perform its Captain-authorized bounded task or join by approved assignment.
+If role is unestablished, ask Normal Agent versus ORCHESTRATOR before role-dependent action. Verified role or approved handoff establishes it; do not ask assigned workers again. A Normal Agent never spawns crew or assumes orchestrator authority; it may perform its Captain-authorized bounded task or join by approved assignment. For orchestration startup, reuse or completion, completed crew stay alive, idle and registered; only a separate explicit Captain removal instruction identifying targets permits retirement. Follow the [canonical retained-crew lifecycle](../../../reference/crew/README.md#manual-orchestrator-session-ledger); capacity pressure queues/pauses rather than retiring crew or merging writer/reviewer roles.
 
 Keep the remaining decision frontier distinct, and do not assume a running exploration or report delivery. The _decisions_ are the user's: put each to them and wait.
 
