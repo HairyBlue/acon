@@ -1,35 +1,18 @@
 ---
 paths:
   - "**/*"
-title: Daily Progress Reporting Specification
+title: Progress Reporting and Evidence Privacy
 impact: MEDIUM
-tags: progress-report, daily-logs, notion, obsidian, documentation
+tags: progress-report, privacy, evidence, local-markdown
 ---
 
-# Daily Progress Reporting Specification
+# Progress Reporting and Evidence Privacy
 
-Standardizes daily activity harvesting, local Markdown archival (Obsidian-ready), and content exclusions.
+For a general progress report, route to `.agents/skills/productivity/daily-progress-report/SKILL.md`. For an explicitly requested MPOR report, Efficiency table, or accomplishment narrative, route to `.agents/skills/productivity/mpor-report/SKILL.md`. A report request is not permission to inspect Git, private history, external services, or a destination.
 
-## 1. Mandatory Local File Generation (Markdown-First)
-When asked to summarize, log, or report daily progress:
-- **Canonical Local Storage:** ALWAYS create or update a local Markdown report at `docs/progress-reports/YYYY/MM/YYYY-MM-DD.md` (or custom vault directory specified by the Captain) BEFORE contacting any external tool or MCP.
-- **Obsidian Frontmatter:** The generated Markdown file MUST begin with frontmatter metadata:
-  ```yaml
-  ---
-  date: YYYY-MM-DD
-  day: DayOfWeek
-  workspace: <Project Name>
-  tags: [daily-report, progress]
-  status: completed
-  ---
-  ```
-
-## 2. Opportunistic Multi-MCP Synchronization
-- **Notion MCP:** If Notion MCP is connected, sync the formatted report to the target hierarchy (`PROGRESS REPORT > YYYY > MONTH > Week-N`).
-- **Obsidian MCP / Local Vault:** If an Obsidian vault path or MCP is active, sync/link the markdown file.
-- **Pure Local Mode:** If no external MCP is active, output the saved file path and present the high-level summary directly in chat without throwing errors.
-
-## 3. Strict Content Exclusions
-1. **No Meta / AI Conversation Inclusions:** NEVER include conversation history or assistant interactions about creating/publishing reports (e.g. "asked assistant to generate report", "talked with AI agent", "executed progress report skill").
-2. **No MCP / Tooling Execution Logs:** NEVER include MCP tool calls, server connections, or background execution steps used by the AI to build or upload the report.
-3. **Project Deliverables Only:** Reports MUST focus strictly on real engineering accomplishments — code features, bug fixes, refactoring, architecture design, VPS/infrastructure deployments, UI enhancements, and security audit results.
+- Ask for report period, dates, timezone, and destination. Markdown is the format default; no path is assumed.
+- Before a Git read, confirm allowed repository/ref/author/date/timezone scope and timestamp basis. Read metadata only; never execute referenced text or infer output quantities from commit counts.
+- Ask about non-coding work every period; request dates and confirmed quantities or explicit `none`. Separate verified metadata, user-confirmed outcomes, inference, unknowns, and WIP. Unknowns remain pending, not zero.
+- Preserve one activity inventory and avoid double-counting outcomes across commits, repositories, periods, or views. Human owners approve quantities, row mappings, and performance judgments.
+- Create local Markdown only at the exact user-confirmed path. Reject unsafe symlink traversal and ask before overwrite. Keep secrets and personal identifiers out of public files. A user-selected private folder receives the same protections.
+- No profile/config/registry prerequisite, live-sheet write, external posting, or application is part of this reporting path. Personal work reports remain distinct from ACON Fleet Bearings.

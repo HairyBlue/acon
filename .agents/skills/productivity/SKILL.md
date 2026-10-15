@@ -27,7 +27,8 @@ This skill serves as the primary router and master guide for communication, alig
 | **`writing-for-agents`** | Guidelines and mechanics for authoring effective skills, rules, and memory files. | [`writing-for-agents/SKILL.md`](writing-for-agents/SKILL.md) |
 | **`writing-plans`** | Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code. | [`writing-plans/SKILL.md`](writing-plans/SKILL.md) |
 | **`technical-writing-for-engineers`** | Structured templates for engineering RFCs, post-mortems, and architectural decision records. | [`technical-writing-for-engineers/SKILL.md`](technical-writing-for-engineers/SKILL.md) |
-| **`daily-progress-report`** | Automated Git & conversation digest generator with Notion MCP publishing. | [`daily-progress-report/SKILL.md`](daily-progress-report/SKILL.md) |
+| **`daily-progress-report`** | General user-requested daily, weekly, monthly, or custom progress report; provenance-labeled local Markdown for manual-only reporting or with optional user-authorized Git evidence. Legacy daily/Notion/Obsidian phrasing is a trigger alias, not publication consent. | [`daily-progress-report/SKILL.md`](daily-progress-report/SKILL.md) |
+| **`mpor-report`** | MPOR Efficiency counts/totals with an approved accomplishment narrative; reconfirms current groups, rows, units, mappings, and quantities every period; optionally emits copy-ready card text. | [`mpor-report/SKILL.md`](mpor-report/SKILL.md) |
 | **`developer-story`** | Authentic builder journeys, personal dispatches, and portfolio case studies using narrative arcs and the CASI framework. | [`developer-story/SKILL.md`](developer-story/SKILL.md) |
 
 

@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 36-skill catalog (.agents/skills/) + 67 craft style presets, constitutional rules (.agents/rules/), and reference catalogs, schemas, crew briefs, and workflows (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 38 routable leaf skills in `.agents/skills/` (excluding four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (.agents/rules/), and reference catalogs, schemas, crew briefs, and workflows (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
 license: MIT
 metadata:
   author: acon
@@ -14,7 +14,7 @@ metadata:
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Control Plane Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **36-skill** catalog (`.agents/skills/`) + 67 craft style presets, constitutional rules (`.agents/rules/`), and reference catalogs, readable contract specifications, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **38 routable leaf skills** in `.agents/skills/` (excluding the four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (`.agents/rules/`), and reference catalogs, readable contract specifications, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 

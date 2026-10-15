@@ -166,9 +166,21 @@ Report one precise blocker and the smallest supported Captain-approved alternati
 
 ## Architectural council authority
 
-This section is the canonical current statement of the Captain-ratified council carve-out, formerly recorded in the root `plan.md` amendment dated 2026-10-12. Architectural council advisor pitches use the council report contract in the [portable adaptation plan](../../../docs/plans/2026-10-12-agent-fleet-portable-adaptation.md#33-council-persona-and-learning-contracts), not gate DecisionSheets. Gate evaluations continue to use the normative [DecisionSheet contract](../schemas/decision-sheet.md); this carve-out does not alter gates.
+This section is the canonical current statement of the Captain-ratified council carve-out, formerly recorded in the root `plan.md` amendment dated 2026-10-12. Architectural council advisor pitches follow the portable [Council report contract](#council-report-contract) below, not gate DecisionSheets. Gate evaluations continue to use the normative [DecisionSheet contract](../schemas/decision-sheet.md); this carve-out does not alter gates.
 
 Advisors are read-only and submit independent initial pitches before seeing peer positions. Permit at most one cross-examination turn per advisor, bounded to **≤500 tokens per advisor cross-examination**. A council report, consensus/agreement, or lead synthesis is advisory and never authorizes implementation; the Captain alone decides. Any implementation still requires separately authorized bounded work and applicable review.
+
+### Council report contract
+
+Each advisor's independent report contains `advisor`, `position`, `evidence`, `falsifier`, `changed`, `evidence_that_changed_position`, `concerns`, and `state`.
+
+- Each evidence entry pairs a claim with an artifact/locator; absent evidence is explicitly `UNPROVEN`. A falsifier is a concrete observation that would change the position, not an empty field.
+- `changed` is Boolean: when true, provide nonempty change evidence; when false, leave that evidence empty. Limit `concerns` to three.
+- `state` is `[ACKNOWLEDGED, COMPLETED, BLOCKED]`. `ACKNOWLEDGED` means receipt only, never a finished report or proof. `COMPLETED` requires all report fields and artifact references, not agreement with peers.
+
+Synthesis records `consensus`, `dissent`, `rejected_positions`, `recommendation`, and `captain_decision_ref`. Each consensus, dissent, or rejected position names the advisors and evidence; each rejected position also states its reason. Preserve minority and changed positions, unresolved unknowns, and full report references in the bounded Bearings digest. An empty `captain_decision_ref` means pending and never authorizes implementation.
+
+When advisors proceed sequentially, use isolated first-round contexts and do not expose earlier positions before independent pitches. The active installed harness owns completion and cancellation; this prose does not create messaging or transport.
 
 ## Persona classification
 
@@ -539,7 +551,7 @@ Every source path in this table is relative to the Fleet source at the pinned re
 | `.agents/reference/portable-fleet.md` | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); `agents/*.md` (the 15 classified files above); `LICENSE`; the assertion, council, persona and learning sources in the rows below |
 | `AGENTS.md` | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); ACON authority reconciliation |
 | `.agents/rules/agent-control-plane.md` | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); ACON authority reconciliation |
-| `plan.md` (removed 2026-10-12; historical origin record, not a current destination) | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); `references/communication-contract.md`; `references/fleet-coordination-patterns.md`; ACON historical supersession; current council authority retained in [Architectural council authority](#architectural-council-authority) and [council contract](../../../docs/plans/2026-10-12-agent-fleet-portable-adaptation.md#33-council-persona-and-learning-contracts) |
+| `plan.md` (removed 2026-10-12; historical origin record, not a current destination) | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); `references/communication-contract.md`; `references/fleet-coordination-patterns.md`; ACON historical supersession; the historical source contract in `docs/plans/2026-10-12-agent-fleet-portable-adaptation.md` §3.3 is optional source-only provenance, not a shipped dependency; current authority and report fields are in [Architectural council authority](#architectural-council-authority) and [Council report contract](#council-report-contract) |
 | `README.md` | `docs/PHILOSOPHY.md`; `.pi/agents/model-profiles.yaml` (ideas only); ACON discovery/compatibility wording |
 | `.agents/INDEX.md` | `docs/PHILOSOPHY.md`; `skills/compound-learning/SKILL.md`; ACON discovery pointers |
 | `.agents/README.md` | `docs/PHILOSOPHY.md`; `skills/compound-learning/SKILL.md`; ACON discovery pointers |
