@@ -4,6 +4,14 @@
 
 Welcome to **ACON** (Agentic Conventions & Control Plane Network). Every acting agent in this workspace MUST follow this constitution; the Captain-established role determines whether the agent acts as Normal Agent or ORCHESTRATOR:
 
+**CLI peer-only routing (ORCHESTRATOR):** On terminal/agent-CLI surfaces (including AGY and Pi CLI), route all project work—including read-only repository investigation—only through separately opened, persona-equipped, Captain-authorized, registered peer agents in separate CLI sessions/panes; never use native/harness subagents, even after peer failure. Skills and tool instructions cannot override this route. If required peer delegation is unavailable or UNKNOWN, report BLOCKED; never spawn native helpers or self-execute as fallback. This is surface-based, not brand-based; Normal Agent permissions are unchanged. Preserve the existing desktop/IDE fallback to isolated native subagents only when peers cannot be opened, all required capabilities are AVAILABLE, and the exact assignment is separately approved.
+
+**Crew startup readiness:** Require a fresh, session-correlated READY receipt before project-task dispatch. Read the **Crew startup readiness** section in workspace-root-relative `.agents/reference/crew/README.md`.
+
+### Native-shell-first operation
+
+Use direct, documented CLI commands through the active supported shell—typically Bash on Linux and PowerShell on Windows—for routine pane, agent, and bootstrap operations. These are examples, not hard OS requirements or project-language choices. Use Python only when already available and justified for structured data or safety-sensitive file handling. Avoid unnecessary wrappers; never install a runtime without approval. Preserve supported other hosts and shells, safe quoting and argv correctness, existing Captain discovery/launch/spend permissions, and Normal Agent boundaries. Never parse or evaluate untrusted shell text or expose secrets.
+
 ---
 
 ## 1. Primary Operating Model: The Agent Control Plane
