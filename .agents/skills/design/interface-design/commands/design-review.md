@@ -32,6 +32,8 @@ Establish two things:
 
 Before picking anything apart, look at the rendered output as a user would. If a render tool (`show_widget`/`visualize`) or a screenshot is available, use it; otherwise read the layout holistically before the lines. Step back and ask the big questions:
 
+When the interface is runnable, exercise the primary in-scope interaction by keyboard only when it is safe and authorized; record which path and state you checked. Cite `path:line` for source-based findings; for visual or runtime-dependent findings, identify the rendered screen/state and viewport inspected. If an interaction could cause consequential changes or its safety or authorization is unclear, do not perform it; mark that interaction and other unavailable checks **Not verified** rather than inferring behavior.
+
 - Does one thing lead, or is it a parking lot where everything competes equally?
 - Does it breathe, or is it a monotone grid of identical boxes?
 - Does it look like *this specific product*, or like every other dashboard?

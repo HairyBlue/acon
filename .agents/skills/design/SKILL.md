@@ -50,6 +50,8 @@ This suite provides the foundational craft engineering principles needed to make
 
 When the user or product specification expresses a desired aesthetic, route to the designated style skill:
 
+For an explicitly requested multi-domain audit of an existing interface, use [`better-interface`](better-interface/SKILL.md); a narrow craft/hierarchy review remains [`interface-design/commands/design-review.md`](interface-design/commands/design-review.md), and a broader technical design audit remains [`impeccable`](impeccable/SKILL.md). For explicit read-only discovery of motion opportunities in existing UI, use [`find-animation-opportunities`](find-animation-opportunities/SKILL.md). Routine building, styling, or fixing stays on this suite's existing implementation path. These audit skills do not apply fixes, replace the craft floor, or supply unavailable tools.
+
 ### 1. "I want a CLEAN design" (Minimalist, Airy, Uncluttered)
 - **Primary Preset**: **[`styles/clean/DESIGN.md`](styles/clean/DESIGN.md)**
 - **Companions & Variations**:

@@ -221,7 +221,7 @@ acon/
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
     ├── skills/                                   # Curated Modular Agent Skills
-        ├── design/                               # 2 Skills + 67 style presets + 17 craft references (interface-design, impeccable, 67 style presets, 17 craft references)
+        ├── design/                               # 4 Skills + 67 style presets + 17 craft references (interface-design, impeccable, better-interface, find-animation-opportunities, 67 style presets, 17 craft references)
         ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
         ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, setup-pre-commit...)
@@ -262,9 +262,11 @@ Instead, ACON enforces the **Dynamic Documentation Standard**:
 
 When the Control Plane dispatches specialists, it equips them with targeted domain skills on demand:
 
-### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 2 Skills + 67 Presets + 17 Craft References)
+### 🎨 1. Design & UI/UX (`.agents/skills/design/` - 4 Skills + 67 Presets + 17 Craft References)
 - **`craft/` (17 Design Craft References)**: Primary design craft and anti-slop foundation adopted from **`referodesign/refero_skill`** and **`nexu-io/open-design`**. Specialized deep-dive modules covering anti-slop invariants, mandatory 5-state interactive UI coverage, cognitive UX laws, typography rhythm contracts, spring physics motion science, WCAG 2.2 accessibility baselines, form validation UX, semantic color tokens, RTL/BiDi layout, and reference research methodology. Craft rules take strict precedence over generic aesthetic presets or framework boilerplates.
 - **`interface-design`**: Foundational craft engineering to eradicate generic AI slop. Enforces single focal points, weight > size hierarchy, 60/30/10 color rule, subtle surface elevation, persistent design memory (`system.md`), and anti-slop audits (`design-deslop`).
+- **`better-interface`**: Read-only, evidence-led existing-interface audit across accessibility, layout, writing, typography, and polish.
+- **`find-animation-opportunities`**: Read-only motion-opportunity discovery; reject unsupported, decorative, high-frequency, or reduced-motion-incompatible candidates.
 - **`impeccable`**: Design Director and visual quality floor engine with 23 lifecycle commands, craft floor quality checks, and mechanical anti-pattern detection.
 - **`styles/` (67 Aesthetic Style Presets)** with explicit intent-to-style routing:
   - **Clean & Minimal**: [`styles/clean`](.agents/skills/design/styles/clean/DESIGN.md), [`styles/minimal`](.agents/skills/design/styles/minimal/DESIGN.md), [`styles/spacious`](.agents/skills/design/styles/spacious/DESIGN.md) (ample whitespace, 8pt grid, low cognitive load).
