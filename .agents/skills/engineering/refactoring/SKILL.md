@@ -1,13 +1,13 @@
 ---
 name: refactoring
-description: "Discipline and recipes for behavior-preserving code restructuring: automated test prerequisites, concrete Fowler transformations, strangler fig patterns, and the strict revert-on-red loop. Use when reducing technical debt, cleaning up code smells, or preparing code for features without changing observable behavior."
+description: "Discipline and recipes for behavior-preserving code restructuring: concrete Fowler transformations, guard clauses, extract/inline function, and strangler fig patterns. Use when reducing technical debt, cleaning up code smells, or restructuring code without changing observable behavior."
 ---
 
 # Refactoring
 
 Refactoring is the disciplined process of restructuring existing code—changing its internal structure without altering its external observable behavior.
 
-This skill governs code restructuring sessions. It provides the core invariants, test seam prerequisites, concrete Fowler recipes, and the strict revert-on-red micro-step loop.
+This skill governs code restructuring sessions. It provides the core invariants, verification rules, and concrete Fowler recipes.
 
 ---
 
@@ -20,38 +20,12 @@ If external behavior changes, it is not refactoring—it is a feature addition, 
 
 ### The "Two Hats" Principle (Kent Beck)
 When working on software, you must wear only one hat at a time:
-- **The Refactoring Hat:** You restructure code to improve readability, maintainability, and extensibility. You write zero new features and fix zero bugs. Tests must start green and stay green on every micro-step.
-- **The Feature / Bugfix Hat:** You add new capabilities or correct defective behavior. You write new tests and modify interfaces to satisfy new requirements. You do not redesign surrounding architecture while in this mode.
+- **The Refactoring Hat:** You restructure code to improve readability, maintainability, and simplicity. You write zero new features and fix zero bugs.
+- **The Feature / Bugfix Hat:** You add new capabilities or correct defective behavior. You do not redesign surrounding architecture while in this mode.
 
-**Rule:** Never wear both hats at once.
-- If you find a bug while refactoring, **do not fix it**. Record the bug, document it with a failing characterization test marked skipped/todo, finish or revert your refactoring step, and switch hats under an explicit, separate cycle.
-- If you need to add a feature to poorly structured code, **make the change easy first (warning: this may be hard), then make the easy change** (Kent Beck). Refactor first under green tests, commit, then wear the feature hat.
-
-### The Green-to-Green Invariant
-Every refactoring micro-step must begin with passing tests and end with passing tests. Code must compile and all existing test suites must remain green across every single transformation.
-
----
-
-## 2. Pre-condition: Test Harness & Seam Verification
-
-Before editing a single line of production code during a refactoring cycle, verify the following prerequisites:
-
-### 1. Test Coverage at the Target Seam
-A **seam** is a place where you can alter behavior or inspect outcomes without editing that place itself (Michael Feathers).
-- Automated tests covering the target seam **MUST exist and pass** before touching implementation code.
-- If tests only cover private implementation details, they will break during refactoring even if external behavior is preserved. Ensure tests verify public contracts, inputs, and outputs at the module boundary.
-
-### 2. Fast Feedback Cycle
-- The test suite covering the target seam must run in seconds (ideally < 3s).
-- If the full suite takes minutes, configure a targeted test runner command that executes only the tests covering the affected module or subsystem during the micro-step loop.
-
-### 3. Pinning (Characterization) Tests
-When refactoring legacy code lacking tests:
-1. Do not touch production code yet.
-2. Write **Characterization Tests** (Golden Master tests) that exercise the existing boundary.
-3. Assert against the *actual current output* of the system across typical and edge-case inputs—even if the current output contains known quirks.
-4. Verify that these tests pass reliably.
-5. Only once behavior is securely pinned do you proceed to refactoring.
+### Verification Invariant (Build / Typecheck / Lint First)
+Every refactoring step must compile cleanly and pass the project's typechecker and linter (plus any existing tests that are already present).
+- **Do NOT write new test suites just to refactor:** In solo and small-team codebases without existing tests at the target seam, do **not** pause to author characterization or unit test suites unless the Captain explicitly requests them. Verify via typechecker, compiler, and linter.
 
 ---
 

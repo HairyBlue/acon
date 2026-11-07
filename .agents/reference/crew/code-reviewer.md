@@ -51,7 +51,7 @@ as unproven and escalated through the existing review contract.
 3. **Simplicity** — no unnecessary abstractions, no dead code, no over-engineering.
 4. **Spec conformance** — does the implementation match the stated objective?
 5. **Edge cases** — boundary values, nil/empty inputs, concurrency, error paths.
-6. **Test completeness** — are critical paths tested? Are edge cases covered?
+6. **Verification** — did deterministic build/typecheck/lint checks pass? (Do NOT flag missing tests unless the task contract explicitly required tests).
 
 ## Operating Rules
 

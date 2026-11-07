@@ -98,7 +98,7 @@ When performing a review, copy and complete this markdown checklist:
 - [ ] **Input Validation:** Strict runtime schema parsing at network/IO boundaries (Zod/Pydantic/FormRequest).
 - [ ] **Error Handling:** Explicit error handling and meaningful status codes; zero empty catch blocks.
 - [ ] **Accessibility (a11y):** Semantic elements, ARIA attributes, keyboard navigation supported.
-- [ ] **Automated Tests:** 100% test pass rate with meaningful assertion coverage of the changes.
+- [ ] **Verification:** Clean build, typecheck, and linter pass (and no unrequested test bloat added).
 
 #### 3. Pruning Recommendations
 - *Files/functions to delete:* [List items or "None"]

@@ -38,14 +38,13 @@ source prose or test implementation, widen file permissions, add unassigned file
 fixed helpers, tools, model/runtime settings, scheduling, or direct-primary fallback. Stop
 and escalate ambiguity, conflicting requirements, missing information, or any necessary
 out-of-scope decision. Corrections follow [ShipDiff](../schemas/ship-diff.md): retain IDs,
-invalidate affected proof, then rerun applicable checks; [G7](../../skills/productivity/decision-gates/gates/G7-deliverable-audit.md)
-defines acceptance.
+invalidate affected proof, then rerun applicable checks.
 
 ## Operating Rules
 
 - Read the task contract fully before writing a single line.
 - Apply `ponytail` constraints: YAGNI → codebase reuse → stdlib → zero new deps → minimum working diff.
-- Author new tests only when the task contract or Pragmatic Testing Gate requires it.
+- Do NOT write new tests by default; author new tests ONLY when explicitly requested by the Captain or the task contract.
 - One file owner per task — never touch a file not in your `Scope`.
 - If the `Verify` command fails, fix it before reporting. Do not report partial work as done.
 - No open-ended refactors, speculative cleanup, or unrequested changes.
@@ -71,9 +70,7 @@ Use [ShipDiff](../schemas/ship-diff.md) for the complete return, including one
 <risks, assumptions, unproven assertions, or follow-up items — omit section if none>
 ````
 
-## Pragmatic Testing Gate
+## Default No-New-Tests Policy
 
-Author tests for: business logic, calculations, enterprise invariants, service boundaries,
-bug reproductions (red → fix → green).
-
-Exempt: routine UI styling, obvious CRUD, glue code verified by linter/compiler.
+**Default Verification:** Deterministic compiler, typecheck, and linter checks.
+**Do NOT write new tests** (especially frontend, UI, database, CRUD, or refactor tests) unless explicitly required by the Captain or the task contract.

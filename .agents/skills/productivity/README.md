@@ -1,19 +1,16 @@
 # Productivity Skills Suite
 
-Communication, alignment, coaching, and documentation workflows:
+Communication, anti-overengineering, reporting, and alignment workflows:
 
 - **[SKILL.md](SKILL.md)**: Master productivity suite orchestrator.
-- **[adopt-acon](adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
-- **[grammars-and-constrained-sampling](grammars-and-constrained-sampling/SKILL.md)**: Machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) to eliminate preamble fluff and formatting drift.
-- **[io-verification-control](io-verification-control/SKILL.md)**: Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification.
-- **[grill-me](grill-me/SKILL.md)**: Relentless design and plan interrogation: stress-test thinking in rounds across the decision frontier until the design tree is fully settled.
-- **[handoff](handoff/SKILL.md)**: Context compacting and session handoff.
 - **[ponytail](ponytail/SKILL.md)**: Pragmatically lazy senior developer persona, 7-Rung Decision Ladder, YAGNI reviews, and debt ledger.
+- **[mpor-report](mpor-report/SKILL.md)**: MPOR Efficiency counts/totals and accomplishment narrative generator.
+- **[daily-progress-report](daily-progress-report/SKILL.md)**: Daily, weekly, monthly, or custom progress reports.
+- **[grill-me](grill-me/SKILL.md)**: Design and plan interrogation across the decision frontier when requirements are ambiguous.
+- **[handoff](handoff/SKILL.md)**: Context compacting and session handoff.
 - **[prompt-master](prompt-master/SKILL.md)**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
-- **[to-questionnaire](to-questionnaire/SKILL.md)**: Async decision-making questionnaires.
+- **[adopt-acon](adopt-acon/SKILL.md)**: Repository adoption and synchronization suite enforcing zero symlinks and Two-Tier AGENTS.md.
+- **[writing-plans](writing-plans/SKILL.md)**: Opt-in implementation planning (`docs/plans/`) when requested (`/plan`) or for major architectural rewrites.
 - **[writing-for-agents](writing-for-agents/SKILL.md)**: Authoring skills and AGENTS.md instructions.
-- **[writing-plans](writing-plans/SKILL.md)**: Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code.
 - **[technical-writing-for-engineers](technical-writing-for-engineers/SKILL.md)**: Technical RFCs and post-mortems.
-- **[daily-progress-report](daily-progress-report/SKILL.md)**: Git work summaries and Notion publisher.
 - **[developer-story](developer-story/SKILL.md)**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
-

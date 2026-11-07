@@ -1,6 +1,6 @@
 ---
 name: adopt-acon
-description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 38 routable leaf skills in `.agents/skills/` (excluding four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (.agents/rules/), and reference catalogs, schemas, crew briefs, and workflows (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
+description: "Universal lightweight adoption, bootstrap, and synchronization suite for transferring ACON's Control Plane constitution (AGENTS.md), 35 routable leaf skills in `.agents/skills/` (excluding four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (.agents/rules/), and reference catalogs, schemas, crew briefs, and workflows (.agents/reference/) into any new or existing repository while strictly excluding internal control plane scripts."
 license: MIT
 metadata:
   author: acon
@@ -14,7 +14,7 @@ metadata:
 
 `adopt-acon` is the canonical adoption, bootstrapping, and synchronization engine for transferring the **ACON** (Agentic Conventions & Control Plane Network) operational conventions into any greenfield repository or brownfield legacy project.
 
-It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **38 routable leaf skills** in `.agents/skills/` (excluding the four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (`.agents/rules/`), and reference catalogs, readable contract specifications, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
+It installs the complete **Agent Control Plane** constitution (`AGENTS.md`), the **35 routable leaf skills** in `.agents/skills/` (excluding the four domain-router `SKILL.md` entrypoints), 67 design style presets, and 17 craft references, constitutional rules (`.agents/rules/`), and reference catalogs, readable contract specifications, crew briefs, and workflows (`.agents/reference/`) into the target repository—while rigorously preserving all existing codebase guidelines, framework conventions, and tooling commands verbatim.
 
 ---
 
@@ -55,10 +55,9 @@ Adopted repositories are **lightweight consumers** of ACON conventions and domai
 
 When `adopt.sh` runs, it transfers **ONLY**:
 1. `AGENTS.md` (Two-Tier Architecture: Command Bridge + Local Workshop Manual)
-2. `.agents/skills/` (Domain skills dereferenced into physical directories, including `productivity/decision-gates`)
+2. `.agents/skills/` (Domain skills dereferenced into physical directories)
 3. `.agents/rules/` (Constitutional rules dereferenced into physical files)
-3. `.agents/reference/` (Reference catalogs, readable contract specifications in `reference/schemas/` including `decision-sheet.md`, crew briefs, and workflows)
-5. `.agents/reference/` (Reference catalogs dereferenced into physical files)
+4. `.agents/reference/` (Reference catalogs, readable contract specifications in `reference/schemas/`, crew briefs, and workflows)
 
 And explicitly forbids copying:
 - `scripts/`
@@ -111,7 +110,6 @@ The Command Bridge contains the complete, uncompromised ACON constitution:
 - **Foreign Boundary Trigger:** Automatic delegation when inspecting external paths.
 - **Task Contracts (`SHIP` vs. `SCOUT`):** Rigid boundary enforcement and verifiable test passes.
 - **4-Section Bearings Digest:** Standardized status reporting.
-- **Decision Gates Protocol:** Structured evaluation gates (`decision-gates`) and the readable normative [decision-sheet.md](../../../reference/schemas/decision-sheet.md) contract governing intake, shaping, and post-flight verification; the Markdown contract is not executable schema validation.
 - **Exclusive Captain Authority:** Destructive actions and git commits require human authorization.
 
 ### Tier 2: The Workshop Manual (Bottom)

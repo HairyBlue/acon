@@ -90,36 +90,11 @@ File approaching 300 lines?
 
 ---
 
-## Invariant 3 — Thin Controllers, Fat Services
+## Invariant 3 — Clean Separation of UI and Complex Logic (Pragmatic Layering)
 
-**Rule:** Controllers/handlers/route handlers contain **zero business logic**. All computation, transformation, validation, and orchestration live in service layer files.
-
-**Controller responsibilities (ONLY these):**
-1. Parse and validate request shape (schema validation only — not business rules)
-2. Call one service method
-3. Map the service result to a response shape
-4. Return the response
-
-**Service responsibilities:**
-- Business rule enforcement
-- Data fetching and transformation
-- Cross-cutting orchestration (calling multiple repositories/APIs)
-- Error classification and domain error creation
-- Caching logic
-
-**Layering contract:**
-```
-Controller / Handler
-    │  (receives request, calls one service method, returns response)
-    ▼
-Service
-    │  (business rules, orchestration, transformations)
-    ▼
-Repository / API Client / Store
-    │  (raw data access — no business logic)
-    ▼
-External (DB, API, Cache)
-```
+**Rule:** Keep UI components and route handlers focused and readable.
+- **Simple / Single-Use Logic (Inline per Ponytail Rung 6):** For straightforward CRUD queries, simple form handlers, or 1–10 line data fetches used in a single route or component, keep them directly in the route handler/action—do **NOT** invent ceremony-heavy service/repository/DAO files for trivial operations.
+- **Complex / Shared Business Logic (Extract to Service):** When business rules, multi-step orchestration, or data transformations are complex or reused across multiple callers, extract them into a dedicated service module (`<domain>.service.ts`).
 
 **Anti-patterns (BLOCKED):**
 ```ts

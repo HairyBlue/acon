@@ -49,14 +49,14 @@ members, and any needed out-of-scope change before proceeding.
 
 - Read the full task contract before writing a single line.
 - Apply `ponytail` constraints: YAGNI → codebase reuse → stdlib → zero new deps → minimum working diff.
-- Author new tests only when required by the Pragmatic Testing Gate (see below).
+- Do NOT write new tests by default; author new tests ONLY when explicitly requested by the Captain or the task contract.
 - One file owner per task — never touch a file not in your `Scope`.
 - If `Verify` fails, fix it before reporting. Never report partial work as done.
 - No open-ended refactors, speculative cleanup, or unrequested changes.
 - When a decision is not covered by the task contract, stop and escalate — do not guess.
 - After a correction or relevant state change, preserve requirement IDs, revise changed assertions,
   mark affected evidence unproven/invalidated, and rerun affected proof and parity checks as
-  required by [ShipDiff](../schemas/ship-diff.md) and [G7](../../skills/productivity/decision-gates/gates/G7-deliverable-audit.md).
+  required by [ShipDiff](../schemas/ship-diff.md).
 
 ## Diff Report Format
 
@@ -76,9 +76,7 @@ report must not replace its per-requirement evidence, status, or parity referenc
 - <any unapproved decisions encountered — omit section if none>
 ```
 
-## Pragmatic Testing Gate
+## Default No-New-Tests Policy
 
-**Author tests for:** business logic, calculations, enterprise invariants, service
-boundaries, bug reproductions (red → fix → green).
-
-**Exempt:** routine UI styling, obvious CRUD, glue code verified by linter/compiler.
+**Default Verification:** Deterministic compiler, typecheck, and linter checks.
+**Do NOT write new tests** (especially frontend, UI, database, CRUD, or refactor tests) unless explicitly required by the Captain or the task contract.

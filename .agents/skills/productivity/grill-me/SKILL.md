@@ -30,9 +30,9 @@ Each round the user answers reshapes the tree: settled decisions push the fronti
 
 ---
 
-## Machine Grammar & Constrained Sampling (`grill-interview.md`)
+## Structured Interview Contract (`grill-interview.md`)
 
-`grill-me` pairs directly with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) to eliminate conversational preamble and enforce structured multiple-choice rounds:
+To eliminate conversational preamble and enforce structured multiple-choice rounds:
 
 1. **Zero Conversational Chit-Chat:** Never preface a round with conversational pleasantries (*"Thanks for your answers!", "Let's explore the next set of questions..."*). The output opens directly with the question round or interactive prompt.
 2. **Constrained Multiple-Choice Enums:** Every question in the frontier MUST provide 2–4 discrete options with clear trade-offs and an explicit recommended default option.

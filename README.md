@@ -63,57 +63,17 @@ ACON resolves the tension between project-level rules and multi-agent coordinati
 
 ---
 
-## 🔄 The End-to-End Fleet Operating Workflow
+## 🔄 Operating Modes & Workflow
 
-An agent acting as **ORCHESTRATOR** coordinates authorized multi-agent missions through this 4-phase lifecycle, governed by Machine-Native Decision Gates:
-
-```mermaid
-flowchart TD
-    Captain["👨‍✈️ 1. Captain (The User)"] -->|"Issues goal / raw objective"| FirstMate["🧭 2. Control Plane (First Mate)"]
-    
-    subgraph Alignment ["Phase I: Front-Loaded Alignment"]
-        FirstMate -->|"Gate G1: grill-trigger"| G1{"G1 Gate"}
-        G1 -->|"If p >= 0.6 or UNCERTAIN"| Grill["grill-me / oracle (Clarify ~30s)"]
-        G1 -->|"If p <= 0.3 (Clear)"| PM1["prompt-master Intent Extraction"]
-        Grill -->|"Aligned intent"| PM1
-    end
-    
-    subgraph Shaping ["Phase II: Task Shaping & Briefing"]
-        PM1 -->|"Gate G2: plan-first"| G2{"G2 Gate"}
-        G2 -->|"REQUIRED"| Plan["writing-plans (docs/plans/)"]
-        Plan -->|"Captain sign-off"| ShapingCore["Task Decomposition"]
-        G2 -->|"NOT_REQUIRED"| ShapingCore
-        ShapingCore -->|"Gate G3: task-shape (SHIP vs SCOUT, Tier 1-3)"| G3["Gate G3"]
-        G3 -->|"Gate G5: skill-route (Crew & Skills)"| G5["Gate G5"]
-        G5 -->|"Draft Task Briefs"| Briefs["Specialist Task Briefs"]
-        Briefs -->|"Gate G4: anti-slop (Pre-Flight Audit)"| G4{"G4 Gate"}
-        G4 -->|"BLOCKED"| FixBrief["Refine Brief / Slices"]
-        FixBrief --> G4
-        G4 -->|"ELIGIBLE"| Contracts["Task Contracts & Bounds"]
-    end
-    
-    subgraph Flight ["Phase III: Autonomous Crew Flight"]
-        Contracts -->|"Capability-verified delegation (Task N)"| Crew["Isolated Crew (worker, scout, reviewer, oracle)"]
-        Crew -->|"Compile, test, self-verify in assigned workspace"| Crew
-        FirstMate -.->|"Evidenced supervision and completion delivery"| Crew
-    end
-    
-    subgraph Synthesis ["Phase IV: Synthesis & Gatekeeping"]
-        Crew -->|"Finished deliverables & diffs"| G7{"Gate G7: deliverable-audit"}
-        G7 -->|"REJECT_RETRY"| RetryWorker["worker (Fix regressions/scope)"]
-        RetryWorker --> G7
-        G7 -->|"APPROVE"| G89["Gate G8 (Code Review) & G9 (Security Review)"]
-        G89 -->|"APPROVE"| ControlPlane["Control Plane Synthesis"]
-        ControlPlane -->|"Gate G6: bearings-triage"| G6["Gate G6"]
-        G6 -->|"Presents 4-section Bearings Digest"| Bearings["⚓ Fleet Bearings Digest"]
-        Bearings -->|"Captain approval for git commit / destructive ops"| Captain
-    end
-```
-
-1. **Phase I: Front-Loaded Alignment (Captain $\rightarrow$ ORCHESTRATOR):** The ORCHESTRATOR performs intent extraction via [`prompt-master`](.agents/skills/productivity/prompt-master/SKILL.md) and **Gate G1 (`grill-trigger`)**, triggering 1–3 upfront clarifying questions via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) or second-opinion analysis via `oracle` to clarify architecture.
-2. **Phase II: Task Shaping & Calibrated Briefing (ORCHESTRATOR):** The ORCHESTRATOR shapes authorized work through **Gate G2 (`plan-first`)**, `SHIP` vs. `SCOUT` classification via **Gate G3 (`task-shape`)**, specialist routing via **Gate G5 (`skill-route`)**, non-overlapping file boundaries, and pre-flight validation via **Gate G4 (`anti-slop`)**.
-3. **Phase III: Autonomous Crew Flight (ORCHESTRATOR $\rightarrow$ Crew):** Only an authorized ORCHESTRATOR dispatches crew. Route by the actual execution surface, never brand. Terminal/agent-CLI orchestrators use separately opened, persona-equipped peers only, including after peer failure. A desktop/IDE surface unable to open pane-plus-agent-CLI peers may use isolated native subagents only when every required capability is evidenced `AVAILABLE` and the exact assignment is separately approved; `UNKNOWN` is `BLOCKED`. Preserve bounded scope, isolation, approved ceilings, supervision and completion evidence. See the [canonical surface route and manual ledger lifecycle](.agents/reference/crew/README.md#host-neutral-orchestration).
-4. **Phase IV: Central Synthesis & Gatekeeping (ORCHESTRATOR $\rightarrow$ Captain):** The ORCHESTRATOR coordinates post-flight verification via **Gate G7 (`deliverable-audit`)** (verifying tests pass, no scope creep, and simplicity), delegated central file integration, and mandatory independent **G8 (Code Review)** and **G9 (Security Review)** in separate read-only reviewer contexts precede any commit proposal. Record actual writer/reviewer identities; shared model identity requires `CORRELATED_REVIEW`, never writer-session review. Missing required review evidence means `BLOCKED`. Triage status via **Gate G6 (`bearings-triage`)** and present verified diffs in the 4-section Fleet Bearings digest. Git commit and push are strictly blocked until the Captain reviews outcomes and explicitly authorizes them (zero autonomous git mutations).
+ACON defaults to **Normal Agent** mode for solo and small-team velocity:
+- **Normal Agent (Default):** Executes your bounded tasks directly—reading files, making minimal working edits (`ponytail`), and verifying via **compiler, typecheck, and linter** checks.
+  - **No Unrequested Tests:** Does not write new frontend, UI, database, CRUD, or refactor tests unless you explicitly ask for tests.
+  - **Direct Execution (No Unrequested Plans):** Does not generate `docs/plans/` files for everyday features, refactors, or schema changes unless you explicitly request `/plan` or a major multi-system architectural rewrite.
+- **ORCHESTRATOR Mode (Opt-In Fleet Mode):** When you explicitly request multi-agent execution (`/teamwork`, *"use a crew"*), the agent coordinates specialized crewmates (`scout`, `worker`, `reviewer`, `oracle`) through a 4-phase lifecycle:
+  1. **Phase I: Alignment** — Clarify genuine ambiguities via [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md).
+  2. **Phase II: Task Shaping (Parallel Partitioning)** — Partition the project into non-overlapping file scopes so independent tracks can be built simultaneously.
+  3. **Phase III: Parallel Crew Flight** — Whenever tasks do not conflict on the same files—both across layers (backend + frontend) and within the same layer (2+ frontend workers on separate pages/components, 2+ backend workers on separate endpoints/services, or parallel scouts)—**hire and dispatch multiple crew members concurrently** rather than bottlenecking on a single worker, per the [portable fleet reference](.agents/reference/crew/README.md#host-neutral-orchestration).
+  4. **Phase IV: Synthesis & Gatekeeping** — Verify diffs via build/typecheck/lint and independent read-only review (`crew/code-reviewer.md`, `crew/security-reviewer.md`), then present the 4-section Fleet Bearings Digest. Git commits/pushes remain strictly gated on Captain approval.
 
 ### Terminal fleet lifecycle (normative detail)
 
@@ -121,24 +81,7 @@ If acting role is unknown, ask whether you are a Normal Agent or ORCHESTRATOR be
 
 For terminal orchestration, use only the local, ignored `.acon/sessions.json` and exact sibling `.acon/sessions.json.tmp`. Before launch or resume, safely initialize the existing minimal schema when absent, validate it against the active workspace, and reconcile owned live conversations. The ORCHESTRATOR owns ledger writes; one bounded delegated writer may perform one exact update only while the ORCHESTRATOR suspends its own writes, validates the result, and resumes sole ownership. Never allow concurrent writers. Register each verified launch/join before another; completed crew CLIs remain alive, idle and registered. Retirement requires a separate explicit Captain instruction naming or unambiguously identifying targets; remove a ledger entry only after actual retirement is confirmed. Preserve saved conversations and panes unless separately authorized for deletion/closure. Unknown, failed or unreachable sessions remain pending and are never duplicated or guessed-recreated. Count idle live CLIs against the approved mission ceiling; queue or pause when full—never auto-quit or recycle. Reuse an idle same-role conversation only for currently authorized work after refreshing its bounded brief/skills and verifying role, context, model, workspace and capabilities; no silent persona/model change and never reuse a writer context for reviewer work. See the [canonical retained-crew lifecycle](.agents/reference/crew/README.md#manual-orchestrator-session-ledger). Adopt an existing normal-agent session only with explicit Captain opt-in and verified identity, workspace, role/persona and model/effort; preserve the live conversation and change role/model only with consent and supported controls.
 
-Move only a verified owned joining session, and only when supported and approved: keep the ORCHESTRATOR alone on the left and distribute fleet panes on the right within approved ceilings, ownership, readability and host-attested geometry. If safe movement or layout support is unknown, preserve the current layout and pause/queue. These instructions are a documentation contract, not automation, runtime or host-compatibility certification. The [portable fleet reference](.agents/reference/crew/README.md#host-neutral-orchestration) is canonical for routing; its [manual ledger lifecycle](.agents/reference/crew/README.md#manual-orchestrator-session-ledger) governs safe I/O and roster operations. Captain spend/Git authority and independent G8/G9 reviews remain required.
-
-### 🛡️ Machine-Native Decision Gates (The Jev Protocol)
-
-To eliminate conversational guesswork, sycophancy, and uncalibrated LLM confidence across autonomous missions, ACON embeds **Machine-Native Decision Gates** ([`decision-gates`](.agents/skills/productivity/decision-gates/SKILL.md)).
-
-Borrowing the core concept from TypeSafe (Jev)—*state in, typed answers with coarse probabilities out, deterministic lookup table outcome*—the protocol operates with **zero code, external APIs, or runtime dependencies**:
-
-* **G1 (`grill-trigger`)**: Gates Phase I upfront alignment, triggering `grill-me` or `oracle` on ambiguous intent.
-* **G2 (`plan-first`)**: Gates Phase II planning, deterministically mandating implementation plans for architectural or schema changes.
-* **G3 (`task-shape`)**: Governs `SHIP` vs. `SCOUT` task classification and Pre-Dispatch Tiers (1–3).
-* **G4 (`anti-slop`)**: Enforces pre-flight task brief eligibility, strict 3-file bounds, and automated test specifications.
-* **G5 (`skill-route`)**: Routes appropriate specialist roles and modular domain skills from `.agents/INDEX.md`.
-* **G6 (`bearings-triage`)**: Filters status updates and escalates critical blockers to the Captain's Call.
-* **G7 (`deliverable-audit`)**: Universal post-flight verification auditing worker diffs for regressions, scope creep, and simplicity before central synthesis.
-* **G8 (Code Review)** and **G9 (Security Review)**: Mandatory independent post-SHIP reviews, preserving separate read-only contexts and Captain authority.
-
-Every gate ships in `Mode: advisory`, operates strictly **tighten-only**, and anchors probabilistic claims in verbatim code citations. Detailed documentation and worked cases are available in [`.agents/skills/productivity/decision-gates/SKILL.md`](.agents/skills/productivity/decision-gates/SKILL.md).
+Move only a verified owned joining session, and only when supported and approved: keep the ORCHESTRATOR alone on the left and distribute fleet panes on the right within approved ceilings, ownership, readability and host-attested geometry. If safe movement or layout support is unknown, preserve the current layout and pause/queue. These instructions are a documentation contract, not automation, runtime or host-compatibility certification. The [portable fleet reference](.agents/reference/crew/README.md#host-neutral-orchestration) is canonical for routing; its [manual ledger lifecycle](.agents/reference/crew/README.md#manual-orchestrator-session-ledger) governs safe I/O and roster operations. Captain spend/Git authority and independent reviews remain required.
 
 ---
 
@@ -221,13 +164,13 @@ acon/
     │   ├── git-conventional-commits.md           # Conventional Commits v1.0.0
     │   └── progress-reporting.md                 # Markdown-first daily reporting standards
     ├── skills/                                   # Curated Modular Agent Skills
-        ├── design/                               # 4 Skills + 67 style presets + 17 craft references (interface-design, impeccable, better-interface, find-animation-opportunities, 67 style presets, 17 craft references)
-        ├── engineering/                          # 14 Skills (refactoring, api-design, zero-downtime-migrations, tdd...)
-        ├── productivity/                         # 14 Skills (adopt-acon, decision-gates, prompt-master, ponytail, grammars...)
+        ├── design/                               # 4 Skills + 67 style presets + 17 craft references
+        ├── engineering/                          # 14 Skills (refactoring, api-design, frontend-conventions, diagnosing-bugs...)
+        ├── productivity/                         # 11 Skills (ponytail, mpor-report, daily-progress-report, grill-me, adopt-acon...)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, setup-pre-commit...)
     └── reference/                                # Reference Catalog, Contracts & Subagent Briefs
         ├── crew/                                 # Specialist Subagent Persona Briefs (scout, worker, reviewer...)
-        ├── schemas/                              # 8 normative Markdown contract specifications (not executable validators)
+        ├── schemas/                              # 7 normative Markdown contract specifications (not executable validators)
         ├── workflows/                            # Repeatable Multi-Agent Workflows (council, review-loop...)
         └── fowler-smells.md                      # Code smell reference guide
 ```
@@ -236,7 +179,7 @@ acon/
 
 ### Contract specifications
 
-The eight canonical Markdown contract specifications document required fields, types, enums, bounds, and conditional rules in readable tables. They are normative documentation, not executable validation schemas:
+The seven canonical Markdown contract specifications document required fields, types, enums, bounds, and conditional rules in readable tables. They are normative documentation, not executable validation schemas:
 
 - [ScoutReport](.agents/reference/schemas/scout-report.md)
 - [ShipDiff](.agents/reference/schemas/ship-diff.md)
@@ -244,7 +187,6 @@ The eight canonical Markdown contract specifications document required fields, t
 - [TaskContract](.agents/reference/schemas/task-contract.md)
 - [HandoffState](.agents/reference/schemas/handoff-state.md)
 - [BearingsDigest](.agents/reference/schemas/bearings-digest.md)
-- [DecisionSheet](.agents/reference/schemas/decision-sheet.md)
 - [ReviewReport](.agents/reference/schemas/review-report.md)
 
 ## 📖 Dynamic Documentation Standard
@@ -277,31 +219,29 @@ When the Control Plane dispatches specialists, it equips them with targeted doma
   - **Playful & Retro**: [`styles/claymorphism`](.agents/skills/design/styles/claymorphism/DESIGN.md), [`styles/glassmorphism`](.agents/skills/design/styles/glassmorphism/DESIGN.md), [`styles/retro`](.agents/skills/design/styles/retro/DESIGN.md) (3D pill depth, frosted glass, 8-bit nostalgia).
 
 ### ⚙️ 2. Engineering (`.agents/skills/engineering/` - 14 Skills)
-- **`refactoring`**: Fowler refactoring catalog, green-to-green invariant, Two-Hats rule, guard clauses, extract method, polymorphism, and strangler fig.
+- **`refactoring`**: Fowler refactoring catalog, Two-Hats rule, guard clauses, extract/inline method, polymorphism, and strangler fig.
 - **`api-design`**: RESTful modeling, RFC 7807 problem details, idempotency keys, keyset/cursor pagination, and HMAC webhooks.
-- **`zero-downtime-migrations`**: 5-phase Expand/Contract pattern, online index creation, lock timeouts, and batched non-locking backfills.
-- **`tdd`**: Strict red-green-refactor test-driven development loop.
+- **`frontend-conventions`**: Modular file structure (≤300 lines), pragmatic logic separation, and zero reinvention of UI primitives.
+- **`diagnosing-bugs`**: Fast-path direct fixes for obvious bugs; systematic feedback loop for elusive bugs.
 - **`code-review`**: Parallel two-axis review (Standards adherence + Spec conformance).
-- **`diagnosing-bugs`**: Systematic red-test feedback loop and regression verification.
 - **`domain-modeling`**: Ubiquitous language definition, scenario testing, and ADR tracking.
 - **`codebase-design`** & **`improve-codebase-architecture`**: Deep module design principles (small interfaces, clean seams).
-- **`to-spec`** & **`to-tickets`**: Conversation-to-spec synthesis and tracer-bullet ticket breakdown.
+- **`tdd`**: Opt-in red-green-refactor test-driven development loop (only when explicitly requested).
+- **`zero-downtime-migrations`**: 5-phase Expand/Contract pattern and online index creation (high-traffic production only).
+- **`to-spec`**, **`prototype`**, **`wizard`**, **`setup-ts-deep-modules`**: Opt-in spec synthesis, UI/logic prototyping, CLI setup wizards, and TS boundary enforcement.
 
-### 🧠 3. Productivity (`.agents/skills/productivity/` - 14 Skills)
-- **`adopt-acon`**: Universal repository adoption and synchronization suite. Enforces physical catalog deployment, CLAUDE.md symlink to AGENTS.md, Two-Tier AGENTS.md merge standard (preserving existing project guidelines verbatim), and fail-closed verification.
-- **`decision-gates`**: Structured Jev probability sheets, 7 typed decision gates (G1–G7), anti-slop audits, deliverable verification, and empirical calibration logging.
-- **`grammars-and-constrained-sampling`**: Formal machine contracts (YAML/JSON schemas, closed enums, Token-0 anchoring) to eliminate preamble fluff and formatting drift.
-- **`io-verification-control`**: Master 4-stage lifecycle governing input context slicing, dynamic sampling calibration, Token-0 machine contracts, and deterministic tool verification.
+### 🧠 3. Productivity (`.agents/skills/productivity/` - 11 Skills)
 - **`ponytail`**: Pragmatically lazy senior engineer persona, 7-Rung Decision Ladder (YAGNI, stdlib, platform natives, zero-deps, inline clarity), anti-overengineering reviews, and debt ledger.
-- **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
-- **`grill-me`**: Relentless design & plan interrogation: core design tree interview engine in rounds along the decision frontier.
+- **`mpor-report`**: MPOR Efficiency counts/totals with an approved accomplishment narrative and optional copy-ready card text.
+- **`daily-progress-report`**: Daily, weekly, monthly, or custom work progress reports.
+- **`grill-me`**: Design & plan interrogation across the decision frontier when requirements have genuine ambiguity.
 - **`handoff`**: Compacts conversation context into a structured handoff document.
-- **`writing-plans`**: Bite-sized TDD implementation planning, interface contracts (Consumes/Produces), and zero-placeholder specs before touching code.
+- **`prompt-master`**: 9-dimension intent extraction, model-specific prompt calibration, and airtight agent task briefs.
+- **`adopt-acon`**: Universal repository adoption and synchronization suite enforcing physical catalog deployment, CLAUDE.md symlink to AGENTS.md, and Two-Tier AGENTS.md merge standard.
+- **`writing-plans`**: Opt-in implementation planning (`docs/plans/`) when explicitly requested (`/plan`) or for major architectural rewrites.
 - **`developer-story`**: Authentic developer stories, builder journeys, personal dispatches, and CASI portfolio case studies.
-- **`to-questionnaire`**: Formats complex design decisions into fillable Markdown questionnaires.
 - **`writing-for-agents`**: Guidelines and mechanics for authoring effective skills and agent rules.
-- **[`technical-writing-for-engineers`](.agents/skills/productivity/technical-writing-for-engineers/SKILL.md)**: Technical RFCs, architecture decisions, and post-mortems; also the existing skill entry for optional durable-learning proposals. Propose evidence-grounded, deduplicated lessons in-session first; persistence requires separate Captain approval of exact text/path/scope and an assigned worker. Transient `handoff` is not durable learning.
-- **`daily-progress-report`**: Work summary and Notion publishing via MCP.
+- **[`technical-writing-for-engineers`](.agents/skills/productivity/technical-writing-for-engineers/SKILL.md)**: Technical RFCs, architecture decisions, and post-mortems.
 
 ### 🔒 4. Security & DevOps (`.agents/skills/security-devops/` - 6 Skills)
 - **`security-audit`**: Universal, language-agnostic static security audit engine (OWASP Top 10 (2021), OWASP API Security Top 10 (2023), D1-D10 matrix, taint analysis, AST triage, closed-loop remediation).

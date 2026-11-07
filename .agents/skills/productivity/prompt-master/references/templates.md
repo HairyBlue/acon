@@ -259,8 +259,8 @@ Requirement Evidence:
 Carry exact TaskContract requirement IDs, assertions/revisions and applicable parity inventory.
 Record current assertion_evidence, command exits and artifact locators; missing or stale proof is UNPROVEN, not completion.
 
-Grammar Envelope (Constrained Sampling):
-Enforce grammars-and-constrained-sampling. Deliver the final summary strictly conforming to the canonical [ship-diff.md](../../../../reference/schemas/ship-diff.md) contract:
+Grammar Envelope:
+Deliver the final summary strictly conforming to the canonical [ship-diff.md](../../../../reference/schemas/ship-diff.md) contract:
 - Zero Conversational Preamble (forbid "Sure!", "Here is...", pleasantries; start directly with the YAML envelope).
 - Schema-locked output must follow [ship-diff.md](../../../../reference/schemas/ship-diff.md).
 - Zero markdown prose or filler outside the envelope.
@@ -451,8 +451,8 @@ Run these in order. Each output feeds the next.
 ## Progress Evidence
 For long-running work, report progress only when it changes or when a checkpoint is reached. Ground every completion claim in a tool result, changed artifact, or verification output.
 
-## Grammar Envelope (Constrained Sampling)
-Enforce grammars-and-constrained-sampling and the assigned role's canonical output schema.
+## Grammar Envelope
+Follow the assigned role's canonical output schema.
 Use [scout-report.md](../../../../reference/schemas/scout-report.md) for Scout findings,
 [ship-diff.md](../../../../reference/schemas/ship-diff.md) for writer deliverables, or the explicitly assigned review/council/gate envelope.
 - Zero Conversational Preamble (start directly with the schema envelope).

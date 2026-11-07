@@ -5,7 +5,9 @@ description: Diagnosis loop for hard bugs and performance regressions. Use when 
 
 # Diagnosing Bugs
 
-A discipline for hard bugs. Skip phases only when explicitly justified.
+A discipline for diagnosing bugs proportionally:
+- **Obvious Bugs (Fast Path):** When the root cause is clear from the stack trace, compiler/typecheck error, or code inspection (e.g., typo, wrong prop, null check, query syntax), **fix it directly** and verify with build/typecheck/lint. Do NOT waste time building a reproduction harness or writing a new unit test unless the Captain asks for one.
+- **Hard / Elusive Bugs:** When the root cause is non-obvious, flaky, or deep in complex state, follow the phased feedback loop below.
 
 When exploring the codebase, read `CONTEXT.md` (if it exists) to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
 
@@ -111,28 +113,16 @@ Tool preference:
 
 **Perf branch.** For performance regressions, logs are usually wrong. Instead: establish a baseline measurement (timing harness, `performance.now()`, profiler, query plan), then bisect. Measure first, fix second.
 
-## Phase 5: Fix + regression test
+## Phase 5: Fix + Verify
 
-Write the regression test **before the fix**, but only if there is a **correct seam** for it.
+Apply the minimal fix and re-run the Phase 1 feedback loop plus the project's build/typecheck/lint checks.
 
-A correct seam is one where the test exercises the **real bug pattern** as it occurs at the call site. If the only available seam is too shallow (single-caller test when the bug needs multiple callers, unit test that can't replicate the chain that triggered the bug), a regression test there gives false confidence.
-
-**If no correct seam exists, that itself is the finding.** Note it. The codebase architecture is preventing the bug from being locked down. Flag this for the next phase.
-
-If a correct seam exists:
-
-1. Turn the minimised repro into a failing test at that seam.
-2. Watch it fail.
-3. Apply the fix.
-4. Watch it pass.
-5. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario.
+- **No Unrequested Regression Test Bloat:** Do **not** write a permanent unit/integration regression test unless the Captain explicitly asks for one.
 
 ## Phase 6: Cleanup
 
 Required before declaring done:
 
-- [ ] Original repro no longer reproduces (re-run the Phase 1 loop)
-- [ ] Regression test passes (or absence of seam is documented)
+- [ ] Original repro no longer reproduces (and build/typecheck/lint pass)
 - [ ] All `[DEBUG-...]` instrumentation removed (`grep` the prefix)
-- [ ] Throwaway prototypes deleted (or moved to a clearly-marked debug location)
-- [ ] The hypothesis that turned out correct is stated in the commit / PR message, so the next debugger learns
+- [ ] Throwaway prototypes/harnesses deleted

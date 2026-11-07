@@ -1,11 +1,14 @@
 ---
 name: zero-downtime-migrations
-description: "Zero-downtime database schema migrations: expand/contract patterns, online index creation, lock timeout hygiene, non-locking batched backfills, and forbidden operations catalog. Use when designing, reviewing, or applying database migrations in production environments."
+description: "Zero-downtime database schema migrations: expand/contract patterns, online index creation, lock timeout hygiene, and batched backfills. Activate ONLY for high-traffic, zero-downtime production databases or when explicitly requested."
+disable-model-invocation: true
 ---
 
-# Zero-Downtime Migrations
+# Zero-Downtime Migrations (High-Traffic Production Only)
 
-In modern high-availability architectures, deploying database changes must never cause user-facing downtime, lock connection pools, or interrupt application traffic.
+> **Scope Note (Solo / Small-Team vs. High-Traffic Production):** For solo developer projects, prototypes, early-stage apps, or small-team applications where standard migrations (`prisma migrate`, `drizzle-kit`, `artisan migrate`, `alembic`) run in milliseconds, **do NOT use 5-phase Expand/Contract ceremony**—use normal, direct database migrations. Activate this skill **ONLY** when operating on large, high-traffic production tables where table locks cause user-facing downtime, or when explicitly requested by the Captain.
+
+In high-availability production architectures with large tables and continuous traffic, deploying database changes must avoid locking connection pools or interrupting active traffic.
 
 This skill establishes the engineering discipline, execution patterns, and safety guardrails required for safe schema evolution on production databases (PostgreSQL, MySQL).
 

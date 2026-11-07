@@ -21,7 +21,7 @@ If the user passed arguments, treat them as a description of what the next sessi
 
 ## Machine Grammar: `handoff-state.md` (<500 Tokens)
 
-`handoff` pairs directly with [`grammars-and-constrained-sampling`](../grammars-and-constrained-sampling/SKILL.md) to eliminate token bloat and enable clean-slate session resumption:
+To eliminate token bloat and enable clean-slate session resumption:
 
 1. **Zero Conversational Preamble:** The handoff document opens directly with metadata or structured YAML without conversational introductions or sign-offs.
 2. **Dense Machine State:** Rather than a verbose multi-page summary, structure active state following the canonical readable [HandoffState contract](../../../reference/schemas/handoff-state.md). Its Markdown tables and rules guide the handoff; they are not executable schema validation:

@@ -1,9 +1,12 @@
 ---
 name: tdd
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: Test-driven development. Activate ONLY when the Captain explicitly requests tests, TDD, or "red-green-refactor".
+disable-model-invocation: true
 ---
 
-# Test-Driven Development
+# Test-Driven Development (Opt-In Only)
+
+> **Activation Rule:** In solo and small-team projects, ACON defaults to **build/typecheck/lint verification** + manual testing. Activate this skill **ONLY** when the Captain explicitly requests automated tests or TDD.
 
 TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle: consult them before and during the loop, not after.
 
@@ -25,16 +28,13 @@ Ask: "What's the public interface, and which seams should we test?"
 
 When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), call the Skill tool with "codebase-design" for the vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage and locality terms, and it is a reference to consult, not a session to run.
 
-## Pragmatic Testing Standard (Business-Logic-First)
+## Default No-New-Tests Standard (Opt-In Testing)
 
-In the agentic era, writing automated tests for every change (UI styling, superficial layouts, obvious CRUD scaffolding, config glue) consumes excessive tokens and developer time. Follow the **Pragmatic Testing Standard**:
-- **Test-Required Triggers (MUST write tests test-first):**
-  1. *Business Logic & Calculations:* Financial formulas, quotas, pricing/discounts, metric aggregations, state machine transitions.
-  2. *Mission-Critical & Enterprise Invariants:* Auth/security policies, payment processing, multi-tenant isolation, sensitive mutations.
-  3. *Multi-Team & Shared Boundaries:* Public API contracts, shared service interfaces where regressions cause cross-team breakage.
-  4. *Bug Reproductions:* Standalone failing reproduction tests before fixing reported defects.
-  5. *Explicit Captain Command:* When the user explicitly requests tests, TDD, or test coverage.
-- **Test-Exempt Tasks:** For UI styling/templates, obvious CRUD, and config glue, bypass test-writing and rely on deterministic verification (linters, typecheckers, build compilation). In solo developer mode, focus test suites strictly on business logic and formulas to maximize shipping speed.
+In solo developer and small-team workflows, writing automated tests for UI, frontend, database queries, CRUD endpoints, or refactors wastes tokens and slows shipping because the developer tests the application manually.
+- **Default Policy (No New Tests):** Rely on deterministic **compiler, typecheck, and linter** checks. Do NOT write new tests unless explicitly asked.
+- **When Captain Explicitly Requests Tests:**
+  1. Focus strictly on pure business logic, financial/math formulas, or the specific seam the Captain asked to test.
+  2. Never write brittle frontend layout tests, mock-heavy database query tests, or tautological tests unless specifically instructed.
 
 ## Anti-patterns
 
