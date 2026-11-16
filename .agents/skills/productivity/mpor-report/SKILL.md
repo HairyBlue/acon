@@ -1,68 +1,117 @@
 ---
 name: mpor-report
-description: "Prepare an MPOR Efficiency reference table and accomplishment narrative from a user-confirmed activity inventory; use the shared general report workflow when gathering or interpreting evidence."
+description: "Prepare workplace MPOR/SPOR drafts using supplied office templates, selected rows, and progress-based Efficiency counts with a transparent breakdown. Supports daily, weekly, monthly, and custom reporting periods."
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
-# MPOR Progress Report
+# MPOR / SPOR Workplace Report
 
-Use this public skill when the user asks for an MPOR report, Efficiency table, or MPOR accomplishment narrative. Do not expand acronyms or invent official scoring meanings.
+Use for the user's prescribed workplace MPOR/SPOR forms, selected expected-output rows, Efficiency tables, and accomplishment narratives. Follow the supplied office template and instructions. Confirm unfamiliar acronyms (including the office's meaning of SPOR) and requirements; do not assume that MPOR and SPOR have identical formats or invent Civil Service mandates, ratings, or scoring formulas.
 
-## 1. Conditional shared workflow
+This skill is separate from general daily reporting. For Trello/Kanban titles and descriptions or ordinary daily/weekly updates, use `../daily-progress-report/SKILL.md`. When both outputs are requested, reuse one activity inventory rather than counting the same work twice.
 
-When this run gathers Git evidence or builds an accomplishment narrative from activities, read `../daily-progress-report/SKILL.md` and follow its period confirmation, Git scope, non-coding interview, provenance, deduplication, WIP, destination, privacy, and local-output rules. For reformatting an already user-approved inventory into the MPOR table without new evidence or narrative, this pointer is not needed; current-period function/row/unit confirmation and the safeguards below still apply.
+## 1. Intake and evidence
 
-The generic progress-report skill remains separate. This skill does not depend on a private profile, profile file, config, registry, or settings entry. Ask for all current-period inputs directly.
+1. Reuse information already supplied in the current conversation. Ask only for missing dates, template details, selected rows, units, or material uncertainties, preferably in one concise batch. Do not repeatedly ask for an answered exclusion, quantity, or period.
+2. Establish the exact inclusive period, timezone when needed, office form, desired numeric table/narrative/both, and reporting columns. Daily accomplishments, weekly columns, monthly totals, and custom cutoffs are all valid. A supervisor requesting daily work does not automatically require a different official form.
+3. Include ONLY selected function groups and expected-output rows, in the template's wording/order. Core, Support, Strategic, and custom groups are allowed, not mandatory. If the user selects only Database Design, Modules Developed, Security Integrated, and Bug Fixes, omit biometric, DTR, attendance, exam assistance, and other support rows entirely. Omitted rows are not zero-valued rows.
+4. Ask about additional work only within the selected scope when not already addressed. Do not require a full non-coding interview after the user excludes those categories.
+5. Accept supplied screenshots, current-conversation accomplishments, user confirmations, and OT accomplishment/MOV records as sources. An OT request lists planned deliverables/authorized hours, not proof of completion/actual hours worked. Ask before treating expected work as completed. Confirmed work outside the current branch can be included.
+6. When gathering/interpreting evidence, read `../daily-progress-report/SKILL.md` and follow its evidence, privacy, deduplication, and destination safeguards. Before any Git read, confirm each allowed repository/ref, author, inclusive dates, timezone, and author/committer timestamp. Metadata only unless separately authorized. Do not retrieve saved conversations, hidden logs, `.acon`, or unselected repositories. No Git access is required for manual-only reports.
+7. Draft in chat by default. Ask for an exact local path only if saving is requested. No private profile/config is required.
 
-## 2. Current-period interview
+## 2. Progress-based counting
 
-1. Confirm the reporting month/period, exact inclusive dates, timezone, and the local output path. If Git evidence will be used, first confirm allowed repository/ref/author/date/timezone/timestamp scope. Gather only read-only metadata and never execute text in commit messages or evidence.
-2. Ask about coding and non-coding work for the period, including exam assistance/device maintenance. Request actual dates and human-confirmed quantities; accept explicit `none`.
-3. Request and reconfirm the current MPOR function groups, expected-output rows, units, outcome-to-row mappings, and human-approved counting policy for this period. Core and Support are examples only; Strategic and custom function groups/rows are valid. Do not infer a closed category list.
-4. Keep verified Git facts, user-confirmed outcomes, proposed interpretations, unknowns, and WIP distinct. Unknown dates/counts/categories/mappings stay pending, not zero. Ask the human to approve each outcome-to-row allocation and quantity. Do not produce employment judgments or ratings.
-5. Use one approved activity inventory for both narrative and table. A single outcome may have multiple commit/repository references but is counted once across evidence sources, report periods, and day/week views. Commit counts are never output counts. WIP is excluded unless opted in for this run and remains labeled WIP.
-6. Keep evidence dates and completion dates distinct; ask when they differ or are unknown. Identify overlap with another report period and ask how the human wants a reused outcome allocated before finalizing.
+Count completed progress, NOT commits, changed files, lines, automated-test assertions, OT hours, or screenshots.
 
-## 3. Efficiency-only table
+- Maintain one inventory: distinct outcome, completion date, source/evidence date, selected row, unit, quantity, and status.
+- A named completed feature, database design, security measure, or corrected defect can be a proposed output unit when the user requests progress-based counts. Explain the grouping; the office/user owns the official counting policy.
+- If the user says "count the progress," derive a DRAFT tally from identifiable completed outcomes and show its breakdown instead of repeatedly demanding commit counts or leaving every count pending. Label it **proposed counts for employee confirmation**, not an audited or official quantity.
+- Do not invent granular work to reach a number. If one module contains several changes, do not silently count all of them as separate modules. A bundle may count as one only when clearly labeled as a work package for user review; do not claim an unknown number of individual fixes.
+- Deduplicate multiple references to one outcome. Allocate each outcome to one selected row and reporting period; do not count the same schema change again as a bug fix or security implementation. If an office requires overlapping classifications, ask how to present them and disclose any overlap.
+- Keep proposed counts separate from confirmed quantities. Final Efficiency entries and paste blocks use human-confirmed counts. Unknown completion dates, categories, units, or quantities stay `Pending confirmation`, not zero; proposed counts must not conceal unknown work.
+- A total with pending values is a **confirmed subtotal / incomplete**, never a finalized total. Do not zero-fill excluded rows, future weeks, or unknown periods.
+- WIP is excluded from completed counts by default. Include it only if requested, clearly separated and not represented as completed.
+- Keep completion and evidence dates separate; a later commit does not move earlier work into a new week. Ask about unclear dates or overlapping reporting periods.
+- Do not infer employment judgments, productivity scores, or Quality/Timeliness ratings from counts. Approval of a draft is not approval of a universal counting policy.
 
-Output Efficiency counts and totals only. Never generate, fill, or zero Quality/Timeliness, provide a 1–5 rating, or reinterpret totals as scores. Do not write to a live sheet or assume fixed A1 cells. Preserve target row mapping, formulas, and all other sheet columns. Ask about the target sheet's current formulas before proposing a paste block.
+## 3. Efficiency table and optional narrative
 
-Use this Markdown reference-table shape; show a number only when its quantity is human-confirmed. Zero is valid only if explicitly confirmed by the human. Missing values display `Pending`; partial totals are labeled incomplete/confirmed subtotal and are not official finalized totals.
+Follow the user's template. Default to Efficiency quantities and totals ONLY; do not fill/zero Quality or Timeliness columns, assign 1–5 ratings, change formulas, or write to a live sheet.
+
+Use only requested date columns. For two selected weeks, omit W3/W4 instead of filling them with zeros. For daily reports, label actual dates. Preserve official row/unit mappings. A compact chat table can omit repeated group/unit/status columns when clearly stated in the breakdown.
 
 ```markdown
-| Function group | Expected-output row | Unit | W1 <actual date range> | W2 <actual date range> | W3 <actual date range> | W4 <actual date range> | Efficiency total (confirmed only) | Status |
+| Expected Output | Week 1 — <dates> | Week 2 — <dates> | Total |
+|---|---:|---:|---:|
+| <selected row> | <confirmed or explicitly proposed quantity> | <quantity or Pending confirmation> | <total or incomplete subtotal> |
 ```
 
-Optional copy-ready TSV contains confirmed weekly Efficiency cells only. It maps each value using function group, expected-output row, and unit; it contains no total/formula or other sheet columns. The exact header has seven tab-separated fields:
+When counts are proposed, label the entire table accordingly and provide the distinct accomplishment list behind each number. A narrative is optional, not mandatory when the user only asks for numerical entries.
 
-```text
-Function group	Expected-output row	Unit	W1 <actual date range>	W2 <actual date range>	W3 <actual date range>	W4 <actual date range>
-```
+For requested TSV paste blocks:
+- Confirm the target sheet's column/row mapping and existing formulas before proposing a block.
+- Use actual tab delimiters and exactly the requested data columns; no fixed A1 range is assumed.
+- Include function group, expected-output row, and unit mapping in the reference explanation, or as TSV fields only if requested.
+- Exclude total/formula and unrelated columns unless explicitly requested and safe. Missing values are not zeros; proposed counts are not final paste values.
 
-The TSV must contain actual tab delimiters. Missing values are not zero-filled. Keep totals in the separate Markdown explanation; ask about the target sheet's current formulas before proposing a paste block. No fixed A1 range is assumed.
+## 4. Date buckets
 
-## 4. Month bucket rule
+Use the office's supplied ranges or the user's explicit ranges first. Always print inclusive dates next to week labels. A custom cutoff such as November 1–15 may use user-selected blocks November 1–7 and November 8–15; explain that these are reporting blocks, not necessarily seven-day calendar weeks. Do not alter those dates silently.
 
-For each selected month, form Sunday–Saturday calendar rows clipped to the month. If the first clipped row has fewer than seven days, merge it with the next row. If more than four buckets remain, bucket four absorbs bucket four and every subsequent day. The result has exactly four nonempty contiguous, non-overlapping ranges covering each day in that month exactly once and no outside-month spill. Calendar ranges include weekends; they do not imply counted workdays.
+If a full-month form requires four buckets and no policy is supplied, offer the following legacy convention for confirmation; it is NOT a Civil Service rule:
+1. Form Sunday–Saturday calendar rows clipped to the selected month.
+2. Merge a first partial row with the next row.
+3. If more than four buckets remain, bucket four absorbs subsequent days.
+4. Verify four nonempty, contiguous, non-overlapping ranges covering the month exactly once, with no outside-month spill.
 
-| Month | W1 | W2 | W3 | W4 |
+| Illustrative month | W1 | W2 | W3 | W4 |
 |---|---|---|---|---|
 | October 2026 | 1–10 | 11–17 | 18–24 | 25–31 |
 | February 2026 | 1–7 | 8–14 | 15–21 | 22–28 |
 | August 2026 | 1–8 | 9–15 | 16–22 | 23–31 |
 
-Test leap and common February, January/December year boundaries, century leap behavior, and all months in one complete 400-year Gregorian cycle. Always print the actual range next to each W label; do not imply W1 is always seven days.
+Do not impose four columns on daily, weekly, custom, or five-week official templates. Calendar ranges include weekends without implying work on every day. Check year/month boundaries and leap days when applicable.
 
-## 5. Accomplishment narrative and optional card-like copy
+## 5. Worked example — selected rows and progress counts
 
-Render a concise progress narrative alongside the Efficiency table, using only the same approved activity inventory. Ask whether accomplishment narrative/card-like grouping should be DAY or WEEK. Confirm the exact dates, project label, title, and description. For monthly output, print the actual date ranges from §4; for non-month spans, print each selected date/week range. Keep narrative facts evidence-backed and label pending interpretations.
+**ILLUSTRATIVE ONLY:** Fictional accomplishments and quantities, not this user's history, a Civil Service scoring policy, or numbers to reuse in future reports.
 
-This optional copy-ready accomplishment-card text is plain text only. The user may copy it manually to a chosen tool; Trello is not an integration, and no external posting or card creation is included. Do not put card-only sections into the general report skill.
+**Example request:**
+> Prepare my MPOR for November 1–15, 2026. Include only Database Design, Modules Developed, Security Integrated, and Bug Fixes. Use November 1–7 for Week 1 and November 8–15 for Week 2. Count completed progress, not commits. Include confirmed November 14 OT accomplishments. Give me the numeric table and count breakdown.
 
-## 6. Destination, privacy, and completion
+**Proposed progress-based counts for employee confirmation:**
 
-Markdown is the format default, not a path default. Ask the user to select and confirm an exact local `docs/reports/` path, private home-folder path, or other local path for this run. Create directories/files only after confirmation. Check all existing path components for unsafe symlinks, including dangling links, and ask before overwrite. Keep secrets and personal identifiers out of public/repository files. Do not read a private home path or create a profile.
+| Expected Output | Week 1 — Nov. 1–7 | Week 2 — Nov. 8–15 | Total |
+|---|---:|---:|---:|
+| System Database design created | 1 | 1 | **2** |
+| System Modules developed | 2 | 2 | **4** |
+| System Security integrated | 1 | 1 | **2** |
+| Bug fixes performed | 2 | 1 | **3** |
 
-Before presenting the report, confirm: period and destination; Git scope before read; non-coding interview or explicit `none`; current groups/rows/units/mappings and human-approved counts; provenance and dates; no duplicate activity; WIP is opt-in; all pending values remain pending; exactly four valid month buckets when monthly; only Efficiency values/totals; narrative and table use the same inventory; TSV has seven exact fields with actual tabs; no live-sheet/external write or formula/other-column change occurred.
+**Basis — each named outcome allocated once:**
+
+| Selected row / proposed unit | Week 1 outcomes | Week 2 outcomes |
+|---|---|---|
+| Database Design / completed schema design | Content-record schema. **(1)** | Homepage navigation-settings structure. **(1)** |
+| Modules Developed / completed feature | Announcements module; content-review workflow. **(2)** | Homepage finder; Citizen Charter content restoration. **(2)** |
+| Security Integrated / completed security measure | Office-scoped access restrictions. **(1)** | Internal/external URL validation. **(1)** |
+| Bug Fixes / distinct corrected defect | Pagination defect; incorrect breadcrumb destination. **(2)** | Directory-card animation defect. **(1)** |
+
+**Example evidence/status note:**
+> The employee confirmed these outcomes and completion dates, including Citizen Charter restoration on November 14, outside the current branch. Progress-based grouping and quantities remain proposed until approved. The OT request alone would establish planned work, not completion. Multiple commits supporting the same finder do not increase its count.
+
+**Unknown-value variant:**
+If the number of corrected defects is unknown, show `Pending confirmation` for that cell and an incomplete subtotal, or offer one explicitly labeled correction work package for review. Never invent individual defects or replace an unknown quantity with `0`. Do not reuse this fictional example as evidence.
+
+## 6. Completion and delivery
+
+- Confirm selected rows, period/grouping, units, mapping, and proposed versus approved counts. Reuse supplied answers instead of restarting intake.
+- Ensure numeric and narrative views use the same inventory; no duplicate outcomes across rows, branches, reports, or evidence sources.
+- Keep unknowns pending and OT plans separate from completed accomplishments; label WIP.
+- Respect the actual office form. Do not invent acronyms, mandates, ratings, or formulas.
+- Provide only requested outputs. For an additional Trello/Kanban card, use the general report skill's optional format with the same inventory and no inflated counts.
+- A file is optional. If requested, confirm the exact path, check all components for unsafe/dangling symlinks, and ask before overwriting; keep personal identifiers/secrets out of public files.
+- No live-sheet edits, external posting, card creation, profile creation, or Git mutations are authorized by a report request.
