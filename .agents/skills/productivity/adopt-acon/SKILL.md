@@ -191,38 +191,7 @@ The adoption process runs an automated verification gate:
 
 ---
 
-## 5. Automated Tooling: `adopt.sh` CLI Reference
-
-The automated adoption script is located at `scripts/adopt.sh`.
-
-### Syntax
-```bash
-./scripts/adopt.sh [OPTIONS] <TARGET_DIRECTORY>
-```
-
-### Options & Flags
-| Flag | Description |
-| :--- | :--- |
-| `<TARGET_DIRECTORY>` | Absolute or relative path to the target repository to adopt ACON into. |
-| `-n, --dry-run` | Preview files to be created/updated without modifying the target. |
-| `-f, --force` | Overwrite existing files or re-synthesize `AGENTS.md` without confirmation. |
-| `-h, --help` | Display command usage and examples. |
-
-### Example Invocations
-```bash
-# Adopt ACON into a target project:
-./scripts/adopt.sh /home/user/my-project
-
-# Preview adoption in dry-run mode:
-./scripts/adopt.sh --dry-run /home/user/my-project
-
-# Force update an already adopted project:
-./scripts/adopt.sh --force /home/user/my-project
-```
-
----
-
-### Pane-pool policy and local session boundary
+## 5. Pane-pool policy and local session boundary
 
 The user manually opens/resumes the ORCHESTRATOR; ACON never launches it from JSON. The portable session policy lives in the shared crew reference. Resolve actual execution surface and task-local capabilities, not provider brand. Establish Normal Agent versus ORCHESTRATOR before role-dependent action when unknown; approved handoff/existing verified role is sufficient.
 
@@ -242,7 +211,6 @@ When verifying an adopted repository, complete this checklist:
 
 ### Repository Adoption Checklist
 - [ ] **Physical Copy & Symlink Standard:** No symlinks in `$TARGET/.agents` or `$TARGET/AGENTS.md`; `$TARGET/CLAUDE.md` symlinks cleanly to `AGENTS.md`.
-- [ ] **Strict Boundary Enforced:** Internal ACON scripts from `scripts/` do NOT leak into `$TARGET`.
 - [ ] **Two-Tier Constitution:** `$TARGET/AGENTS.md` contains Tier 1 (Command Bridge) at the top and Tier 2 (Workshop Manual) at the bottom.
 - [ ] **Catalog Integrity:** All active skills exist physically under `$TARGET/.agents/skills/`.
 - [ ] **Role-Bounded Execution:** A Normal Agent performs only its Captain-authorized bounded task and never spawns crew; an ORCHESTRATOR acts as Control Plane and delegates project investigation, edits, builds/tests and Git operations through the canonical surface route.

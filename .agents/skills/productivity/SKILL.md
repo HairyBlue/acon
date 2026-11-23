@@ -27,3 +27,6 @@ This skill serves as the primary router and master guide for communication, alig
 | **`writing-for-agents`** | Guidelines and mechanics for authoring effective skills, rules, and memory files. | [`writing-for-agents/SKILL.md`](writing-for-agents/SKILL.md) |
 | **`technical-writing-for-engineers`** | Structured templates for engineering RFCs, post-mortems, and architectural decision records. | [`technical-writing-for-engineers/SKILL.md`](technical-writing-for-engineers/SKILL.md) |
 | **`developer-story`** | Authentic builder journeys, personal dispatches, and portfolio case studies using narrative arcs and the CASI framework. | [`developer-story/SKILL.md`](developer-story/SKILL.md) |
+| **`inbox-and-notes-triage`** | Filter emails/messages into actionable replies and distill rough notes or articles into clean local Markdown. | [`inbox-and-notes-triage/SKILL.md`](inbox-and-notes-triage/SKILL.md) |
+| **`personal-day-planning`** | Organize personal priorities, daily schedules, and non-coding operational tasks into an actionable plan. | [`personal-day-planning/SKILL.md`](personal-day-planning/SKILL.md) |
+| **`job-hunt-onlinejobs`** | Scout OnlineJobs.ph and remote job listings, catch hidden attention checks and red flags, and draft tailored proposals. | [`job-hunt-onlinejobs/SKILL.md`](job-hunt-onlinejobs/SKILL.md) |

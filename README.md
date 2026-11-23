@@ -26,7 +26,6 @@ ACON supplies conventions, not a runtime integration. Reading `AGENTS.md` / `CLA
 
 - A reader of `AGENTS.md` / `CLAUDE.md` can consume the conventions; delegated execution additionally requires evidenced child delegation, isolated contexts, applicable workspace isolation, supervision/communication, terminal completion delivery and separate read-only review.
 - One current Captain-authorized model/subscription is sufficient when those capabilities are available. Demonstrated sequential isolated roles may replace concurrency, never independent review. A required `UNAVAILABLE` or `UNKNOWN` capability means `BLOCKED`; seek a Captain-approved supported operating-mode change, not primary-thread implementation or weaker review.
-- Standard Unix utilities (`bash`, `rsync`) for `./scripts/adopt.sh`
 
 ---
 
@@ -103,11 +102,7 @@ Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
 ---
 
 ### Integrating ACON into Existing Projects
-To adopt ACON into an existing project while preserving all local conventions verbatim, run the adoption script:
-```bash
-./scripts/adopt.sh /path/to/my-project
-```
-Alternatively, invoke our built-in [`adopt-acon`](.agents/skills/productivity/adopt-acon/SKILL.md) skill to inspect, onboard, and configure any existing repository automatically.
+Invoke our built-in [`adopt-acon`](.agents/skills/productivity/adopt-acon/SKILL.md) skill so your agent inspects, onboards, and configures the target repository while preserving its local conventions.
 
 ---
 
@@ -153,8 +148,6 @@ acon/
 ├── AGENTS.md                                     # The Control Plane Constitution (Master Rules)
 ├── CLAUDE.md                                     # Existing compatibility entry point -> same AGENTS.md constitution; not a runtime requirement
 ├── README.md                                     # Human-facing guide and operational instructions
-├── scripts/                                      # Control Plane automation scripts
-│   └── adopt.sh                                  # Repository adoption & synchronization script
 └── .agents/                                      # Central Physical Source of Truth (Pure Conventions)
     ├── INDEX.md                                  # Fast symptom, task, and skill lookup matrix
     ├── README.md                                 # Internal catalog
@@ -166,7 +159,11 @@ acon/
     ├── skills/                                   # Curated Modular Agent Skills
         ├── design/                               # 4 Skills + 67 style presets + 17 craft references
         ├── engineering/                          # 14 Skills (refactoring, api-design, frontend-conventions, diagnosing-bugs...)
-        ├── productivity/                         # 11 Skills (ponytail, mpor-report, daily-progress-report, grill-me, adopt-acon...)
+        ├── productivity/                         # 14 Skills (ponytail, mpor-report, daily-progress-report, grill-me, adopt-acon, inbox-and-notes-triage...)
+        ├── assistant -> productivity             # Symlink alias to productivity suite
+        ├── seo-growth/                           # 3 Skills (keyword-opportunity-map, technical-and-cro-audit, seo-content-and-briefs)
+        ├── business/                             # 3 Skills (sop-and-process-builder, client-delivery-and-scope, competitor-and-spend-audit)
+        ├── amazon-ops/                           # 4 Skills (asin-and-competitor-research, listing-seo-and-keywords, ppc-wasted-spend-audit, fba-inventory-and-reviews)
         └── security-devops/                      # 6 Skills (security-audit, git-worktrees, shell-scripting, setup-pre-commit...)
     └── reference/                                # Reference Catalog, Contracts & Subagent Briefs
         ├── crew/                                 # Specialist Subagent Persona Briefs (scout, worker, reviewer...)

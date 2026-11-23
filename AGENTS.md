@@ -11,7 +11,10 @@ Welcome to **ACON** (Agentic Conventions & Control Plane Network). Every agent i
 - **Default Role (`Normal Agent`):** Unless the Captain explicitly requests multi-agent orchestration (e.g., *"use a crew"*, *"run as orchestrator"*, *"spawn a scout/worker"*, or `/teamwork`) or supplies an approved crew handoff, operate as a **Normal Agent**.
   - A **Normal Agent** executes the Captain's task directly (reading files, editing code, running builds/linters/typechecks) using native shell commands first. It does not spawn crew sessions or assume orchestration authority.
 - **Fleet Role (`ORCHESTRATOR` / First Mate):** Activated only when the Captain explicitly requests multi-agent execution or opens an orchestrator session.
-  - **Control vs. Execution Separation:** The ORCHESTRATOR is a control role (mission intake, task decomposition, fleet supervision, synthesis). It performs **no** project codebase exploration, file edits, builds/tests, or git operations on its primary thread; it may access only `.acon/sessions.json` and `.acon/sessions.json.tmp` for ledger state.
+  - **Control vs. Execution Separation:** The ORCHESTRATOR is a control role (mission intake, task decomposition, fleet supervision, synthesis). It performs **no** project codebase exploration, file edits, builds/tests, or git operations on its primary thread.
+  - **Runtime Surface Routing:**
+    - **Harness-Managed Apps (T3 Code, MausBot, IDE/desktop apps, AI bot platforms):** Use the host's native delegation, thread, and worktree tools directly; do **not** create or maintain `.acon/sessions.json`.
+    - **Manual Terminal / Pane Sessions (e.g., `herdr` + `pi`, tmux, WezTerm, cmux):** Use `.acon/sessions.json` and `.acon/sessions.json.tmp` as the session ledger per [`.agents/reference/crew/README.md`](.agents/reference/crew/README.md).
   - **Canonical Surface Route & Crew Lifecycle:** When operating as ORCHESTRATOR, read and follow [`.agents/reference/crew/README.md`](.agents/reference/crew/README.md) for capability discovery, launch authorization barriers, session ledger management, and independent reviewer isolation.
 
 ---
@@ -25,6 +28,7 @@ Welcome to **ACON** (Agentic Conventions & Control Plane Network). Every agent i
   2. Destructive operations (`git reset --hard`, `git clean -fd`, dropping tables, deleting directories).
   3. Installing new dependencies (`package.json`, `composer.json`, `pyproject.toml`, `Cargo.toml`).
   4. Proceeding when required external credentials/secrets are missing.
+  5. External side-effects via app integrations/MCPs (sending emails or messages, submitting job applications, publishing content, or modifying live ad bids/listings).
 
 ### 2.2 Selective Skill Loading
 Check `.agents/INDEX.md` or `.agents/skills/` only when specialized domain guidance is genuinely needed (e.g., UI craft/presets, security audits, MPOR/daily reports, shell scripts). Do **not** load planning, spec, or testing skills for routine coding tasks:
@@ -34,7 +38,10 @@ Check `.agents/INDEX.md` or `.agents/skills/` only when specialized domain guida
 | UI/UX, typography, design systems, anti-AI-slop, RTL, forms | [`design`](.agents/skills/design/SKILL.md) + domain craft references (`craft/anti-ai-slop.md`, `craft/state-coverage.md`) |
 | Architecture, refactoring, bug diagnosis, API design, TDD (when requested) | [`engineering`](.agents/skills/engineering/SKILL.md) |
 | Security audits, git guardrails, worktrees, shell scripts, pre-commit | [`security-devops`](.agents/skills/security-devops/SKILL.md) |
-| Anti-overengineering (`ponytail`), MPOR/progress reports, plans, handoffs | [`productivity`](.agents/skills/productivity/SKILL.md) |
+| Anti-overengineering (`ponytail`), MPOR/progress reports, plans, handoffs, inbox triage, day planning, job scouting | [`productivity`](.agents/skills/productivity/SKILL.md) (alias: [`assistant`](.agents/skills/assistant/SKILL.md)) |
+| SEO strategy, keyword mapping, technical SEO & CRO audits, content briefs | [`seo-growth`](.agents/skills/seo-growth/SKILL.md) |
+| SOPs & checklists, client status updates & scope guard, competitor/spend audits | [`business`](.agents/skills/business/SKILL.md) |
+| Amazon FBA research, listing SEO, PPC wasted-spend audits, inventory/review triage | [`amazon-ops`](.agents/skills/amazon-ops/SKILL.md) |
 
 ### 2.3 Ponytail Anti-Overengineering & Pragmatic Verification
 Every implementation task enforces [`ponytail`](.agents/skills/productivity/ponytail/SKILL.md) through the **7-Rung Decision Ladder** in strict order:
@@ -57,8 +64,8 @@ Every implementation task enforces [`ponytail`](.agents/skills/productivity/pony
 ## 3. Direct Execution Workflow (Zero Unnecessary Ceremony)
 
 ### Step 1: Proportional Alignment (`grill-me`)
-- **Clear Intent $\rightarrow$ Execute Immediately:** When the target scope and behavior are clear, proceed directly to code edits without interrogation or boilerplate.
-- **Genuine Ambiguity $\rightarrow$ Clarify First:** When a request has unresolved architectural forks or missing critical constraints, use [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to ask 1–3 concise, high-leverage clarifying questions before writing code.
+- **Clear Intent → Execute Immediately:** When the target scope and behavior are clear, proceed directly to code edits without interrogation or boilerplate.
+- **Genuine Ambiguity → Clarify First:** When a request has unresolved architectural forks or missing critical constraints, use [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) to ask 1–3 concise, high-leverage clarifying questions before writing code.
 
 ### Step 2: Plan-First Gate (`writing-plans` — Opt-In / Major Rewrites Only)
 Default to **Direct Execution**. Never generate a `docs/plans/` file for everyday development:
@@ -89,7 +96,12 @@ When explicitly operating in `ORCHESTRATOR` mode on multi-agent missions, follow
    - **`scout`**: Read-only codebase archaeology, schema discovery, and diagnostic spikes (`.agents/reference/schemas/scout-report.md`). Spawn multiple scouts in parallel when exploring distinct subsystems.
    - **`worker`** / **`ship`**: Autonomous implementation and build/typecheck/lint verification within strict file boundaries (`.agents/reference/schemas/ship-diff.md`). Spawn multiple workers in parallel across non-conflicting file sets.
    - **`reviewer`**: Independent, read-only post-flight auditor for code quality (`crew/code-reviewer.md`) and security (`crew/security-reviewer.md`). Never reuse a writer session as its own reviewer.
-   - **`oracle`** & **`council-mode`**: Architectural evaluator / multi-agent panel for high-stakes trade-offs (`#architectural-council-authority`).
+   - **`oracle`** & **`council-mode`**: Architectural evaluator / multi-agent panel for high-stakes trade-offs ([`#architectural-council-authority`](.agents/reference/crew/README.md#architectural-council-authority)).
+   - **Domain Specialist Crews (`.agents/reference/crew/`):**
+     - *Assistant:* `concierge`, `inbox-triage`, `second-brain`, `job-scout`
+     - *SEO Growth:* `growth-lead`, `keyword-mapper`, `tech-seo`, `content-writer`
+     - *Business:* `ops-director`, `sop-architect`, `client-success`, `market-intel`
+     - *Amazon Ops:* `seller-lead`, `product-scout`, `listing-seo`, `ppc-analyst`, `inventory-ops`
 3. **Zero-Overlapping File Boundaries & Worktrees:** No two concurrent workers may touch the same file. Concurrent `SHIP` workers execute in isolated git worktrees (`.worktrees/<branch>`) per [`git-worktrees`](.agents/skills/security-devops/git-worktrees/SKILL.md) (or strictly disjoint file scopes when approved by the Captain).
 4. **Full Skill Inlining in Worker Briefs:** Resolve the concrete leaf `SKILL.md` path from `.agents/INDEX.md`, read it, and embed its full content verbatim under `## Skill: <skill-name>`. Always include `ponytail` in worker briefs.
 5. **Evidenced Completion Delivery:** Do not poll crew sessions in loops; yield and rely on evidenced completion delivery ([`.agents/reference/crew/README.md#capability-discovery`](.agents/reference/crew/README.md#capability-discovery)).
