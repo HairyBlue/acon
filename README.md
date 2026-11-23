@@ -104,6 +104,28 @@ Captain: "Inspect /path/to/billing-app. Decompose the Stripe webhook refactor
 ### Integrating ACON into Existing Projects
 Invoke our built-in [`adopt-acon`](.agents/skills/productivity/adopt-acon/SKILL.md) skill so your agent inspects, onboards, and configures the target repository while preserving its local conventions.
 
+### Using ACON Globally (`~/.gemini/config/` for Antigravity / `agy`)
+If you want ACON's rules and skills active across **all** projects on your machine without adopting them into each repo individually, run this from inside your cloned `acon` directory (or set `ACON_DIR` to wherever you cloned it):
+
+```bash
+ACON_DIR="$(pwd)" # e.g. /path/to/acon
+
+# 1. Global constitution rule (deduplicated automatically when inside acon)
+ln -s "$ACON_DIR/AGENTS.md" ~/.gemini/config/AGENTS.md
+
+# 2. Global skill suites
+for skill in amazon-ops business design engineering productivity security-devops seo-growth; do
+  ln -s "$ACON_DIR/.agents/skills/$skill" ~/.gemini/config/skills/"$skill"
+done
+```
+
+> **Note:** Keep `~/.gemini/config/GEMINI.md` for machine-specific global rules (such as MCP guidance below) so it stays separate from the symlinked `AGENTS.md`.
+
+### Using Remote MCPs (e.g., Composio)
+When connecting remote HTTP MCP servers (such as **Composio** for Discord, Gmail, Google Meet, or Notion) in `~/.gemini/config/mcp_config.json`:
+1. **Remote MCPs can take ~1–2s to complete their HTTP handshake** when a new thread starts, so turn 1 of a brand-new thread may run before the remote MCP tools appear in `<mcp_servers>`.
+2. **Add a global rule in `~/.gemini/config/GEMINI.md`** telling the agent which external apps are connected via `composio` (`COMPOSIO_SEARCH_TOOLS`) and to ask for a quick follow-up message on turn 1 if `composio` is still connecting, instead of reporting that no integration exists.
+
 ---
 
 ## ⚓ Fleet Status Protocol (The Bearings Digest)
