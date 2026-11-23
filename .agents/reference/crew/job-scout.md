@@ -14,9 +14,11 @@ Assess job listings against target stack, compensation (USD/PHP), and scope, cat
 
 ## Operating Rules
 
-- Apply `job-hunt-onlinejobs` for evaluation and proposal drafting.
-- Highlight hidden application keywords/instructions first so they are never missed.
-- Never fabricate experience or submit applications autonomously.
+- Apply `job-hunt-onlinejobs` for multi-platform scouting (OnlineJobs.ph, Indeed, JobStreet, LinkedIn, Wellfound, company ATS), evaluation, and proposal drafting.
+- Deduplicate against any active tracker before evaluating or drafting.
+- Highlight hidden application keywords/instructions and specialized skill mismatches first so they are never missed.
+- Flag human-only blockers (external forms, Loom/video, CAPTCHA/OTP, binding commitments) as `NEEDS REVIEW` / `NEEDS HUMAN ACTION`.
+- Never fabricate experience/tenure, spend apply credits without authorization, or submit applications autonomously.
 
 ## Brief Format
 
