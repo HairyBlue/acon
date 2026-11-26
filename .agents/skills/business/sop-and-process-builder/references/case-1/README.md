@@ -21,25 +21,33 @@ This reference documents a production-grade e-commerce Customer Support SOP mode
 
 ---
 
-## 2. Master Ticket Triage (Entry -> 9 Branches)
+## 2. Master Ticket Triage (Entry -> 4 Primary Trunks / 9 Branches)
+
+On the Miro board, every ticket enters from the **Global Rules Box (`ALWAYS`)** -> **`New Email Received`** -> **`Check any earlier customer conversations for context`**, and then routes into **4 primary visual trunks** (`1. Return Request` with its linked `Faulty Product` sub-flow, `2. Delivery Status`, `3. Cancel Order Request`, and `4. General Question` with 5 FAQ/issue sub-flows covering Not-received/POD, Missing items, Payment/Checkout, Customs/Extra fees, and Receipt/Invoice, totaling 9 scenarios).
 
 ```mermaid
 flowchart TD
-    A["New Email Received"] --> B["Check any earlier customer conversations for context"]
-    B --> C1["1. Return Request"]
-    B --> C2["2. Delivery Status"]
-    B --> C3["3. Cancel Order Request"]
-    B --> C4["4. General Question"]
-    B --> C5["5. Not got their package in timeframe?"]
-    B --> C6["6. Missing item(s)?"]
-    B --> C7["7. Payment method / discount / checkout issue"]
-    B --> C8["8. Customs or extra fee/costs"]
-    B --> C9["9. Receipt or invoice"]
+    G["Global Rules Box (ALWAYS): Tracking, Language, Product, Speed, Money, Logging, When Solved"] --> A["New Email Received"]
+    A --> B["Check any earlier customer conversations for context"]
+
+    B --> T1["Trunk 1: 1. Return Request"]
+    T1 -. "Linked sub-flow" .-> T1F["Faulty Product Sub-Flow"]
+
+    B --> T2["Trunk 2: 2. Delivery Status"]
+    B --> T3["Trunk 3: 3. Cancel Order Request"]
+
+    B --> T4["Trunk 4: 4. General Question + 5 Sub-Flows"]
+    T4 --> C4["4. General Question"]
+    T4 --> C5["5. Not got their package in timeframe?"]
+    T4 --> C6["6. Missing item(s)?"]
+    T4 --> C7["7. Payment method / discount / checkout issue"]
+    T4 --> C8["8. Customs or extra fee/costs"]
+    T4 --> C9["9. Receipt or invoice"]
 ```
 
 ---
 
-## 3. Return Request & Faulty Product Tree (Miro Top Branches)
+## 3. Return Request & Faulty Product Tree (Miro Trunk 1 + Linked Sub-Flow)
 
 ```mermaid
 flowchart TD
@@ -89,23 +97,23 @@ flowchart TD
 
 ---
 
-## 4. Delivery Status & Cancel Order Request (Miro Middle Branches)
+## 4. Delivery Status & Cancel Order Request (Miro Trunks 2 & 3)
 
 ```mermaid
 flowchart TD
     %% Delivery Status
-    DS0["Delivery Status"] --> DS1["Send LC tracking # + our tracking link, then check corresponding tracking # on 17TRACK before replying"]
+    DS0["Delivery Status"] --> DS1["Look up LC tracking # + our tracking link, and verify corresponding tracking # on 17TRACK before replying"]
     DS1 --> DS2{"Does 17TRACK match our tracking page?"}
-    DS2 -- "No" --> DS2N["Report tracking mismatch ASAP (Order #, LC tracking #, 17TRACK #, screenshots of both) + inform customer we will investigate & flag email"]
-    DS2 -- "Yes" --> DS3{"Is there any tracking issue or unusual status? (exception, failed attempt, wrong address, returning, held, customs, stalled, carrier error, wrong ETA)"}
-    DS3 -- "Yes" --> DS3Y["Report issue ASAP before taking further action (Order #, tracking #s, status, screenshot) + inform customer & flag email"]
+    DS2 -- "No" --> DS2N["Report tracking mismatch ASAP (Order #, LC tracking #, 17TRACK #, screenshots of both tracking pages, short explanation of what does not match) + inform customer we will investigate, flag email, and never guess"]
+    DS2 -- "Yes" --> DS3{"Is there any tracking issue or unusual status? (stalled updates, carrier warnings/errors, wrong ETA, missing ETA, exception, failed attempt, wrong address, returning, held, customs)"}
+    DS3 -- "Yes" --> DS3Y["Report issue ASAP before taking further action (Order #, LC tracking #, 17TRACK #, status, screenshots of both tracking pages, short explanation) + inform customer, flag email, and never guess"]
     DS3 -- "No" --> DS3N["Everything looks normal -> Reply with LC tracking # & our tracking link"]
 
     %% Cancel Order Request
     CO0["Cancel Order Request"] --> CO1{"Order marked as fulfilled in Shopify?"}
     CO1 -- "No" --> CO2{"Does customer have more than 1 order with us?"}
     CO2 -- "No" --> CO2N["Follow SOP regarding avoiding order cancellations"]
-    CO2 -- "Yes" --> CO2Y["Submit Cancellation Request: add 'request to cancel order' in Issue Sheet -> tell customer we are checking if shipped -> wait for agent decision"]
+    CO2 -- "Yes" --> CO2Y["Submit Cancellation Request: add 'request to cancel order' in Issue Sheet -> tell customer we are checking if shipped -> Wait for Agent Decision"]
     CO2Y --> CO2D{"Agent Decision"}
     CO2D -- "Declined" --> CO2D1["Inform customer order has already shipped and cannot be canceled"]
     CO2D -- "Approved" --> CO2D2["Request refund (log Refunds & Returns) -> inform customer cancellation succeeded and refund is processing"]
@@ -117,9 +125,11 @@ flowchart TD
     CO3 -- "Yes" --> CO3Y["Offer a 30% refund on the item they wished to cancel (keep it) & explain they can also return the order when received for a full refund"]
 ```
 
+> **Notion SOP Override Note (Cancellations):** While the Miro flow preserves `Wait for Agent Decision` (`Declined` vs. `Approved`) and fast-path branches, whenever written Notion SOP rules apply (such as the 24-hour weekday shipping-window delay before replying to a cancellation request in Section 7.1, or avoiding a premature or contradictory 30% keep-it offer on a late cancellation), **written Notion SOP overrides the Miro shortcut**.
+
 ---
 
-## 5. General, Missing Package (POD), Missing Items, Payment, Customs & Invoice (Miro Lower Branches)
+## 5. General, Missing Package (POD), Missing Items, Payment, Customs & Invoice (Miro Trunk 4 + 5 Sub-Flows)
 
 ```mermaid
 flowchart TD
@@ -136,10 +146,10 @@ flowchart TD
     NP4 -- "Wrong address" --> NP4W["Explain not delivered due to wrong address -> put correct address in Issue Sheet -> ask for reship + new tracking #"]
     NP4 -- "Correct address" --> NP4C["Put in Issue Sheet to reship ASAP with new tracking # -> tell customer carrier marked delivered, out of kindness we will ship another package"]
 
-    %% Missing items
-    MI0["Missing item(s)?"] --> MI1{"Do we know what is missing?"}
-    MI1 -- "Yes" --> MI1Y["Reship missing item(s) ASAP + apologize warmly and kindly"]
-    MI1 -- "No" --> MI1N["Ask customer to confirm all items received + photo evidence + compare vs. Shopify order"]
+    %% Missing items (NOT photo-gated)
+    MI0["Missing item(s)?"] --> MI1{"Do we know what is missing (verified in Shopify order lines)?"}
+    MI1 -- "Yes" --> MI1Y["NOT photo-gated: Log in Issue Sheet to reship missing item NOW (never 'Waiting for customer photo') + tell customer it is already being shipped right away at no cost + separately ask for a photo of what arrived for internal warehouse records only"]
+    MI1 -- "No" --> MI1N["Ask customer which item is missing + confirm all items received + compare vs. Shopify order lines (and request photo for records)"]
     MI1N --> MI2{"Confirmed missing?"}
     MI2 -- "Yes" --> MI1Y
     MI2 -- "No" --> MI2N["Explain order contains everything ordered and clear up misunderstanding"]
@@ -154,7 +164,7 @@ flowchart TD
 
 ## 6. Dual-Sheet Logging & SOP Checklist
 
-1. **Issue Sheet (Operations / Fulfillment):** Log **every** case with its own distinct row and order number (`#XXXX`), tracking numbers, issue type, and required action:
+1. **Issue Sheet (Operations / Fulfillment):** Log **every** case with its own distinct row and unique order number (`#XXXX`), tracking numbers, issue type, and required action (never leave duplicated or copied template rows):
    - Late order
    - Lost order
    - Wrong address
@@ -162,9 +172,15 @@ flowchart TD
    - Refund approval needed
    - Return request
    - Product damaged
-   - Missing item
+   - Missing item *(instruct fulfillment to send the missing item **now**; never write `"Waiting for customer photo"`)*
    *(Write the problem in the sheet, tell the fulfillment agent what you need, and request any needed info such as POD.)*
-2. **Refunds & Returns Sheet (Finance):** Log **every** return instruction sent, partial 30% refund, or full refund (never duplicate another order's row). A return request touches **both** sheets (`Issue Sheet` for the case, `Refunds & Returns` for the money).
+2. **Refunds & Returns Sheet (Finance):** Log **every** return instruction sent, partial 30% refund, or full refund in its own unique row (never duplicate another order's row). A return request touches **both** sheets (`Issue Sheet` for the case, `Refunds & Returns` for the money).
+   - **`Approved by` Timing Rule (`#9640` Guardrail):**
+     - **Leave `Approved by` BLANK** (or `"Not approved yet (waiting for return & inspection)"`) whenever only return instructions have been sent and the parcel has **not** yet arrived at the warehouse and been inspected. **NEVER** put an agent's name (e.g., `Nicki`) in `Approved by` prematurely.
+     - Fill `Approved by` **only** after:
+       1. The return parcel physically arrives at the warehouse and passes inspection,
+       2. The customer accepts a **30% keep-it offer**, or
+       3. An agent explicitly approves an **unfulfilled (`Yellow`) cancellation**.
 
 ---
 
@@ -179,7 +195,7 @@ flowchart TD
 - **Weekend Exception:** If the request arrives Friday evening or Saturday (`Yellow`), cancel it and log it in the `Issue Sheet` (if Sunday, hold/ignore as on weekdays). If `Grey`, reply immediately that it has already shipped.
 
 ### 7.2 Carrier & Delivery Windows (Verify on 17TRACK + Send Store Link Only)
-- **Internal Check:** Always verify the corresponding tracking number on `https://www.17track.net/en` before replying.
+- **Internal Check:** Always verify the corresponding tracking number on `https://www.17track.net/en` before replying. If 17TRACK does not match our tracking page or shows any unusual status (stalled updates, carrier warnings/errors, wrong ETA, missing ETA, exception, failed attempt, wrong address, returning, held, customs), report it ASAP with Order #, LC tracking #, 17TRACK #, **screenshots of both tracking pages**, and a short explanation of what does not match, flag the email, and **never guess**.
 - **Customer-Facing Tracking:** Only ever send the masked `LC-XXXX-XXXXX` number and the localized store tracking page (never send carrier links or raw carrier tracking numbers):
 
 | Market | Typical Delivery Window (Work Days) | Store Tracking Path Pattern |
@@ -192,8 +208,14 @@ flowchart TD
 | **World / UK / US / CA** | Market standard | `/pages/track-your-order` |
 
 ### 7.3 The 4 Core Exception Playbooks
-1. **Missing Item:** Open the order lines to verify what was ordered. **Always reship the missing part** (never refund instead). In the same email, ask for a photo of what they *did* receive (evidence for `Issue Sheet`), log under `Missing item`, and instruct fulfillment to send the missing part. Never question the customer.
-2. **Damaged / Faulty Product:** If the fault is already described, do not ask them to describe it again. Require a **photo/video** first, and state in the same email: *once the photo arrives, we will ship a free replacement and you can keep the broken one*. Log under `Product damaged`. Never reship before receiving the photo; never refund instead of reshipping.
+1. **Missing Item (NOT Photo-Gated, `#7605` Guardrail):** Open the Shopify order lines to verify what was ordered. Once the missing item is known, **ALWAYS reship it immediately** (never refund instead, and **never** gate shipment on receiving a photo). Tell the customer the missing item is **already being shipped right away at no cost**, and ask for a photo of what *did* arrive **only for internal warehouse / `Issue Sheet` records**. **NEVER** write `"before we can ship, we need a photo"` (e.g., `"innan vi kan skicka det behöver vi bara en bild"`), and **NEVER** write `"Waiting for customer photo"` in `Issue Sheet`. Log under `Missing item` instructing fulfillment to send it **now**. Never question the customer.
+2. **Damaged / Faulty Product (Photo-Gated):** If the fault is already described, do not ask them to describe it again. Require **photo/video proof BEFORE** shipping the free replacement, and state in the same email: *once the photo arrives, we will ship a free replacement and you can keep the broken one*. Log under `Product damaged`. Wait for the photo before instructing fulfillment to reship; never refund instead of reshipping.
+
+| Scenario | Photo-Gated? | Customer Email Rule | `Issue Sheet` Entry |
+| :--- | :--- | :--- | :--- |
+| **Missing Item** | **No** (once verified in Shopify order lines) | State missing item is **already being shipped right away at no cost**; ask for a photo of what arrived **only for internal warehouse records** | Log under `Missing item` telling fulfillment to send it **NOW** (never `"Waiting for customer photo"`) |
+| **Damaged / Faulty Product** | **Yes** (photo/video required first) | Require photo/video proof **before** shipping; confirm free replacement ships once photo arrives (keep broken one) | Log under `Product damaged`; hold reship instruction until photo/video arrives |
+
 3. **30% Keep-It Offer:** Offer 30% back while keeping the item when the customer no longer wants it and the order is already shipped (`Grey`) or delivered. If declined, move to normal returns. **Never** offer it twice in the same thread; never refund 100% or cancel a `Grey` order.
 4. **Delivered Not Received (POD):** Request Proof of Delivery (POD) **internally** in the `Issue Sheet` (never ask the customer for POD). In the same email, ask the customer to confirm their full delivery address so we can compare it against the order (do not promise a reship yet).
    - Wrong address -> explain address mismatch, log correct address in `Issue Sheet`, request reship + new tracking number.
@@ -210,13 +232,13 @@ Use when a package is returned/undeliverable due to customer error (missed picku
 1. Check where the carrier actually delivered it; state plainly if it was delivered somewhere other than the warehouse.
 2. **No refund until the return arrives at the warehouse and is inspected** (never bend this rule, even if the customer threatens escalation).
 3. Ask the customer for the shipping receipt / proof that they sent it to the correct return address, and instruct them to contact the carrier to trace it.
-4. Log in **both** `Issue Sheet` and `Refunds & Returns`.
+4. Log in **both** `Issue Sheet` and `Refunds & Returns`, keeping `Approved by` **blank** (or `"Not approved yet (waiting for return & inspection)"`) until the parcel physically arrives at the warehouse and passes inspection.
 
 ---
 
 ## 8. Sample Response Templates (Adapt & Translate to Customer's Language)
 
-> **Important:** Always translate into the customer's exact language, keep tone calm and helpful, and replace `[placeholders]` with verified order facts.
+> **Important:** Always translate into the customer's exact language, keep tone calm and helpful, replace `[placeholders]` with verified order facts, avoid robotic em-dashes, and never expose internal warehouse or fulfillment handoffs.
 
 ### A. Delivery Status (Normal Tracking)
 ```text
@@ -263,7 +285,8 @@ Best regards,
 [Brand Name]
 ```
 
-### D. Missing Item (Photo Evidence + Free Reship)
+### D. Missing Item (Immediate Reship Now + Record Photo Only; NOT Photo-Gated)
+*(Never make reshipment conditional on receiving a photo. Never say "before we can ship, we need a photo" or write "Waiting for customer photo" in `Issue Sheet`.)*
 ```text
 Subject: Missing item in order #[OrderNumber]
 
@@ -271,7 +294,9 @@ Hi [Name],
 
 I am so sorry that an item was missing from your package!
 
-We will ship the missing item to you right away at no cost. Could you also send a quick photo of what you received in the parcel so we can attach it to our warehouse report?
+We are already shipping the missing item to you right away at no cost, so you do not need to wait on anything from your side for your replacement to go out.
+
+Whenever you have a moment, could you also reply with a quick photo of what you received in the parcel? We only need this for our internal warehouse records, and your missing item is being shipped out regardless.
 
 Best regards,
 [Brand Name]
@@ -403,3 +428,18 @@ I am happy we got this sorted!
 If you are satisfied, a short Trustpilot review mentioning my name "[Your Name]" would really help me a lot, it only takes a minute. Thanks so much!
 [Localized Trustpilot Link]
 ```
+
+---
+
+## 9. Pre-Submit Audit Checklist & Grading Pitfalls
+
+Run this final verification gate before submitting any CS assessment batch or ending a live ticket shift:
+
+| Check | Requirement / Guardrail | Common Mistake Caught |
+| :--- | :--- | :--- |
+| **1. Unique rows only** | Every order/case gets its own distinct row (`#XXXX`) in `Issue Sheet` and `Refunds & Returns`. | Leaving duplicated or copied template rows (`#9455`/`#6291` error). |
+| **2. Dual-sheet sync** | Every return request and return-not-received case is logged in **both** `Issue Sheet` and `Refunds & Returns`. | Logging in only one sheet (unfinished job). |
+| **3. Missing item vs. Damaged gate** | **Missing item** = reship **NOW** (ask for photo for internal records only; never `"Waiting for customer photo"`). **Damaged** = wait for photo/video **BEFORE** reshipping. | Gating a verified missing item on a photo (`#7605` error: `"innan vi kan skicka det behöver vi bara en bild"`). |
+| **4. Approval timing gate** | Leave `Approved by` **blank** (or `"Not approved yet (waiting for return & inspection)"`) when sending return instructions. Fill `Approved by` **only** after physical arrival + inspection, an accepted 30% keep-it offer, or an agent-approved unfulfilled cancellation. | Putting an agent's name (e.g., `Nicki`) in `Approved by` when only return instructions were sent (`#9640` error). |
+| **5. No internal logistics leaks** | Never mention internal warehouse/fulfillment handoffs, raw carrier tracking numbers, origin country, or supplier documents in customer emails. | Exposing internal workflow details such as `"how the stop travelled to warehouse"`. |
+| **6. Refund timing & language hygiene** | Always state **5-10 business days after arrival & inspection** in return replies; reply strictly in the customer's exact written language; keep customer-facing templates free of robotic em-dashes. | Missing return refund window, wrong reply language, or robotic em-dash phrasing. |
